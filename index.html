@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>道場的十萬個為什麼</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; background: #0a0a1a; }
+    .font-serif { font-family: 'Noto Serif TC', serif; }
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: flex; flex-direction: column; }
+    .bg-tao { background: linear-gradient(135deg, #0a0a1a 0%, #12062a 50%, #061224 100%); }
+    .glow-gold { text-shadow: 0 0 30px rgba(251,191,36,.7), 0 0 80px rgba(251,191,36,.3); }
+    .glow-red  { text-shadow: 0 0 20px rgba(248,113,113,.8); }
+    .timer-huge { font-size: clamp(5rem, 18vw, 11rem); font-weight: 900; font-variant-numeric: tabular-nums; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse-ring { 0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.5)}50%{box-shadow:0 0 0 12px rgba(251,191,36,0)} }
+    @keyframes bar-grow { from{width:0} to{width:var(--target-w)} }
+    .animate-in { animation: fadeUp .5s ease forwards; }
+    .pulse { animation: pulse-ring 2s infinite; }
+    .vote-card { border: 2px solid #334155; border-radius: 1rem; padding: .75rem; cursor: pointer; transition: all .2s; text-align: center; }
+    .vote-card:hover { border-color: #fbbf24; background: rgba(251,191,36,.08); transform: translateY(-2px); }
+    .vote-card.selected { border-color: #fbbf24; background: rgba(251,191,36,.15); }
+    .progress-bar { height: 100%; border-radius: 9999px; transition: width .8s linear; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: #0f172a; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-tao text-white">
+
+<!-- ═══════════════════ 首頁 ═══════════════════ -->
+<div id="page-home" class="page active items-center justify-center p-8">
+  <div class="text-center mb-14 animate-in">
+    <div class="text-7xl mb-5">🏛️</div>
+    <h1 class="font-serif text-5xl md:text-6xl font-black text-amber-300 glow-gold mb-3 leading-tight">
+      道場的<br>十萬個為什麼
+    </h1>
+    <p class="text-slate-400 text-lg">講員培訓互動課程</p>
+  </div>
+  <div class="flex flex-col gap-4 w-full max-w-xs">
+    <button onclick="nav('host')"    class="bg-amber-500 hover:bg-amber-400 active:scale-95 text-black font-black py-5 rounded-2xl text-xl transition-all shadow-xl">🎙️ 主持人</button>
+    <button onclick="nav('display')" class="bg-indigo-700 hover:bg-indigo-600 active:scale-95 font-black py-5 rounded-2xl text-xl transition-all shadow-xl">📺 大螢幕</button>
+    <button onclick="nav('vote')"    class="bg-emerald-700 hover:bg-emerald-600 active:scale-95 font-black py-5 rounded-2xl text-xl transition-all shadow-xl">🗳️ 投票</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ 主持人 ═══════════════════ -->
+<div id="page-host" class="page overflow-y-auto">
+  <div class="max-w-xl mx-auto w-full p-4 pb-16">
+    <div class="flex items-center justify-between py-4 mb-2">
+      <h2 class="font-serif text-2xl font-black text-amber-300">🎙️ 主持人控制台</h2>
+      <button onclick="nav('home')" class="text-slate-500 hover:text-slate-300 text-sm">← 返回</button>
+    </div>
+
+    <!-- 密碼鎖 -->
+    <div id="host-lock" class="bg-slate-800/80 rounded-2xl p-6 mb-4">
+      <p class="text-slate-300 mb-3 font-bold">請輸入主持人密碼</p>
+      <div class="flex gap-2">
+        <input id="host-pw" type="password" onkeydown="if(event.key==='Enter')unlockHost()"
+               class="flex-1 bg-slate-700 text-white px-4 py-3 rounded-xl border border-slate-600 focus:border-amber-400 outline-none text-lg" placeholder="密碼">
+        <button onclick="unlockHost()" class="bg-amber-500 hover:bg-amber-400 text-black font-black px-5 py-3 rounded-xl">確認</button>
+      </div>
+      <p id="host-err" class="text-red-400 text-sm mt-2 hidden">密碼錯誤，請重試</p>
+    </div>
+
+    <!-- 控制台主體 -->
+    <div id="host-main" class="hidden space-y-4">
+
+      <!-- 狀態列 -->
+      <div class="bg-slate-800/80 rounded-2xl px-5 py-3 flex items-center justify-between">
+        <span class="text-slate-400">目前階段</span>
+        <span id="h-phase" class="font-black text-amber-300 text-lg">等待中</span>
+      </div>
+
+      <!-- ── 設定區（waiting）── -->
+      <div id="sec-setup" class="bg-slate-800/80 rounded-2xl p-5">
+        <h3 class="font-bold text-lg mb-4">📋 分組設定</h3>
+        <div class="mb-4">
+          <p class="text-slate-400 text-sm mb-2">組數</p>
+          <div class="flex gap-2">
+            <button onclick="setGrpCount(4)" id="btn-g4" class="flex-1 py-2 rounded-xl bg-slate-700 hover:bg-indigo-600 transition-colors font-bold">4 組</button>
+            <button onclick="setGrpCount(5)" id="btn-g5" class="flex-1 py-2 rounded-xl bg-indigo-600 font-bold">5 組</button>
+          </div>
+        </div>
+        <div id="grp-assign" class="space-y-3 mb-5"></div>
+        <button onclick="startCourse()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl text-xl transition-all hover:scale-[1.02]">
+          🚀 展示題目，開始課程
+        </button>
+      </div>
+
+      <!-- ── 討論區（drawing / discussion）── -->
+      <div id="sec-discuss" class="hidden bg-slate-800/80 rounded-2xl p-5">
+        <h3 class="font-bold text-lg mb-3">⏱️ 討論計時（10 分鐘）</h3>
+        <div id="h-disc-timer" class="text-5xl font-black text-amber-300 text-center font-mono mb-4">10:00</div>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="startDiscussion()" id="btn-disc-start" class="bg-green-600 hover:bg-green-500 font-bold py-3 rounded-xl">▶ 開始計時</button>
+          <button onclick="goPresent(1)" class="bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl">跳過 → 分享</button>
+        </div>
+      </div>
+
+      <!-- ── 分享區（presenting）── -->
+      <div id="sec-present" class="hidden bg-slate-800/80 rounded-2xl p-5">
+        <h3 class="font-bold text-lg mb-3">🎤 分享控制</h3>
+        <div id="h-present-grp" class="text-center text-amber-200 text-xl font-bold mb-2">第一組 分享中</div>
+        <div id="h-pres-timer" class="text-5xl font-black text-white text-center font-mono mb-4">3:00</div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <button onclick="startPresent()" class="bg-green-600 hover:bg-green-500 font-bold py-3 rounded-xl">▶ 開始計時</button>
+          <button id="btn-next-grp" onclick="nextGroup()" class="bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl">下一組 →</button>
+        </div>
+        <button onclick="openVoting()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl">
+          🗳️ 開放投票
+        </button>
+      </div>
+
+      <!-- ── 投票區（voting）── -->
+      <div id="sec-voting" class="hidden bg-slate-800/80 rounded-2xl p-5">
+        <h3 class="font-bold text-lg mb-3">🗳️ 投票進行中</h3>
+        <div id="h-vote-count" class="text-slate-300 mb-4 text-sm">目前 0 人已投票</div>
+        <div id="h-vote-live" class="space-y-4 mb-5"></div>
+        <button onclick="showResults()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl text-lg">
+          🏆 公布結果
+        </button>
+      </div>
+
+      <!-- ── 結果區（results）── -->
+      <div id="sec-results" class="hidden bg-slate-800/80 rounded-2xl p-5">
+        <h3 class="font-bold text-lg mb-4">🏆 得獎名單</h3>
+        <div id="h-results" class="space-y-3 mb-6"></div>
+        <button onclick="resetCourse()" class="w-full bg-slate-600 hover:bg-slate-500 font-bold py-3 rounded-xl">🔄 重置課程</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 大螢幕 ═══════════════════ -->
+<div id="page-display" class="page items-center justify-center relative overflow-hidden">
+  <button onclick="nav('home')" class="absolute top-4 left-4 text-slate-700 hover:text-slate-500 text-sm z-10">← 返回</button>
+
+  <!-- waiting -->
+  <div id="disp-waiting" class="text-center px-8 animate-in">
+    <div class="text-8xl mb-6">🏛️</div>
+    <h1 class="font-serif font-black text-amber-300 glow-gold leading-tight mb-6" style="font-size:clamp(2.5rem,7vw,5rem)">
+      道場的十萬個為什麼
+    </h1>
+    <p class="text-slate-500 text-2xl">等待課程開始…</p>
+  </div>
+
+  <!-- drawing -->
+  <div id="disp-drawing" class="hidden w-full max-w-5xl px-8 py-10">
+    <h2 class="font-serif font-black text-amber-300 glow-gold text-center mb-8" style="font-size:clamp(2rem,5vw,3.5rem)">今天的題目</h2>
+    <div id="disp-questions" class="grid gap-4 md:grid-cols-2"></div>
+  </div>
+
+  <!-- discussion -->
+  <div id="disp-discussion" class="hidden text-center px-8">
+    <p class="text-slate-400 text-2xl mb-2">小組討論</p>
+    <div id="disp-disc-timer" class="timer-huge text-amber-300 glow-gold font-mono">10:00</div>
+    <div class="w-72 md:w-[28rem] h-4 bg-slate-800 rounded-full mt-10 mx-auto overflow-hidden">
+      <div id="disp-disc-bar" class="progress-bar bg-amber-400" style="width:100%"></div>
+    </div>
+    <p class="text-slate-600 text-xl mt-6">各組正在準備精彩答案…</p>
+  </div>
+
+  <!-- presenting -->
+  <div id="disp-presenting" class="hidden text-center px-8 w-full max-w-3xl">
+    <p class="text-slate-400 text-2xl mb-2">現在分享</p>
+    <div id="disp-pres-name" class="font-serif font-black text-amber-300 glow-gold mb-2" style="font-size:clamp(3rem,9vw,6rem)">第一組</div>
+    <div id="disp-pres-q" class="text-slate-300 text-lg md:text-xl leading-relaxed mb-6 mx-auto max-w-2xl"></div>
+    <div id="disp-pres-timer" class="timer-huge text-white font-mono">3:00</div>
+    <div class="w-72 md:w-[28rem] h-4 bg-slate-800 rounded-full mt-8 mx-auto overflow-hidden">
+      <div id="disp-pres-bar" class="progress-bar bg-emerald-400" style="width:100%"></div>
+    </div>
+  </div>
+
+  <!-- voting -->
+  <div id="disp-voting" class="hidden text-center px-8 w-full max-w-2xl">
+    <h2 class="font-serif font-black text-amber-300 glow-gold mb-4" style="font-size:clamp(2.5rem,6vw,4rem)">投票開始！</h2>
+    <p class="text-slate-300 text-xl mb-5">掃描 QR Code 進入投票頁</p>
+    <div class="flex justify-center mb-4">
+      <div id="disp-qr" class="bg-white p-3 rounded-2xl shadow-2xl inline-block"></div>
+    </div>
+    <p id="disp-vote-url" class="text-slate-500 text-sm mb-6 break-all"></p>
+    <div id="disp-voter-count" class="text-amber-300 text-xl font-bold">0 人已投票</div>
+  </div>
+
+  <!-- results -->
+  <div id="disp-results" class="hidden text-center px-6 w-full max-w-3xl py-8">
+    <h2 class="font-serif font-black text-amber-300 glow-gold mb-10" style="font-size:clamp(2.5rem,6vw,4rem)">🏆 得獎名單</h2>
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="bg-slate-800/70 rounded-3xl p-6 animate-in" style="animation-delay:.1s">
+        <div class="text-5xl mb-3">✨</div>
+        <div class="text-slate-400 mb-2 text-lg">最有創意獎</div>
+        <div id="res-creative" class="font-serif font-black text-amber-300" style="font-size:clamp(1.8rem,4vw,2.5rem)">—</div>
+        <div id="res-creative-votes" class="text-slate-500 text-sm mt-1"></div>
+      </div>
+      <div class="bg-slate-800/70 rounded-3xl p-6 animate-in" style="animation-delay:.3s">
+        <div class="text-5xl mb-3">💡</div>
+        <div class="text-slate-400 mb-2 text-lg">最佳解惑獎</div>
+        <div id="res-clarity" class="font-serif font-black text-amber-300" style="font-size:clamp(1.8rem,4vw,2.5rem)">—</div>
+        <div id="res-clarity-votes" class="text-slate-500 text-sm mt-1"></div>
+      </div>
+      <div class="bg-slate-800/70 rounded-3xl p-6 animate-in" style="animation-delay:.5s">
+        <div class="text-5xl mb-3">❤️</div>
+        <div class="text-slate-400 mb-2 text-lg">最感動人獎</div>
+        <div id="res-touching" class="font-serif font-black text-amber-300" style="font-size:clamp(1.8rem,4vw,2.5rem)">—</div>
+        <div id="res-touching-votes" class="text-slate-500 text-sm mt-1"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 投票 ═══════════════════ -->
+<div id="page-vote" class="page overflow-y-auto">
+  <div class="max-w-lg mx-auto w-full p-4 pb-16">
+
+    <!-- 尚未開放 -->
+    <div id="vote-wait" class="text-center py-24">
+      <div class="text-7xl mb-5">⏳</div>
+      <h2 class="font-serif text-3xl font-black text-amber-300 mb-3">投票尚未開放</h2>
+      <p class="text-slate-400">請等待主持人開放投票</p>
+    </div>
+
+    <!-- 表單 -->
+    <div id="vote-form" class="hidden">
+      <div class="text-center py-6">
+        <div class="text-5xl mb-2">🗳️</div>
+        <h2 class="font-serif text-3xl font-black text-amber-300 mb-1">投票</h2>
+        <p class="text-slate-400">三個獎項各選一組，共三票</p>
+      </div>
+
+      <div id="vote-creative-sec" class="bg-slate-800/80 rounded-2xl p-4 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-2xl">✨</span>
+          <span class="font-bold text-lg">最有創意獎</span>
+        </div>
+        <div id="vopt-creative" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
+      </div>
+
+      <div id="vote-clarity-sec" class="bg-slate-800/80 rounded-2xl p-4 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-2xl">💡</span>
+          <span class="font-bold text-lg">最佳解惑獎</span>
+        </div>
+        <div id="vopt-clarity" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
+      </div>
+
+      <div id="vote-touching-sec" class="bg-slate-800/80 rounded-2xl p-4 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-2xl">❤️</span>
+          <span class="font-bold text-lg">最感動人獎</span>
+        </div>
+        <div id="vopt-touching" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
+      </div>
+
+      <button id="btn-submit" onclick="submitVote()" disabled
+              class="w-full bg-slate-600 text-slate-400 font-black py-5 rounded-2xl text-xl transition-all mt-2 cursor-not-allowed">
+        請選擇三個獎項
+      </button>
+    </div>
+
+    <!-- 完成 -->
+    <div id="vote-done" class="hidden text-center py-24">
+      <div class="text-7xl mb-5">🎉</div>
+      <h2 class="font-serif text-3xl font-black text-amber-300 mb-3">感謝投票！</h2>
+      <p class="text-slate-300 text-lg mb-2">你的投票已送出</p>
+      <p class="text-slate-500">等待結果揭曉…</p>
+    </div>
+
+    <!-- 已投票 -->
+    <div id="vote-already" class="hidden text-center py-24">
+      <div class="text-7xl mb-5">✅</div>
+      <h2 class="font-serif text-3xl font-black text-amber-300 mb-3">已完成投票</h2>
+      <p class="text-slate-400">你已經投過票了</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Firebase + App Logic ═══════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ╔══════════════════════════════════════════════════════╗
+// ║  請將下方替換為您的 Firebase 配置                      ║
+// ╚══════════════════════════════════════════════════════╝
+const firebaseConfig = {
+  apiKey:            "AIzaSyDpkFpV5hujitNEK4TitlPF3vklaVchmJc",
+  authDomain:        "tao-why.firebaseapp.com",
+  databaseURL:       "https://tao-why-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "tao-why",
+  storageBucket:     "tao-why.firebasestorage.app",
+  messagingSenderId: "890386342264",
+  appId:             "1:890386342264:web:de68c75a2cfe42dab5e88d"
+};
+// ╔══════════════════════════════════════════════════════╗
+// ║  主持人密碼                                            ║
+// ╚══════════════════════════════════════════════════════╝
+const HOST_PW = "tao2025";
+
+// ── 題目庫 ──────────────────────────────────────────────
+const QUESTIONS = [
+  { short: "本性善良之謎",  full: "為什麼每個人的本性都是一樣善良的？明明我們每個人都有不一樣的個性。而且如果大家都是善良的，為什麼世界還會這麼亂？" },
+  { short: "無為而修道",    full: "老子都說了「無為而為」，那為什麼我們修道還要這麼努力？" },
+  { short: "帶家人來佛堂",  full: "如何讓家裡的人認同，跟我一起來佛堂？" },
+  { short: "為何上進階班",  full: "沒來上課的生活也可以很精彩啊，為什麼一定要來上進階班？" },
+  { short: "功德與無執著",  full: "為什麼佛堂一直要我們做功德賺天幣，但是同時叫我們不要想自己賺多少功德呢？" },
+];
+const GRP_NAMES = ['第一組','第二組','第三組','第四組','第五組'];
+const DISC_SEC  = 10 * 60;  // 討論：10 分鐘
+const PRES_SEC  = 3  * 60;  // 分享：3 分鐘
+
+// ── Firebase ─────────────────────────────────────────────
+const fbApp  = initializeApp(firebaseConfig);
+const db     = getDatabase(fbApp);
+const sessRef = ref(db, 'session');
+
+// ── 設備 ID（防重複投票）──────────────────────────────────
+let deviceId = localStorage.getItem('_tao_dev');
+if (!deviceId) {
+  deviceId = 'dev_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  localStorage.setItem('_tao_dev', deviceId);
+}
+
+// ── 全域狀態快取 ─────────────────────────────────────────
+let S = {};   // session snapshot
+let timerHandle = null;
+let displayListening = false;
+let voteListening    = false;
+
+// ════════════════════════════ 路由 ════════════════════════════
+window.nav = function(p) {
+  document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  window.location.hash = p;
+  if (p === 'display' && !displayListening) initDisplay();
+  if (p === 'vote'    && !voteListening)    initVote();
+};
+// 初始路由
+const initHash = location.hash.replace('#','') || 'home';
+nav(initHash);
+
+// ════════════════════════════ 主持人 ════════════════════════
+window.unlockHost = () => {
+  if (document.getElementById('host-pw').value === HOST_PW) {
+    document.getElementById('host-lock').classList.add('hidden');
+    document.getElementById('host-main').classList.remove('hidden');
+    initHost();
+  } else {
+    document.getElementById('host-err').classList.remove('hidden');
+  }
+};
+
+let grpCount = 5;
+let assignments = [0,1,2,3,4];
+
+window.setGrpCount = function(n) {
+  grpCount = n;
+  ['4','5'].forEach(k => {
+    document.getElementById('btn-g' + k).className =
+      'flex-1 py-2 rounded-xl font-bold transition-colors ' +
+      (String(n) === k ? 'bg-indigo-600' : 'bg-slate-700 hover:bg-indigo-600');
+  });
+  renderAssign();
+};
+
+function renderAssign() {
+  const c = document.getElementById('grp-assign');
+  c.innerHTML = '';
+  for (let i = 0; i < grpCount; i++) {
+    const d = document.createElement('div');
+    d.className = 'flex items-center gap-3';
+    d.innerHTML = `
+      <span class="text-slate-300 w-14 shrink-0 font-bold">${GRP_NAMES[i]}</span>
+      <select id="asgn-${i}" class="flex-1 bg-slate-700 text-white px-3 py-2 rounded-xl border border-slate-600 focus:border-amber-400 outline-none text-sm">
+        ${QUESTIONS.map((q,qi)=>`<option value="${qi}" ${assignments[i]===qi?'selected':''}>${qi+1}. ${q.short}</option>`).join('')}
+      </select>`;
+    c.appendChild(d);
+  }
+}
+
+window.startCourse = async () => {
+  const groups = {};
+  for (let i = 0; i < grpCount; i++) {
+    const qi = parseInt(document.getElementById('asgn-' + i).value);
+    assignments[i] = qi;
+    groups[i+1] = { name: GRP_NAMES[i], qIndex: qi };
+  }
+  await set(sessRef, {
+    phase: 'drawing',
+    totalGroups: grpCount,
+    presentingGroup: 0,
+    discussionStart: 0,
+    presentStart: 0,
+    groups,
+    voters: {}
+  });
+};
+
+window.startDiscussion = async () => {
+  const el = document.getElementById('btn-disc-start');
+  el.disabled = true;
+  el.textContent = '計時中…';
+  await update(sessRef, { phase: 'discussion', discussionStart: Date.now() });
+};
+
+window.goPresent = async (n) => {
+  await update(sessRef, { phase: 'presenting', presentingGroup: n, presentStart: 0 });
+};
+
+window.startPresent = async () => {
+  await update(sessRef, { presentStart: Date.now() });
+};
+
+window.nextGroup = async () => {
+  const next = (S.presentingGroup || 0) + 1;
+  if (next > (S.totalGroups || 5)) { openVoting(); return; }
+  await update(sessRef, { presentingGroup: next, presentStart: 0 });
+};
+
+window.openVoting = async () => {
+  await update(sessRef, { phase: 'voting' });
+};
+
+window.showResults = async () => {
+  await update(sessRef, { phase: 'results' });
+};
+
+window.resetCourse = async () => {
+  if (!confirm('確定要重置課程？所有投票將清除。')) return;
+  await set(sessRef, { phase: 'waiting' });
+};
+
+function initHost() {
+  renderAssign();
+  onValue(sessRef, snap => {
+    S = snap.val() || {};
+    const { phase='waiting', presentingGroup=0, totalGroups=5,
+            discussionStart=0, presentStart=0, voters={}, groups={} } = S;
+
+    const phaseLabel = {
+      waiting:'等待中', drawing:'展示題目', discussion:'小組討論',
+      presenting:'分享進行', voting:'投票中', results:'結果揭曉'
+    };
+    document.getElementById('h-phase').textContent = phaseLabel[phase] || phase;
+
+    // 顯示對應 section
+    const showSec = id => document.getElementById(id).classList.remove('hidden');
+    const hideSec = id => document.getElementById(id).classList.add('hidden');
+    ['sec-setup','sec-discuss','sec-present','sec-voting','sec-results'].forEach(hideSec);
+
+    if (phase === 'waiting')    showSec('sec-setup');
+    if (['drawing','discussion'].includes(phase)) showSec('sec-discuss');
+    if (phase === 'presenting') {
+      showSec('sec-present');
+      const g = groups[presentingGroup];
+      document.getElementById('h-present-grp').textContent = (g?.name||'') + ' 分享中';
+      document.getElementById('btn-next-grp').textContent =
+        presentingGroup >= totalGroups ? '→ 開放投票' : '下一組 →';
+    }
+    if (phase === 'voting') {
+      showSec('sec-voting');
+      const voterCount = Object.keys(voters).length;
+      document.getElementById('h-vote-count').textContent = `目前 ${voterCount} 人已投票`;
+      renderHostVoteLive(voters, groups, totalGroups);
+    }
+    if (phase === 'results') {
+      showSec('sec-results');
+      renderHostResults(voters, groups);
+    }
+
+    // 計時
+    clearInterval(timerHandle);
+    if (phase === 'discussion' && discussionStart) {
+      hostTick('h-disc-timer', discussionStart, DISC_SEC);
+    }
+    if (phase === 'presenting' && presentStart) {
+      hostTick('h-pres-timer', presentStart, PRES_SEC);
+    }
+  });
+}
+
+function hostTick(elId, startTs, totalSec) {
+  const update = () => {
+    const rem = Math.max(0, totalSec - (Date.now() - startTs) / 1000);
+    const el = document.getElementById(elId);
+    if (el) el.textContent = fmt(rem);
+    if (rem <= 0) clearInterval(timerHandle);
+  };
+  update();
+  timerHandle = setInterval(update, 500);
+}
+
+function renderHostVoteLive(voters, groups, total) {
+  const counts = calcVotes(voters, total);
+  const cats = [
+    { key:'creative', label:'✨ 最有創意' },
+    { key:'clarity',  label:'💡 最佳解惑' },
+    { key:'touching', label:'❤️ 最感動人' }
+  ];
+  const c = document.getElementById('h-vote-live');
+  c.innerHTML = cats.map(cat => {
+    const rows = Object.entries(counts[cat.key]||{})
+      .sort((a,b)=>b[1]-a[1])
+      .map(([gid,n]) => `<div class="flex justify-between text-sm">
+        <span>${groups[gid]?.name||'第'+gid+'組'}</span>
+        <span class="text-amber-300 font-bold">${n} 票</span>
+      </div>`).join('');
+    return `<div><div class="text-slate-400 text-xs mb-1">${cat.label}</div>${rows}</div>`;
+  }).join('');
+}
+
+function renderHostResults(voters, groups) {
+  const total = S.totalGroups || 5;
+  const counts = calcVotes(voters, total);
+  const cats = ['creative','clarity','touching'];
+  const labels = { creative:'✨ 最有創意獎', clarity:'💡 最佳解惑獎', touching:'❤️ 最感動人獎' };
+  document.getElementById('h-results').innerHTML = cats.map(cat => {
+    const entries = Object.entries(counts[cat]||{}).sort((a,b)=>b[1]-a[1]);
+    const winner  = entries[0];
+    const name    = winner ? (groups[winner[0]]?.name||'第'+winner[0]+'組') : '—';
+    const votes   = winner ? winner[1] : 0;
+    return `<div class="flex justify-between items-center">
+      <span>${labels[cat]}</span>
+      <span class="font-black text-amber-300">${name} <span class="text-slate-500 font-normal text-sm">${votes} 票</span></span>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════ 大螢幕 ════════════════════════
+function initDisplay() {
+  displayListening = true;
+  let qrDone = false;
+  let dispTimer = null;
+
+  onValue(sessRef, snap => {
+    S = snap.val() || {};
+    const { phase='waiting', groups={}, presentingGroup=0,
+            discussionStart=0, presentStart=0, voters={}, totalGroups=5 } = S;
+
+    // 切換視圖
+    ['waiting','drawing','discussion','presenting','voting','results'].forEach(p => {
+      document.getElementById('disp-' + p).classList.add('hidden');
+    });
+    const cur = document.getElementById('disp-' + phase);
+    if (cur) cur.classList.remove('hidden');
+
+    clearInterval(dispTimer);
+
+    if (phase === 'drawing') {
+      const c = document.getElementById('disp-questions');
+      c.innerHTML = Object.entries(groups).map(([gid, g]) => `
+        <div class="bg-slate-800/60 rounded-2xl p-5 animate-in border border-slate-700">
+          <div class="text-amber-400 font-black text-xl mb-2">${g.name}</div>
+          <div class="text-slate-200 text-base md:text-lg leading-relaxed">${QUESTIONS[g.qIndex]?.full||''}</div>
+        </div>`).join('');
+    }
+
+    if (phase === 'discussion') {
+      if (discussionStart) {
+        const tick = () => {
+          const rem = Math.max(0, DISC_SEC - (Date.now() - discussionStart) / 1000);
+          const el  = document.getElementById('disp-disc-timer');
+          const bar = document.getElementById('disp-disc-bar');
+          if (el)  { el.textContent = fmt(rem); el.className = 'timer-huge font-mono ' + (rem<=60?'text-red-400 glow-red':'text-amber-300 glow-gold'); }
+          if (bar) bar.style.width = (rem / DISC_SEC * 100) + '%';
+          if (rem === 0) clearInterval(dispTimer);
+        };
+        tick(); dispTimer = setInterval(tick, 500);
+      }
+    }
+
+    if (phase === 'presenting') {
+      const g = groups[presentingGroup];
+      document.getElementById('disp-pres-name').textContent = g?.name || '';
+      document.getElementById('disp-pres-q').textContent    = QUESTIONS[g?.qIndex]?.full || '';
+      if (presentStart) {
+        const tick = () => {
+          const rem = Math.max(0, PRES_SEC - (Date.now() - presentStart) / 1000);
+          const el  = document.getElementById('disp-pres-timer');
+          const bar = document.getElementById('disp-pres-bar');
+          if (el)  { el.textContent = fmt(rem); el.className = 'timer-huge font-mono ' + (rem<=30?'text-red-400 glow-red':'text-white'); }
+          if (bar) bar.style.width = (rem / PRES_SEC * 100) + '%';
+          if (rem === 0) clearInterval(dispTimer);
+        };
+        tick(); dispTimer = setInterval(tick, 500);
+      }
+    }
+
+    if (phase === 'voting') {
+      if (!qrDone) {
+        const url  = location.origin + location.pathname + '#vote';
+        document.getElementById('disp-vote-url').textContent = url;
+        const qrc  = document.getElementById('disp-qr');
+        qrc.innerHTML = '';
+        new QRCode(qrc, { text: url, width: 200, height: 200, colorDark: '#0a0a1a', colorLight: '#ffffff' });
+        qrDone = true;
+      }
+      const count = Object.keys(voters).length;
+      document.getElementById('disp-voter-count').textContent = count + ' 人已投票';
+    }
+
+    if (phase === 'results') {
+      const counts = calcVotes(voters, totalGroups);
+      ['creative','clarity','touching'].forEach(cat => {
+        const entries = Object.entries(counts[cat]||{}).sort((a,b)=>b[1]-a[1]);
+        const winner  = entries[0];
+        const name    = winner ? (groups[winner[0]]?.name||'第'+winner[0]+'組') : '—';
+        const votes   = winner ? winner[1] : 0;
+        document.getElementById('res-' + cat).textContent = name;
+        document.getElementById('res-' + cat + '-votes').textContent = votes ? votes + ' 票' : '';
+      });
+    }
+  });
+}
+
+// ════════════════════════════ 投票頁 ════════════════════════
+let voteChoices = { creative: null, clarity: null, touching: null };
+
+function initVote() {
+  voteListening = true;
+  onValue(sessRef, snap => {
+    S = snap.val() || {};
+    const { phase='waiting', groups={}, voters={} } = S;
+    const voted = !!voters[deviceId];
+
+    ['vote-wait','vote-form','vote-done','vote-already'].forEach(id =>
+      document.getElementById(id).classList.add('hidden'));
+
+    if (phase === 'voting') {
+      if (voted) {
+        document.getElementById('vote-already').classList.remove('hidden');
+      } else {
+        document.getElementById('vote-form').classList.remove('hidden');
+        renderVoteOptions(groups);
+      }
+    } else if (phase === 'results' && voted) {
+      document.getElementById('vote-done').classList.remove('hidden');
+    } else {
+      document.getElementById('vote-wait').classList.remove('hidden');
+    }
+  });
+}
+
+function renderVoteOptions(groups) {
+  ['creative','clarity','touching'].forEach(cat => {
+    const c = document.getElementById('vopt-' + cat);
+    if (!c || c.children.length > 0) return; // 已渲染就跳過
+    Object.entries(groups).forEach(([gid, g]) => {
+      const d = document.createElement('div');
+      d.className = 'vote-card';
+      d.textContent = g.name;
+      d.dataset.cat = cat; d.dataset.gid = gid;
+      d.onclick = () => selectVote(cat, gid);
+      c.appendChild(d);
+    });
+  });
+}
+
+function selectVote(cat, gid) {
+  voteChoices[cat] = gid;
+  document.querySelectorAll(`[data-cat="${cat}"]`).forEach(e => e.classList.remove('selected'));
+  document.querySelector(`[data-cat="${cat}"][data-gid="${gid}"]`)?.classList.add('selected');
+  checkVoteReady();
+}
+window.selectVote = selectVote;
+
+function checkVoteReady() {
+  const ready = Object.values(voteChoices).every(v => v !== null);
+  const btn   = document.getElementById('btn-submit');
+  btn.disabled = !ready;
+  btn.textContent = ready ? '送出投票 →' : '請選擇三個獎項';
+  btn.className   = ready
+    ? 'w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-5 rounded-2xl text-xl transition-all mt-2 pulse'
+    : 'w-full bg-slate-600 text-slate-400 font-black py-5 rounded-2xl text-xl transition-all mt-2 cursor-not-allowed';
+}
+
+window.submitVote = async () => {
+  if (!Object.values(voteChoices).every(v => v !== null)) return;
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true; btn.textContent = '送出中…';
+  const rootRef = ref(db, '/');
+  await update(rootRef, {
+    [`session/voters/${deviceId}`]: {
+      creative: voteChoices.creative,
+      clarity:  voteChoices.clarity,
+      touching: voteChoices.touching
+    }
+  });
+  document.getElementById('vote-form').classList.add('hidden');
+  document.getElementById('vote-done').classList.remove('hidden');
+};
+
+// ════════════════════════════ 工具 ════════════════════════
+function fmt(sec) {
+  const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
+  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function calcVotes(voters, totalGroups) {
+  const counts = { creative:{}, clarity:{}, touching:{} };
+  for (let i = 1; i <= totalGroups; i++) {
+    counts.creative[i] = 0; counts.clarity[i] = 0; counts.touching[i] = 0;
+  }
+  Object.values(voters || {}).forEach(v => {
+    if (typeof v !== 'object') return;
+    ['creative','clarity','touching'].forEach(cat => {
+      if (v[cat] && counts[cat][v[cat]] !== undefined) counts[cat][v[cat]]++;
+    });
+  });
+  return counts;
+}
+
+// expose for inline handlers
+window.renderAssign = renderAssign;
+</script>
+</body>
+</html>
