@@ -68,10 +68,12 @@
     .ring-track{fill:none;stroke:rgba(255,255,255,.06);stroke-width:8}
     .ring-prog{fill:none;stroke-width:8;stroke-linecap:round;transform-origin:50% 50%;transform:rotate(-90deg);stroke-dasharray:534.07;stroke-dashoffset:0;transition:stroke-dashoffset .5s linear,stroke .5s}
     /* display typo */
-    .d-h1{font-size:clamp(2.4rem,7vw,5rem);font-weight:700;line-height:1.15}
-    .d-timer{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(4rem,15vw,8.5rem);line-height:1;font-variant-numeric:tabular-nums}
-    .d-group{font-size:clamp(2.5rem,9vw,5.5rem);font-weight:700;line-height:1.1}
-    .d-q{font-size:clamp(1rem,2.2vw,1.4rem);color:var(--t2);line-height:1.65}
+    /* ── Display page: boost all fonts + colors for projector ── */
+    #page-display { --t1:#FFFFFF; --t2:#D8D8F0; --t3:#A0A0C0; --gold:#FFD060; --gold-hi:#FFE880; --acc:#A490FF; --acc-hi:#BBAAFF; --green:#4CD964; }
+    .d-h1{font-size:clamp(3.5rem,9vw,7rem);font-weight:700;line-height:1.1;text-shadow:0 0 40px rgba(255,255,255,.25)}
+    .d-timer{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(6rem,20vw,13rem);line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 0 60px rgba(255,255,255,.3)}
+    .d-group{font-size:clamp(4rem,12vw,8rem);font-weight:700;line-height:1.05;text-shadow:0 0 40px rgba(255,208,96,.4)}
+    .d-q{font-size:clamp(1.4rem,3vw,2.2rem);color:var(--t2);line-height:1.7;text-shadow:0 0 20px rgba(255,255,255,.1)}
     .h-timer{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:52px;line-height:1;font-variant-numeric:tabular-nums}
     @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
     @keyframes scaleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
@@ -230,8 +232,8 @@
     <div style="width:80px;height:80px;border-radius:20px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 28px">
       <svg width="40" height="40" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#7B61FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#7B61FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#7B61FF" stroke-width="1.5"/><path d="M14 3C14 3 3 8.5 3 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/><path d="M14 3C14 3 25 8.5 25 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/></svg>
     </div>
-    <h1 class="d-h1" style="color:var(--t1);margin-bottom:10px">道場的十萬個為什麼</h1>
-    <p style="color:var(--t3);font-size:clamp(1rem,2vw,1.3rem)">等待課程開始…</p>
+    <h1 class="d-h1" style="color:var(--t1);margin-bottom:16px">道場的十萬個為什麼</h1>
+    <p style="color:var(--t3);font-size:clamp(1.4rem,3vw,2.2rem);font-weight:500">等待課程開始…</p>
   </div>
 
   <!-- REGISTERING -->
@@ -239,43 +241,43 @@
     <div style="display:flex;align-items:flex-start;gap:32px">
       <!-- Left: QR + title -->
       <div style="flex-shrink:0;text-align:center">
-        <h2 style="font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;margin-bottom:18px;color:var(--t1)">掃碼加入課程</h2>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:700;margin-bottom:20px;color:#FFFFFF;text-shadow:0 0 30px rgba(255,255,255,.2)">掃碼加入課程</h2>
         <div id="disp-reg-qr" style="background:#fff;padding:10px;border-radius:14px;display:inline-block;margin-bottom:12px;box-shadow:0 0 40px rgba(123,97,255,.2)"></div>
         <p id="disp-reg-url" style="color:var(--t3);font-size:11px;word-break:break-all;max-width:220px"></p>
-        <div id="disp-reg-count" style="margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);border-radius:99px;padding:5px 14px;color:var(--green);font-size:14px;font-weight:600">
+        <div id="disp-reg-count" style="margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.15);border:1px solid rgba(76,217,100,.5);border-radius:99px;padding:8px 18px;color:#4CD964;font-size:clamp(1rem,2vw,1.6rem);font-weight:600">
           <span style="width:7px;height:7px;border-radius:50%;background:var(--green)"></span>0 人已加入
         </div>
       </div>
       <!-- Right: group list -->
-      <div style="flex:1;display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))" id="disp-reg-groups"></div>
+      <div style="flex:1;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))" id="disp-reg-groups"></div>
     </div>
   </div>
 
   <!-- DRAWING -->
   <div id="disp-drawing" style="display:none;width:100%;max-width:960px;padding:32px 28px">
-    <h2 style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700;text-align:center;color:var(--t1);margin-bottom:28px">今天的題目</h2>
-    <div id="disp-questions" style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
+    <h2 style="font-size:clamp(2.2rem,5vw,4rem);font-weight:700;text-align:center;color:#FFFFFF;margin-bottom:28px;text-shadow:0 0 30px rgba(255,255,255,.2)">今天的題目</h2>
+    <div id="disp-questions" style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))"></div>
   </div>
 
   <!-- DISCUSSION -->
   <div id="disp-discussion" class="text-center" style="display:none;padding:32px">
-    <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.2rem);margin-bottom:24px;letter-spacing:.05em;text-transform:uppercase;font-weight:500">小組討論</p>
+    <p style="color:var(--t3);font-size:clamp(1.4rem,3vw,2.4rem);margin-bottom:28px;letter-spacing:.1em;text-transform:uppercase;font-weight:600">小組討論</p>
     <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
-      <svg width="220" height="220" viewBox="0 0 200 200"><circle class="ring-track" cx="100" cy="100" r="85"/><circle id="disp-disc-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#7B61FF"/></svg>
+      <svg width="320" height="320" viewBox="0 0 200 200"><circle class="ring-track" cx="100" cy="100" r="85"/><circle id="disp-disc-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#A490FF"/></svg>
       <div style="position:absolute;text-align:center"><div id="disp-disc-timer" class="d-timer" style="color:var(--t1)">10:00</div></div>
     </div>
     <div style="display:none"><div id="disp-disc-bar" style="width:100%"></div></div>
-    <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.1rem);margin-top:24px">各組正在準備精彩答案…</p>
+    <p style="color:var(--t3);font-size:clamp(1.2rem,2.5vw,2rem);margin-top:28px;font-weight:500">各組正在準備精彩答案…</p>
   </div>
 
   <!-- PRESENTING -->
   <div id="disp-presenting" class="text-center" style="display:none;padding:32px;width:100%;max-width:800px">
-    <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.1rem);margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:500">現在分享</p>
+    <p style="color:var(--t3);font-size:clamp(1.4rem,3vw,2.4rem);margin-bottom:14px;letter-spacing:.1em;text-transform:uppercase;font-weight:600">現在分享</p>
     <div id="disp-pres-name" class="d-group" style="color:var(--t1);margin-bottom:10px">第一組</div>
     <div id="disp-pres-q" class="d-q" style="margin-bottom:24px;max-width:680px;margin-left:auto;margin-right:auto"></div>
     <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
-      <svg width="180" height="180" viewBox="0 0 200 200"><circle class="ring-track" cx="100" cy="100" r="85"/><circle id="disp-pres-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#34C759"/></svg>
-      <div style="position:absolute;text-align:center"><div id="disp-pres-timer" style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(3rem,10vw,5.5rem);line-height:1;font-variant-numeric:tabular-nums;color:var(--t1)">3:00</div></div>
+      <svg width="260" height="260" viewBox="0 0 200 200"><circle class="ring-track" cx="100" cy="100" r="85"/><circle id="disp-pres-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#4CD964"/></svg>
+      <div style="position:absolute;text-align:center"><div id="disp-pres-timer" style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(4rem,13vw,7rem);line-height:1;font-variant-numeric:tabular-nums;color:var(--t1);text-shadow:0 0 50px rgba(255,255,255,.3)">3:00</div></div>
     </div>
     <div style="display:none"><div id="disp-pres-bar" style="width:100%"></div></div>
     <div id="disp-score-count" style="margin-top:20px;display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);border-radius:99px;padding:5px 14px;color:var(--green);font-size:14px;font-weight:600">
@@ -285,28 +287,28 @@
 
   <!-- RESULTS -->
   <div id="disp-results" class="text-center" style="display:none;padding:32px;width:100%;max-width:900px">
-    <h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:var(--t1);margin-bottom:32px">得獎名單</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
-      <div class="card ani-sc" style="padding:22px 16px;animation-delay:.1s">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" style="margin:0 auto 10px" stroke="#F5A623" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <div style="color:var(--t3);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">精闢講解獎</div>
-        <div id="res-clarity" style="font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700;color:var(--gold);margin-bottom:4px">—</div>
-        <div id="res-clarity-score" style="color:var(--t3);font-size:12px;margin-bottom:10px"></div>
-        <div id="res-clarity-members" style="color:var(--t2);font-size:12px;line-height:1.8"></div>
+    <h2 style="font-size:clamp(2.5rem,6vw,5rem);font-weight:700;color:#FFFFFF;margin-bottom:36px;text-shadow:0 0 40px rgba(255,255,255,.25)">得獎名單</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div class="card ani-sc" style="padding:28px 20px;animation-delay:.1s">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="margin:0 auto 14px" stroke="#FFD060" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div style="color:#A0A0C0;font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">精闢講解獎</div>
+        <div id="res-clarity" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#FFD060;margin-bottom:6px;text-shadow:0 0 30px rgba(255,208,96,.5)">—</div>
+        <div id="res-clarity-score" style="color:#A0A0C0;font-size:clamp(.85rem,1.6vw,1.2rem);margin-bottom:14px"></div>
+        <div id="res-clarity-members" style="color:#D8D8F0;font-size:clamp(1rem,1.8vw,1.4rem);line-height:2"></div>
       </div>
-      <div class="card ani-sc" style="padding:22px 16px;animation-delay:.25s">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" style="margin:0 auto 10px" stroke="#7B61FF" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <div style="color:var(--t3);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">創意表現獎</div>
-        <div id="res-creative" style="font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700;color:var(--acc-hi);margin-bottom:4px">—</div>
-        <div id="res-creative-score" style="color:var(--t3);font-size:12px;margin-bottom:10px"></div>
-        <div id="res-creative-members" style="color:var(--t2);font-size:12px;line-height:1.8"></div>
+      <div class="card ani-sc" style="padding:28px 20px;animation-delay:.25s">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="margin:0 auto 14px" stroke="#BBAAFF" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div style="color:#A0A0C0;font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">創意表現獎</div>
+        <div id="res-creative" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#BBAAFF;margin-bottom:6px;text-shadow:0 0 30px rgba(187,170,255,.5)">—</div>
+        <div id="res-creative-score" style="color:#A0A0C0;font-size:clamp(.85rem,1.6vw,1.2rem);margin-bottom:14px"></div>
+        <div id="res-creative-members" style="color:#D8D8F0;font-size:clamp(1rem,1.8vw,1.4rem);line-height:2"></div>
       </div>
-      <div class="card ani-sc" style="padding:22px 16px;animation-delay:.4s">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" style="margin:0 auto 10px" stroke="#FF6B8A" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        <div style="color:var(--t3);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">情感傳達獎</div>
-        <div id="res-emotion" style="font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700;color:#FF6B8A;margin-bottom:4px">—</div>
-        <div id="res-emotion-score" style="color:var(--t3);font-size:12px;margin-bottom:10px"></div>
-        <div id="res-emotion-members" style="color:var(--t2);font-size:12px;line-height:1.8"></div>
+      <div class="card ani-sc" style="padding:28px 20px;animation-delay:.4s">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="margin:0 auto 14px" stroke="#FF8FAA" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <div style="color:#A0A0C0;font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">情感傳達獎</div>
+        <div id="res-emotion" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#FF8FAA;margin-bottom:6px;text-shadow:0 0 30px rgba(255,143,170,.5)">—</div>
+        <div id="res-emotion-score" style="color:#A0A0C0;font-size:clamp(.85rem,1.6vw,1.2rem);margin-bottom:14px"></div>
+        <div id="res-emotion-members" style="color:#D8D8F0;font-size:clamp(1rem,1.8vw,1.4rem);line-height:2"></div>
       </div>
     </div>
   </div>
@@ -617,14 +619,14 @@ function hostTick(elId,startTs,total){
 
 // ── Draw animation ──────────────────────────────────
 let drawAnimPlayed=false;
-const CARD_BASE='background:rgba(18,26,22,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;transition:border-color .4s,background .4s';
+const CARD_BASE='background:rgba(18,26,22,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px 24px;transition:border-color .4s,background .4s';
 
 function renderDispPending(groups){
   const c=document.getElementById('disp-questions');
   c.innerHTML=Object.entries(groups).map(([gid,g])=>`
     <div style="${CARD_BASE}" class="ani-up">
-      <div style="color:var(--gold);font-weight:700;font-size:clamp(1rem,2vw,1.3rem);margin-bottom:10px">${g.name}</div>
-      <div style="color:var(--t3);font-size:clamp(.85rem,1.5vw,1rem)">等待抽題…</div>
+      <div style="color:#FFD060;font-weight:700;font-size:clamp(1.3rem,2.5vw,2rem);margin-bottom:12px;text-shadow:0 0 20px rgba(255,208,96,.4)">${g.name}</div>
+      <div style="color:#A0A0C0;font-size:clamp(1rem,2vw,1.5rem)">等待抽題…</div>
     </div>`).join('');
 }
 
@@ -632,8 +634,8 @@ function renderDispRevealed(groups){
   const c=document.getElementById('disp-questions');
   c.innerHTML=Object.entries(groups).map(([gid,g])=>`
     <div style="${CARD_BASE}" class="ani-up">
-      <div style="color:var(--gold);font-weight:700;font-size:clamp(1rem,2vw,1.3rem);margin-bottom:8px">${g.name}</div>
-      <div style="color:var(--t1);font-size:clamp(.85rem,1.6vw,1.05rem);line-height:1.7">${QUESTIONS[g.qIndex]?.full||''}</div>
+      <div style="color:#FFD060;font-weight:700;font-size:clamp(1.3rem,2.5vw,2rem);margin-bottom:12px;text-shadow:0 0 20px rgba(255,208,96,.4)">${g.name}</div>
+      <div style="color:#FFFFFF;font-size:clamp(1rem,2vw,1.5rem);line-height:1.75">${QUESTIONS[g.qIndex]?.full||''}</div>
     </div>`).join('');
 }
 
@@ -644,8 +646,8 @@ async function playDrawAnim(groups){
   const entries=Object.entries(groups);
   c.innerHTML=entries.map(([gid,g])=>`
     <div id="dq-${gid}" style="${CARD_BASE}">
-      <div style="color:var(--gold);font-weight:700;font-size:clamp(1rem,2vw,1.3rem);margin-bottom:10px">${g.name}</div>
-      <div id="dqt-${gid}" style="color:var(--t3);font-size:clamp(.85rem,1.5vw,1rem);transition:color .3s">—</div>
+      <div style="color:#FFD060;font-weight:700;font-size:clamp(1.3rem,2.5vw,2rem);margin-bottom:12px;text-shadow:0 0 20px rgba(255,208,96,.4)">${g.name}</div>
+      <div id="dqt-${gid}" style="color:#A0A0C0;font-size:clamp(1rem,2vw,1.5rem);transition:color .3s">—</div>
     </div>`).join('');
   await sleep(400);
   for(let i=0;i<entries.length;i++){
@@ -665,8 +667,8 @@ async function spinCard(gid,finalIdx){
   txt.textContent=QUESTIONS[finalIdx].short; txt.style.color='var(--gold-hi)'; txt.style.fontWeight='600';
   card.style.borderColor='rgba(52,199,89,.6)'; card.style.background='rgba(12,30,20,.85)';
   await sleep(700);
-  txt.textContent=QUESTIONS[finalIdx].full; txt.style.color='var(--t1)'; txt.style.fontWeight='400';
-  txt.style.fontSize='clamp(.8rem,1.5vw,1rem)'; txt.style.lineHeight='1.7';
+  txt.textContent=QUESTIONS[finalIdx].full; txt.style.color='#FFFFFF'; txt.style.fontWeight='400';
+  txt.style.fontSize='clamp(1rem,2vw,1.5rem)'; txt.style.lineHeight='1.75';
   card.style.borderColor=''; card.style.background='';
 }
 
@@ -750,8 +752,8 @@ function renderDispRegGroups(users,groups,total){
   c.innerHTML=Object.entries(byGrp).map(([gid,names])=>{
     const isOnline=groups[gid]?.name==='線上組';
     return `<div style="background:rgba(18,26,22,.72);backdrop-filter:blur(12px);border:1px solid ${isOnline?'rgba(52,199,89,.25)':'rgba(255,255,255,.08)'};border-radius:12px;padding:14px">
-      <div style="font-weight:600;font-size:clamp(.85rem,1.5vw,1rem);color:${isOnline?'var(--green)':'var(--gold)'};margin-bottom:8px">${groups[gid]?.name||'第'+gid+'組'}</div>
-      <div style="font-size:clamp(.8rem,1.4vw,.95rem);color:var(--t2);line-height:1.8">${names.length?names.join('\n').split('\n').map(n=>`<div>${n}</div>`).join(''):'<div style="color:var(--t3)">等待中…</div>'}</div>
+      <div style="font-weight:700;font-size:clamp(1.1rem,2vw,1.6rem);color:${isOnline?'#4CD964':'#FFD060'};margin-bottom:10px;text-shadow:0 0 16px ${isOnline?'rgba(76,217,100,.4)':'rgba(255,208,96,.4)'}">${groups[gid]?.name||'第'+gid+'組'}</div>
+      <div style="font-size:clamp(1rem,1.8vw,1.4rem);color:#D8D8F0;line-height:2">${names.length?names.join('\n').split('\n').map(n=>`<div>${n}</div>`).join(''):'<div style="color:#A0A0C0">等待中…</div>'}</div>
     </div>`;
   }).join('');
 }
