@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>道場的十萬個為什麼</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -322,13 +323,13 @@
   </div>
 
   <!-- DRAWING -->
-  <div id="disp-drawing" class="hidden" style="width:100%;max-width:960px;padding:32px 28px">
+  <div id="disp-drawing" style="display:none;width:100%;max-width:960px;padding:32px 28px">
     <h2 style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700;text-align:center;color:var(--t1);margin-bottom:28px">今天的題目</h2>
     <div id="disp-questions" style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
   </div>
 
   <!-- DISCUSSION -->
-  <div id="disp-discussion" class="hidden text-center" style="padding:32px">
+  <div id="disp-discussion" class="text-center" style="display:none;padding:32px">
     <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.2rem);margin-bottom:24px;letter-spacing:.05em;text-transform:uppercase;font-weight:500">小組討論</p>
     <!-- Ring timer -->
     <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
@@ -346,7 +347,7 @@
   </div>
 
   <!-- PRESENTING -->
-  <div id="disp-presenting" class="hidden text-center" style="padding:32px;width:100%;max-width:800px">
+  <div id="disp-presenting" class="text-center" style="display:none;padding:32px;width:100%;max-width:800px">
     <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.1rem);margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:500">現在分享</p>
     <div id="disp-pres-name" class="d-group" style="color:var(--t1);margin-bottom:10px">第一組</div>
     <div id="disp-pres-q" class="d-q" style="margin-bottom:28px;max-width:680px;margin-left:auto;margin-right:auto"></div>
@@ -365,7 +366,7 @@
   </div>
 
   <!-- VOTING -->
-  <div id="disp-voting" class="hidden text-center" style="padding:32px;width:100%;max-width:520px">
+  <div id="disp-voting" class="text-center" style="display:none;padding:32px;width:100%;max-width:520px">
     <h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:var(--t1);margin-bottom:8px">投票開始</h2>
     <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.1rem);margin-bottom:24px">掃描 QR Code 進入投票頁</p>
     <div style="display:flex;justify-content:center;margin-bottom:16px">
@@ -379,7 +380,7 @@
   </div>
 
   <!-- RESULTS -->
-  <div id="disp-results" class="hidden text-center" style="padding:32px;width:100%;max-width:800px">
+  <div id="disp-results" class="text-center" style="display:none;padding:32px;width:100%;max-width:800px">
     <h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:var(--t1);margin-bottom:36px">得獎名單</h2>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
 
@@ -743,9 +744,11 @@ function initDisplay() {
             discussionStart=0, presentStart=0, voters={}, totalGroups=5 } = S;
 
     ['waiting','drawing','discussion','presenting','voting','results'].forEach(p => {
-      document.getElementById('disp-' + p)?.classList.add('hidden');
+      const el = document.getElementById('disp-' + p);
+      if (el) el.style.display = 'none';
     });
-    document.getElementById('disp-' + phase)?.classList.remove('hidden');
+    const target = document.getElementById('disp-' + phase);
+    if (target) target.style.display = '';
 
     clearInterval(dispTimer);
 
