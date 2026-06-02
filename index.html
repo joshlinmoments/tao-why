@@ -5,288 +5,521 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>道場的十萬個為什麼</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <style>
-    body { font-family: 'Noto Sans TC', sans-serif; background: #0a0a1a; }
-    .font-serif { font-family: 'Noto Serif TC', serif; }
-    .page { display: none; min-height: 100vh; }
-    .page.active { display: flex; flex-direction: column; }
-    .bg-tao { background: linear-gradient(135deg, #0a0a1a 0%, #12062a 50%, #061224 100%); }
-    .glow-gold { text-shadow: 0 0 30px rgba(251,191,36,.7), 0 0 80px rgba(251,191,36,.3); }
-    .glow-red  { text-shadow: 0 0 20px rgba(248,113,113,.8); }
-    .timer-huge { font-size: clamp(5rem, 18vw, 11rem); font-weight: 900; font-variant-numeric: tabular-nums; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
-    @keyframes pulse-ring { 0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.5)}50%{box-shadow:0 0 0 12px rgba(251,191,36,0)} }
-    @keyframes bar-grow { from{width:0} to{width:var(--target-w)} }
-    .animate-in { animation: fadeUp .5s ease forwards; }
-    .pulse { animation: pulse-ring 2s infinite; }
-    .vote-card { border: 2px solid #334155; border-radius: 1rem; padding: .75rem; cursor: pointer; transition: all .2s; text-align: center; }
-    .vote-card:hover { border-color: #fbbf24; background: rgba(251,191,36,.08); transform: translateY(-2px); }
-    .vote-card.selected { border-color: #fbbf24; background: rgba(251,191,36,.15); }
-    .progress-bar { height: 100%; border-radius: 9999px; transition: width .8s linear; }
-    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: #0f172a; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    /* ── Figma Design System ─────────────────────────────── */
+    :root {
+      --bg:       #111113;
+      --surf:     #1A1A1D;
+      --elev:     #222226;
+      --hover:    #2A2A2F;
+      --bd:       rgba(255,255,255,.07);
+      --bd-hi:    rgba(255,255,255,.14);
+      --t1:       #ECECEC;
+      --t2:       #9999AA;
+      --t3:       #525260;
+      --acc:      #7B61FF;
+      --acc-hi:   #9580FF;
+      --gold:     #F5A623;
+      --gold-hi:  #FFD060;
+      --green:    #34C759;
+      --red:      #FF453A;
+      --circ:     534.07; /* 2π × 85 */
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--t1); -webkit-font-smoothing: antialiased; }
+
+    /* pages */
+    .page { display: none; min-height: 100dvh; flex-direction: column; }
+    .page.active { display: flex; }
+
+    /* cards */
+    .card { background: var(--surf); border: 1px solid var(--bd); border-radius: 12px; }
+
+    /* buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 16px; border-radius: 8px; font-family: inherit; font-weight: 500; font-size: 14px; line-height: 1; border: none; cursor: pointer; transition: all .15s; text-decoration: none; white-space: nowrap; }
+    .btn-acc   { background: var(--acc);   color: #fff; }
+    .btn-acc:hover   { background: var(--acc-hi); transform: translateY(-1px); }
+    .btn-gold  { background: var(--gold);  color: #1a0f00; font-weight: 700; }
+    .btn-gold:hover  { background: var(--gold-hi); transform: translateY(-1px); }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-green:hover { filter: brightness(1.1); }
+    .btn-ghost { background: var(--elev); color: var(--t1); border: 1px solid var(--bd); }
+    .btn-ghost:hover { background: var(--hover); border-color: var(--bd-hi); }
+    .btn-ghost.active { background: var(--acc); color: #fff; border-color: transparent; }
+    .btn-danger { background: rgba(255,69,58,.1); color: var(--red); border: 1px solid rgba(255,69,58,.2); }
+    .btn-danger:hover { background: rgba(255,69,58,.2); }
+    .btn:disabled { opacity: .35; cursor: not-allowed; transform: none !important; filter: none !important; }
+    .btn-lg  { padding: 13px 22px; font-size: 15px; font-weight: 600; border-radius: 10px; }
+    .btn-xl  { padding: 16px 28px; font-size: 17px; font-weight: 700; border-radius: 12px; }
+    .btn-full { width: 100%; }
+
+    /* inputs */
+    .inp { background: var(--elev); border: 1px solid var(--bd); border-radius: 8px; color: var(--t1); font-family: inherit; font-size: 14px; padding: 9px 12px; outline: none; transition: border-color .15s; width: 100%; }
+    .inp::placeholder { color: var(--t3); }
+    .inp:focus { border-color: var(--acc); }
+    select.inp {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239999AA'%3E%3Cpath fill-rule='evenodd' d='M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center; background-size: 20px; padding-right: 34px;
+    }
+
+    /* badge */
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 500; }
+    .badge-acc   { background: rgba(123,97,255,.12); color: var(--acc-hi);  border: 1px solid rgba(123,97,255,.2); }
+    .badge-gold  { background: rgba(245,166,35,.12);  color: var(--gold);    border: 1px solid rgba(245,166,35,.2); }
+    .badge-green { background: rgba(52,199,89,.12);   color: var(--green);   border: 1px solid rgba(52,199,89,.2); }
+
+    /* section label */
+    .slabel { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--t3); }
+
+    /* divider */
+    .div { height: 1px; background: var(--bd); }
+
+    /* role cards (home) */
+    .role-card { background: var(--surf); border: 1px solid var(--bd); border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: all .2s; }
+    .role-card:hover { border-color: var(--bd-hi); background: var(--elev); transform: translateY(-2px); }
+    .role-card:active { transform: none; }
+    .icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* vote cards */
+    .vcard { background: var(--elev); border: 1px solid var(--bd); border-radius: 10px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all .15s; font-size: 14px; font-weight: 500; color: var(--t2); }
+    .vcard:hover { border-color: var(--bd-hi); background: var(--hover); color: var(--t1); }
+    .vcard.selected { border-color: var(--acc); background: rgba(123,97,255,.1); color: var(--acc-hi); }
+
+    /* ring timer SVG */
+    .ring-track { fill: none; stroke: rgba(255,255,255,.06); stroke-width: 8; }
+    .ring-prog  { fill: none; stroke-width: 8; stroke-linecap: round; transform-origin: 50% 50%; transform: rotate(-90deg); stroke-dasharray: 534.07; stroke-dashoffset: 0; transition: stroke-dashoffset .5s linear, stroke .5s; }
+
+    /* display typography */
+    .d-h1    { font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 700; line-height: 1.15; }
+    .d-timer { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: clamp(4rem, 15vw, 8.5rem); line-height: 1; font-variant-numeric: tabular-nums; }
+    .d-group { font-size: clamp(2.5rem, 9vw, 5.5rem); font-weight: 700; line-height: 1.1; }
+    .d-q     { font-size: clamp(1rem, 2.2vw, 1.4rem); color: var(--t2); line-height: 1.65; }
+
+    /* host timer number */
+    .h-timer { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 52px; line-height: 1; font-variant-numeric: tabular-nums; }
+
+    /* animations */
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes scaleIn  { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+    @keyframes pulseAcc { 0%,100%{box-shadow:0 0 0 0 rgba(123,97,255,.4)} 50%{box-shadow:0 0 0 12px rgba(123,97,255,0)} }
+    .ani-up  { animation: fadeUp  .4s ease both; }
+    .ani-sc  { animation: scaleIn .35s ease both; }
+    .pulse   { animation: pulseAcc 2s infinite; }
+
+    /* dot */
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); flex-shrink: 0; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--hover); border-radius: 4px; }
   </style>
 </head>
-<body class="bg-tao text-white">
+<body>
 
-<!-- ═══════════════════ 首頁 ═══════════════════ -->
-<div id="page-home" class="page active items-center justify-center p-8">
-  <div class="text-center mb-14 animate-in">
-    <div class="text-7xl mb-5">🏛️</div>
-    <h1 class="font-serif text-5xl md:text-6xl font-black text-amber-300 glow-gold mb-3 leading-tight">
-      道場的<br>十萬個為什麼
-    </h1>
-    <p class="text-slate-400 text-lg">講員培訓互動課程</p>
-  </div>
-  <div class="flex flex-col gap-4 w-full max-w-xs">
-    <button onclick="nav('host')"    class="bg-amber-500 hover:bg-amber-400 active:scale-95 text-black font-black py-5 rounded-2xl text-xl transition-all shadow-xl">🎙️ 主持人</button>
-    <button onclick="nav('display')" class="bg-indigo-700 hover:bg-indigo-600 active:scale-95 font-black py-5 rounded-2xl text-xl transition-all shadow-xl">📺 大螢幕</button>
-    <button onclick="nav('vote')"    class="bg-emerald-700 hover:bg-emerald-600 active:scale-95 font-black py-5 rounded-2xl text-xl transition-all shadow-xl">🗳️ 投票</button>
+<!-- ═════════════════════ HOME ═════════════════════ -->
+<div id="page-home" class="page active items-center justify-center p-5"
+     style="background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(123,97,255,.12) 0%, transparent 70%)">
+  <div style="max-width:420px;width:100%">
+
+    <!-- Logo -->
+    <div class="text-center ani-up" style="margin-bottom:36px">
+      <div style="width:60px;height:60px;border-radius:14px;background:rgba(123,97,255,.12);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="11" stroke="#7B61FF" stroke-width="1.5"/>
+          <circle cx="14" cy="8.5" r="3" fill="#7B61FF"/>
+          <circle cx="14" cy="19.5" r="3" fill="none" stroke="#7B61FF" stroke-width="1.5"/>
+          <path d="M14 3C14 3 3 8.5 3 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/>
+          <path d="M14 3C14 3 25 8.5 25 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/>
+        </svg>
+      </div>
+      <h1 style="font-size:22px;font-weight:700;color:var(--t1);margin-bottom:5px">道場的十萬個為什麼</h1>
+      <p style="color:var(--t3);font-size:13px">講員培訓互動課程</p>
+    </div>
+
+    <!-- Role cards -->
+    <div style="display:flex;flex-direction:column;gap:8px">
+
+      <div class="role-card ani-up" style="animation-delay:.08s;display:flex;align-items:center;gap:14px" onclick="nav('host')">
+        <div class="icon-box" style="background:rgba(245,166,35,.12)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:600;margin-bottom:2px">主持人</div>
+          <div style="color:var(--t3);font-size:12px">課程控制、計時、管理</div>
+        </div>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+
+      <div class="role-card ani-up" style="animation-delay:.15s;display:flex;align-items:center;gap:14px" onclick="nav('display')">
+        <div class="icon-box" style="background:rgba(123,97,255,.12)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7B61FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:600;margin-bottom:2px">大螢幕</div>
+          <div style="color:var(--t3);font-size:12px">投影顯示、計時、QR code</div>
+        </div>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+
+      <div class="role-card ani-up" style="animation-delay:.22s;display:flex;align-items:center;gap:14px" onclick="nav('vote')">
+        <div class="icon-box" style="background:rgba(52,199,89,.12)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:600;margin-bottom:2px">投票</div>
+          <div style="color:var(--t3);font-size:12px">學員手機掃碼投票</div>
+        </div>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+
+    </div>
   </div>
 </div>
 
-<!-- ═══════════════════ 主持人 ═══════════════════ -->
-<div id="page-host" class="page overflow-y-auto">
-  <div class="max-w-xl mx-auto w-full p-4 pb-16">
-    <div class="flex items-center justify-between py-4 mb-2">
-      <h2 class="font-serif text-2xl font-black text-amber-300">🎙️ 主持人控制台</h2>
-      <button onclick="nav('home')" class="text-slate-500 hover:text-slate-300 text-sm">← 返回</button>
+
+<!-- ═════════════════════ HOST ═════════════════════ -->
+<div id="page-host" class="page" style="overflow-y:auto">
+  <div style="max-width:540px;margin:0 auto;width:100%;padding:0 16px 80px">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px">
+      <button onclick="nav('home')" class="btn btn-ghost" style="padding:7px 12px;font-size:13px;gap:5px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        返回
+      </button>
+      <span style="font-size:14px;font-weight:600">主持人控制台</span>
+      <div class="badge badge-acc"><span class="dot"></span><span id="h-phase">等待中</span></div>
     </div>
 
-    <!-- 密碼鎖 -->
-    <div id="host-lock" class="bg-slate-800/80 rounded-2xl p-6 mb-4">
-      <p class="text-slate-300 mb-3 font-bold">請輸入主持人密碼</p>
-      <div class="flex gap-2">
-        <input id="host-pw" type="password" onkeydown="if(event.key==='Enter')unlockHost()"
-               class="flex-1 bg-slate-700 text-white px-4 py-3 rounded-xl border border-slate-600 focus:border-amber-400 outline-none text-lg" placeholder="密碼">
-        <button onclick="unlockHost()" class="bg-amber-500 hover:bg-amber-400 text-black font-black px-5 py-3 rounded-xl">確認</button>
+    <!-- Lock -->
+    <div id="host-lock" class="card" style="padding:20px;margin-bottom:10px">
+      <p style="font-size:14px;font-weight:600;margin-bottom:12px">輸入主持人密碼</p>
+      <div style="display:flex;gap:8px">
+        <input id="host-pw" type="password" class="inp" placeholder="密碼" onkeydown="if(event.key==='Enter')unlockHost()">
+        <button onclick="unlockHost()" class="btn btn-acc" style="flex-shrink:0">確認</button>
       </div>
-      <p id="host-err" class="text-red-400 text-sm mt-2 hidden">密碼錯誤，請重試</p>
+      <div id="host-err" class="hidden" style="color:var(--red);font-size:13px;margin-top:8px">密碼錯誤，請重試</div>
     </div>
 
-    <!-- 控制台主體 -->
-    <div id="host-main" class="hidden space-y-4">
+    <!-- Main Controls -->
+    <div id="host-main" class="hidden" style="display:flex;flex-direction:column;gap:10px">
 
-      <!-- 狀態列 -->
-      <div class="bg-slate-800/80 rounded-2xl px-5 py-3 flex items-center justify-between">
-        <span class="text-slate-400">目前階段</span>
-        <span id="h-phase" class="font-black text-amber-300 text-lg">等待中</span>
-      </div>
-
-      <!-- ── 設定區（waiting）── -->
-      <div id="sec-setup" class="bg-slate-800/80 rounded-2xl p-5">
-        <h3 class="font-bold text-lg mb-4">📋 分組設定</h3>
-        <div class="mb-4">
-          <p class="text-slate-400 text-sm mb-2">組數</p>
-          <div class="flex gap-2">
-            <button onclick="setGrpCount(4)" id="btn-g4" class="flex-1 py-2 rounded-xl bg-slate-700 hover:bg-indigo-600 transition-colors font-bold">4 組</button>
-            <button onclick="setGrpCount(5)" id="btn-g5" class="flex-1 py-2 rounded-xl bg-indigo-600 font-bold">5 組</button>
+      <!-- SETUP -->
+      <div id="sec-setup" class="card" style="padding:20px">
+        <p class="slabel" style="margin-bottom:14px">分組設定</p>
+        <div style="margin-bottom:14px">
+          <p style="font-size:12px;color:var(--t2);margin-bottom:8px">組數</p>
+          <div style="display:flex;gap:6px">
+            <button onclick="setGrpCount(4)" id="btn-g4" class="btn btn-ghost" style="flex:1">4 組</button>
+            <button onclick="setGrpCount(5)" id="btn-g5" class="btn btn-ghost active" style="flex:1">5 組</button>
           </div>
         </div>
-        <div id="grp-assign" class="space-y-3 mb-5"></div>
-        <button onclick="startCourse()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl text-xl transition-all hover:scale-[1.02]">
-          🚀 展示題目，開始課程
+        <div id="grp-assign" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
+        <button onclick="startCourse()" class="btn btn-gold btn-xl btn-full">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          展示題目，開始課程
         </button>
       </div>
 
-      <!-- ── 討論區（drawing / discussion）── -->
-      <div id="sec-discuss" class="hidden bg-slate-800/80 rounded-2xl p-5">
-        <h3 class="font-bold text-lg mb-3">⏱️ 討論計時（10 分鐘）</h3>
-        <div id="h-disc-timer" class="text-5xl font-black text-amber-300 text-center font-mono mb-4">10:00</div>
-        <div class="grid grid-cols-2 gap-3">
-          <button onclick="startDiscussion()" id="btn-disc-start" class="bg-green-600 hover:bg-green-500 font-bold py-3 rounded-xl">▶ 開始計時</button>
-          <button onclick="goPresent(1)" class="bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl">跳過 → 分享</button>
+      <!-- DISCUSS -->
+      <div id="sec-discuss" class="card hidden" style="padding:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <p class="slabel">討論計時</p>
+          <span class="badge badge-gold">10 分鐘</span>
+        </div>
+        <div id="h-disc-timer" class="h-timer" style="color:var(--gold);text-align:center;margin-bottom:16px">10:00</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button onclick="startDiscussion()" id="btn-disc-start" class="btn btn-green btn-lg">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            開始計時
+          </button>
+          <button onclick="goPresent(1)" class="btn btn-ghost btn-lg">跳過 → 分享</button>
         </div>
       </div>
 
-      <!-- ── 分享區（presenting）── -->
-      <div id="sec-present" class="hidden bg-slate-800/80 rounded-2xl p-5">
-        <h3 class="font-bold text-lg mb-3">🎤 分享控制</h3>
-        <div id="h-present-grp" class="text-center text-amber-200 text-xl font-bold mb-2">第一組 分享中</div>
-        <div id="h-pres-timer" class="text-5xl font-black text-white text-center font-mono mb-4">3:00</div>
-        <div class="grid grid-cols-2 gap-3 mb-3">
-          <button onclick="startPresent()" class="bg-green-600 hover:bg-green-500 font-bold py-3 rounded-xl">▶ 開始計時</button>
-          <button id="btn-next-grp" onclick="nextGroup()" class="bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl">下一組 →</button>
+      <!-- PRESENT -->
+      <div id="sec-present" class="card hidden" style="padding:20px">
+        <p class="slabel" style="margin-bottom:12px">分享控制</p>
+        <div id="h-present-grp" style="font-size:17px;font-weight:600;text-align:center;margin-bottom:6px">第一組 分享中</div>
+        <div id="h-pres-timer" class="h-timer" style="color:var(--acc-hi);text-align:center;margin-bottom:16px">3:00</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <button onclick="startPresent()" class="btn btn-green btn-lg">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            開始計時
+          </button>
+          <button id="btn-next-grp" onclick="nextGroup()" class="btn btn-ghost btn-lg">下一組 →</button>
         </div>
-        <button onclick="openVoting()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl">
-          🗳️ 開放投票
+        <div class="div" style="margin:10px 0"></div>
+        <button onclick="openVoting()" class="btn btn-full btn-lg" style="background:rgba(52,199,89,.1);color:var(--green);border:1px solid rgba(52,199,89,.2)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          開放投票
         </button>
       </div>
 
-      <!-- ── 投票區（voting）── -->
-      <div id="sec-voting" class="hidden bg-slate-800/80 rounded-2xl p-5">
-        <h3 class="font-bold text-lg mb-3">🗳️ 投票進行中</h3>
-        <div id="h-vote-count" class="text-slate-300 mb-4 text-sm">目前 0 人已投票</div>
-        <div id="h-vote-live" class="space-y-4 mb-5"></div>
-        <button onclick="showResults()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl text-lg">
-          🏆 公布結果
+      <!-- VOTING -->
+      <div id="sec-voting" class="card hidden" style="padding:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <p class="slabel">投票進行中</p>
+          <span id="h-vote-count" class="badge badge-green">0 人已投票</span>
+        </div>
+        <div id="h-vote-live" style="display:flex;flex-direction:column;gap:14px;margin-bottom:16px"></div>
+        <button onclick="showResults()" class="btn btn-gold btn-xl btn-full">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/><path d="M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M17.5 14.5 19 23l-4-2.5"/><path d="M6.5 14.5 5 23l4-2.5"/></svg>
+          公布結果
         </button>
       </div>
 
-      <!-- ── 結果區（results）── -->
-      <div id="sec-results" class="hidden bg-slate-800/80 rounded-2xl p-5">
-        <h3 class="font-bold text-lg mb-4">🏆 得獎名單</h3>
-        <div id="h-results" class="space-y-3 mb-6"></div>
-        <button onclick="resetCourse()" class="w-full bg-slate-600 hover:bg-slate-500 font-bold py-3 rounded-xl">🔄 重置課程</button>
+      <!-- RESULTS -->
+      <div id="sec-results" class="card hidden" style="padding:20px">
+        <p class="slabel" style="margin-bottom:14px">得獎名單</p>
+        <div id="h-results" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+        <div class="div" style="margin-bottom:12px"></div>
+        <button onclick="resetCourse()" class="btn btn-danger btn-full" style="padding:10px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          重置課程
+        </button>
       </div>
 
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════ 大螢幕 ═══════════════════ -->
-<div id="page-display" class="page items-center justify-center relative overflow-hidden">
-  <button onclick="nav('home')" class="absolute top-4 left-4 text-slate-700 hover:text-slate-500 text-sm z-10">← 返回</button>
 
-  <!-- waiting -->
-  <div id="disp-waiting" class="text-center px-8 animate-in">
-    <div class="text-8xl mb-6">🏛️</div>
-    <h1 class="font-serif font-black text-amber-300 glow-gold leading-tight mb-6" style="font-size:clamp(2.5rem,7vw,5rem)">
-      道場的十萬個為什麼
-    </h1>
-    <p class="text-slate-500 text-2xl">等待課程開始…</p>
-  </div>
+<!-- ═════════════════════ DISPLAY ═════════════════════ -->
+<div id="page-display" class="page items-center justify-center relative overflow-hidden"
+     style="background: radial-gradient(ellipse 100% 60% at 50% 0%, rgba(123,97,255,.06) 0%, transparent 60%)">
 
-  <!-- drawing -->
-  <div id="disp-drawing" class="hidden w-full max-w-5xl px-8 py-10">
-    <h2 class="font-serif font-black text-amber-300 glow-gold text-center mb-8" style="font-size:clamp(2rem,5vw,3.5rem)">今天的題目</h2>
-    <div id="disp-questions" class="grid gap-4 md:grid-cols-2"></div>
-  </div>
+  <button onclick="nav('home')" class="btn btn-ghost" style="position:absolute;top:14px;left:14px;padding:7px 12px;font-size:12px;gap:5px;z-index:10">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    返回
+  </button>
 
-  <!-- discussion -->
-  <div id="disp-discussion" class="hidden text-center px-8">
-    <p class="text-slate-400 text-2xl mb-2">小組討論</p>
-    <div id="disp-disc-timer" class="timer-huge text-amber-300 glow-gold font-mono">10:00</div>
-    <div class="w-72 md:w-[28rem] h-4 bg-slate-800 rounded-full mt-10 mx-auto overflow-hidden">
-      <div id="disp-disc-bar" class="progress-bar bg-amber-400" style="width:100%"></div>
+  <!-- WAITING -->
+  <div id="disp-waiting" class="text-center ani-up" style="padding:32px">
+    <div style="width:80px;height:80px;border-radius:20px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 28px">
+      <svg width="40" height="40" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="11" stroke="#7B61FF" stroke-width="1.5"/>
+        <circle cx="14" cy="8.5" r="3" fill="#7B61FF"/>
+        <circle cx="14" cy="19.5" r="3" fill="none" stroke="#7B61FF" stroke-width="1.5"/>
+        <path d="M14 3C14 3 3 8.5 3 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/>
+        <path d="M14 3C14 3 25 8.5 25 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/>
+      </svg>
     </div>
-    <p class="text-slate-600 text-xl mt-6">各組正在準備精彩答案…</p>
+    <h1 class="d-h1" style="color:var(--t1);margin-bottom:10px">道場的十萬個為什麼</h1>
+    <p style="color:var(--t3);font-size:clamp(1rem,2vw,1.3rem)">等待課程開始…</p>
   </div>
 
-  <!-- presenting -->
-  <div id="disp-presenting" class="hidden text-center px-8 w-full max-w-3xl">
-    <p class="text-slate-400 text-2xl mb-2">現在分享</p>
-    <div id="disp-pres-name" class="font-serif font-black text-amber-300 glow-gold mb-2" style="font-size:clamp(3rem,9vw,6rem)">第一組</div>
-    <div id="disp-pres-q" class="text-slate-300 text-lg md:text-xl leading-relaxed mb-6 mx-auto max-w-2xl"></div>
-    <div id="disp-pres-timer" class="timer-huge text-white font-mono">3:00</div>
-    <div class="w-72 md:w-[28rem] h-4 bg-slate-800 rounded-full mt-8 mx-auto overflow-hidden">
-      <div id="disp-pres-bar" class="progress-bar bg-emerald-400" style="width:100%"></div>
-    </div>
+  <!-- DRAWING -->
+  <div id="disp-drawing" class="hidden" style="width:100%;max-width:960px;padding:32px 28px">
+    <h2 style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700;text-align:center;color:var(--t1);margin-bottom:28px">今天的題目</h2>
+    <div id="disp-questions" style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
   </div>
 
-  <!-- voting -->
-  <div id="disp-voting" class="hidden text-center px-8 w-full max-w-2xl">
-    <h2 class="font-serif font-black text-amber-300 glow-gold mb-4" style="font-size:clamp(2.5rem,6vw,4rem)">投票開始！</h2>
-    <p class="text-slate-300 text-xl mb-5">掃描 QR Code 進入投票頁</p>
-    <div class="flex justify-center mb-4">
-      <div id="disp-qr" class="bg-white p-3 rounded-2xl shadow-2xl inline-block"></div>
-    </div>
-    <p id="disp-vote-url" class="text-slate-500 text-sm mb-6 break-all"></p>
-    <div id="disp-voter-count" class="text-amber-300 text-xl font-bold">0 人已投票</div>
-  </div>
-
-  <!-- results -->
-  <div id="disp-results" class="hidden text-center px-6 w-full max-w-3xl py-8">
-    <h2 class="font-serif font-black text-amber-300 glow-gold mb-10" style="font-size:clamp(2.5rem,6vw,4rem)">🏆 得獎名單</h2>
-    <div class="grid md:grid-cols-3 gap-5">
-      <div class="bg-slate-800/70 rounded-3xl p-6 animate-in" style="animation-delay:.1s">
-        <div class="text-5xl mb-3">✨</div>
-        <div class="text-slate-400 mb-2 text-lg">最有創意獎</div>
-        <div id="res-creative" class="font-serif font-black text-amber-300" style="font-size:clamp(1.8rem,4vw,2.5rem)">—</div>
-        <div id="res-creative-votes" class="text-slate-500 text-sm mt-1"></div>
-      </div>
-      <div class="bg-slate-800/70 rounded-3xl p-6 animate-in" style="animation-delay:.3s">
-        <div class="text-5xl mb-3">💡</div>
-        <div class="text-slate-400 mb-2 text-lg">最佳解惑獎</div>
-        <div id="res-clarity" class="font-serif font-black text-amber-300" style="font-size:clamp(1.8rem,4vw,2.5rem)">—</div>
-        <div id="res-clarity-votes" class="text-slate-500 text-sm mt-1"></div>
-      </div>
-      <div class="bg-slate-800/70 rounded-3xl p-6 animate-in" style="animation-delay:.5s">
-        <div class="text-5xl mb-3">❤️</div>
-        <div class="text-slate-400 mb-2 text-lg">最感動人獎</div>
-        <div id="res-touching" class="font-serif font-black text-amber-300" style="font-size:clamp(1.8rem,4vw,2.5rem)">—</div>
-        <div id="res-touching-votes" class="text-slate-500 text-sm mt-1"></div>
+  <!-- DISCUSSION -->
+  <div id="disp-discussion" class="hidden text-center" style="padding:32px">
+    <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.2rem);margin-bottom:24px;letter-spacing:.05em;text-transform:uppercase;font-weight:500">小組討論</p>
+    <!-- Ring timer -->
+    <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+      <svg width="220" height="220" viewBox="0 0 200 200">
+        <circle class="ring-track" cx="100" cy="100" r="85"/>
+        <circle id="disp-disc-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#7B61FF"/>
+      </svg>
+      <div style="position:absolute;text-align:center">
+        <div id="disp-disc-timer" class="d-timer" style="color:var(--t1)">10:00</div>
       </div>
     </div>
+    <!-- Hidden bar (JS compatibility) -->
+    <div style="display:none"><div id="disp-disc-bar" style="width:100%"></div></div>
+    <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.1rem);margin-top:24px">各組正在準備精彩答案…</p>
   </div>
+
+  <!-- PRESENTING -->
+  <div id="disp-presenting" class="hidden text-center" style="padding:32px;width:100%;max-width:800px">
+    <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.1rem);margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:500">現在分享</p>
+    <div id="disp-pres-name" class="d-group" style="color:var(--t1);margin-bottom:10px">第一組</div>
+    <div id="disp-pres-q" class="d-q" style="margin-bottom:28px;max-width:680px;margin-left:auto;margin-right:auto"></div>
+    <!-- Ring timer -->
+    <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+      <svg width="180" height="180" viewBox="0 0 200 200">
+        <circle class="ring-track" cx="100" cy="100" r="85"/>
+        <circle id="disp-pres-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#34C759"/>
+      </svg>
+      <div style="position:absolute;text-align:center">
+        <div id="disp-pres-timer" class="d-timer" style="color:var(--t1);font-size:clamp(3rem,10vw,5.5rem)">3:00</div>
+      </div>
+    </div>
+    <!-- Hidden bar (JS compatibility) -->
+    <div style="display:none"><div id="disp-pres-bar" style="width:100%"></div></div>
+  </div>
+
+  <!-- VOTING -->
+  <div id="disp-voting" class="hidden text-center" style="padding:32px;width:100%;max-width:520px">
+    <h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:var(--t1);margin-bottom:8px">投票開始</h2>
+    <p style="color:var(--t3);font-size:clamp(.9rem,1.8vw,1.1rem);margin-bottom:24px">掃描 QR Code 進入投票頁</p>
+    <div style="display:flex;justify-content:center;margin-bottom:16px">
+      <div id="disp-qr" style="background:#fff;padding:12px;border-radius:14px;display:inline-block;box-shadow:0 0 40px rgba(123,97,255,.25)"></div>
+    </div>
+    <p id="disp-vote-url" style="color:var(--t3);font-size:12px;margin-bottom:20px;word-break:break-all"></p>
+    <div id="disp-voter-count" style="display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);border-radius:99px;padding:6px 16px;color:var(--green);font-size:15px;font-weight:600">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--green)"></span>
+      0 人已投票
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="disp-results" class="hidden text-center" style="padding:32px;width:100%;max-width:800px">
+    <h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:var(--t1);margin-bottom:36px">得獎名單</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+
+      <div class="card ani-sc" style="padding:24px 16px;animation-delay:.1s">
+        <div style="font-size:32px;margin-bottom:12px">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="margin:0 auto" stroke="#F5A623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        </div>
+        <div style="color:var(--t3);font-size:12px;margin-bottom:8px;font-weight:500">最有創意獎</div>
+        <div id="res-creative" style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--gold)">—</div>
+        <div id="res-creative-votes" style="color:var(--t3);font-size:12px;margin-top:4px"></div>
+      </div>
+
+      <div class="card ani-sc" style="padding:24px 16px;animation-delay:.25s">
+        <div style="font-size:32px;margin-bottom:12px">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="margin:0 auto" stroke="#7B61FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div style="color:var(--t3);font-size:12px;margin-bottom:8px;font-weight:500">最佳解惑獎</div>
+        <div id="res-clarity" style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--acc-hi)">—</div>
+        <div id="res-clarity-votes" style="color:var(--t3);font-size:12px;margin-top:4px"></div>
+      </div>
+
+      <div class="card ani-sc" style="padding:24px 16px;animation-delay:.4s">
+        <div style="font-size:32px;margin-bottom:12px">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="margin:0 auto" stroke="#FF6B8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <div style="color:var(--t3);font-size:12px;margin-bottom:8px;font-weight:500">最感動人獎</div>
+        <div id="res-touching" style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:#FF6B8A">—</div>
+        <div id="res-touching-votes" style="color:var(--t3);font-size:12px;margin-top:4px"></div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
-<!-- ═══════════════════ 投票 ═══════════════════ -->
-<div id="page-vote" class="page overflow-y-auto">
-  <div class="max-w-lg mx-auto w-full p-4 pb-16">
 
-    <!-- 尚未開放 -->
-    <div id="vote-wait" class="text-center py-24">
-      <div class="text-7xl mb-5">⏳</div>
-      <h2 class="font-serif text-3xl font-black text-amber-300 mb-3">投票尚未開放</h2>
-      <p class="text-slate-400">請等待主持人開放投票</p>
+<!-- ═════════════════════ VOTE ═════════════════════ -->
+<div id="page-vote" class="page" style="overflow-y:auto">
+  <div style="max-width:480px;margin:0 auto;width:100%;padding:0 16px 80px">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:10px;padding:16px 0 6px">
+      <button onclick="nav('home')" class="btn btn-ghost" style="padding:7px 12px;font-size:13px;gap:5px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <span style="font-size:15px;font-weight:600">投票</span>
     </div>
 
-    <!-- 表單 -->
+    <!-- WAIT -->
+    <div id="vote-wait" class="text-center" style="padding:80px 0">
+      <div style="width:56px;height:56px;border-radius:14px;background:var(--surf);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3 style="font-size:18px;font-weight:600;color:var(--t1);margin-bottom:6px">投票尚未開放</h3>
+      <p style="color:var(--t3);font-size:14px">請等待主持人開放投票</p>
+    </div>
+
+    <!-- FORM -->
     <div id="vote-form" class="hidden">
-      <div class="text-center py-6">
-        <div class="text-5xl mb-2">🗳️</div>
-        <h2 class="font-serif text-3xl font-black text-amber-300 mb-1">投票</h2>
-        <p class="text-slate-400">三個獎項各選一組，共三票</p>
+      <div style="padding:16px 0 20px;color:var(--t2);font-size:13px">三個獎項各選一組，共三票</div>
+
+      <!-- Progress indicator -->
+      <div id="vote-progress" style="display:flex;gap:6px;margin-bottom:20px">
+        <div style="flex:1;height:3px;border-radius:3px;background:var(--bd)" id="vp-0"></div>
+        <div style="flex:1;height:3px;border-radius:3px;background:var(--bd)" id="vp-1"></div>
+        <div style="flex:1;height:3px;border-radius:3px;background:var(--bd)" id="vp-2"></div>
       </div>
 
-      <div id="vote-creative-sec" class="bg-slate-800/80 rounded-2xl p-4 mb-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-2xl">✨</span>
-          <span class="font-bold text-lg">最有創意獎</span>
+      <div style="display:flex;flex-direction:column;gap:10px">
+
+        <div class="card" style="padding:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span style="font-size:14px;font-weight:600">最有創意獎</span>
+          </div>
+          <div id="vopt-creative" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px"></div>
         </div>
-        <div id="vopt-creative" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
-      </div>
 
-      <div id="vote-clarity-sec" class="bg-slate-800/80 rounded-2xl p-4 mb-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-2xl">💡</span>
-          <span class="font-bold text-lg">最佳解惑獎</span>
+        <div class="card" style="padding:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc-hi)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span style="font-size:14px;font-weight:600">最佳解惑獎</span>
+          </div>
+          <div id="vopt-clarity" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px"></div>
         </div>
-        <div id="vopt-clarity" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
-      </div>
 
-      <div id="vote-touching-sec" class="bg-slate-800/80 rounded-2xl p-4 mb-4">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-2xl">❤️</span>
-          <span class="font-bold text-lg">最感動人獎</span>
+        <div class="card" style="padding:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B8A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span style="font-size:14px;font-weight:600">最感動人獎</span>
+          </div>
+          <div id="vopt-touching" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px"></div>
         </div>
-        <div id="vopt-touching" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
+
       </div>
 
-      <button id="btn-submit" onclick="submitVote()" disabled
-              class="w-full bg-slate-600 text-slate-400 font-black py-5 rounded-2xl text-xl transition-all mt-2 cursor-not-allowed">
+      <button id="btn-submit" onclick="submitVote()" disabled class="btn btn-full btn-xl" style="margin-top:16px;background:var(--elev);color:var(--t3);border:1px solid var(--bd);cursor:not-allowed">
         請選擇三個獎項
       </button>
     </div>
 
-    <!-- 完成 -->
-    <div id="vote-done" class="hidden text-center py-24">
-      <div class="text-7xl mb-5">🎉</div>
-      <h2 class="font-serif text-3xl font-black text-amber-300 mb-3">感謝投票！</h2>
-      <p class="text-slate-300 text-lg mb-2">你的投票已送出</p>
-      <p class="text-slate-500">等待結果揭曉…</p>
+    <!-- DONE -->
+    <div id="vote-done" class="hidden text-center" style="padding:80px 0">
+      <div style="width:64px;height:64px;border-radius:16px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 style="font-size:22px;font-weight:700;color:var(--t1);margin-bottom:8px">感謝投票！</h3>
+      <p style="color:var(--t3);font-size:14px">你的投票已送出，等待結果揭曉…</p>
     </div>
 
-    <!-- 已投票 -->
-    <div id="vote-already" class="hidden text-center py-24">
-      <div class="text-7xl mb-5">✅</div>
-      <h2 class="font-serif text-3xl font-black text-amber-300 mb-3">已完成投票</h2>
-      <p class="text-slate-400">你已經投過票了</p>
+    <!-- ALREADY -->
+    <div id="vote-already" class="hidden text-center" style="padding:80px 0">
+      <div style="width:64px;height:64px;border-radius:16px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 style="font-size:22px;font-weight:700;color:var(--t1);margin-bottom:8px">已完成投票</h3>
+      <p style="color:var(--t3);font-size:14px">你已經投過票了</p>
     </div>
+
   </div>
 </div>
 
-<!-- ═══════════════════ Firebase + App Logic ═══════════════════ -->
+
+<!-- ═════════════════════ SCRIPT ═════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// ╔══════════════════════════════════════════════════════╗
-// ║  請將下方替換為您的 Firebase 配置                      ║
-// ╚══════════════════════════════════════════════════════╝
 const firebaseConfig = {
   apiKey:            "AIzaSyDpkFpV5hujitNEK4TitlPF3vklaVchmJc",
   authDomain:        "tao-why.firebaseapp.com",
@@ -296,42 +529,36 @@ const firebaseConfig = {
   messagingSenderId: "890386342264",
   appId:             "1:890386342264:web:de68c75a2cfe42dab5e88d"
 };
-// ╔══════════════════════════════════════════════════════╗
-// ║  主持人密碼                                            ║
-// ╚══════════════════════════════════════════════════════╝
-const HOST_PW = "tao2025";
 
-// ── 題目庫 ──────────────────────────────────────────────
+const HOST_PW   = "tao2025";
 const QUESTIONS = [
-  { short: "本性善良之謎",  full: "為什麼每個人的本性都是一樣善良的？明明我們每個人都有不一樣的個性。而且如果大家都是善良的，為什麼世界還會這麼亂？" },
-  { short: "無為而修道",    full: "老子都說了「無為而為」，那為什麼我們修道還要這麼努力？" },
-  { short: "帶家人來佛堂",  full: "如何讓家裡的人認同，跟我一起來佛堂？" },
-  { short: "為何上進階班",  full: "沒來上課的生活也可以很精彩啊，為什麼一定要來上進階班？" },
-  { short: "功德與無執著",  full: "為什麼佛堂一直要我們做功德賺天幣，但是同時叫我們不要想自己賺多少功德呢？" },
+  { short:"本性善良之謎",  full:"為什麼每個人的本性都是一樣善良的？明明我們每個人都有不一樣的個性。而且如果大家都是善良的，為什麼世界還會這麼亂？" },
+  { short:"無為而修道",    full:"老子都說了「無為而為」，那為什麼我們修道還要這麼努力？" },
+  { short:"帶家人來佛堂",  full:"如何讓家裡的人認同，跟我一起來佛堂？" },
+  { short:"為何上進階班",  full:"沒來上課的生活也可以很精彩啊，為什麼一定要來上進階班？" },
+  { short:"功德與無執著",  full:"為什麼佛堂一直要我們做功德賺天幣，但是同時叫我們不要想自己賺多少功德呢？" },
 ];
 const GRP_NAMES = ['第一組','第二組','第三組','第四組','第五組'];
-const DISC_SEC  = 10 * 60;  // 討論：10 分鐘
-const PRES_SEC  = 3  * 60;  // 分享：3 分鐘
+const DISC_SEC  = 10 * 60;
+const PRES_SEC  = 3  * 60;
+const CIRC      = 534.07; // 2π × 85
 
-// ── Firebase ─────────────────────────────────────────────
-const fbApp  = initializeApp(firebaseConfig);
-const db     = getDatabase(fbApp);
+const fbApp   = initializeApp(firebaseConfig);
+const db      = getDatabase(fbApp);
 const sessRef = ref(db, 'session');
 
-// ── 設備 ID（防重複投票）──────────────────────────────────
 let deviceId = localStorage.getItem('_tao_dev');
 if (!deviceId) {
-  deviceId = 'dev_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  deviceId = 'dev_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
   localStorage.setItem('_tao_dev', deviceId);
 }
 
-// ── 全域狀態快取 ─────────────────────────────────────────
-let S = {};   // session snapshot
+let S = {};
 let timerHandle = null;
 let displayListening = false;
 let voteListening    = false;
 
-// ════════════════════════════ 路由 ════════════════════════════
+// ── Router ────────────────────────────────────────────────
 window.nav = function(p) {
   document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
   document.getElementById('page-' + p).classList.add('active');
@@ -339,31 +566,28 @@ window.nav = function(p) {
   if (p === 'display' && !displayListening) initDisplay();
   if (p === 'vote'    && !voteListening)    initVote();
 };
-// 初始路由
-const initHash = location.hash.replace('#','') || 'home';
-nav(initHash);
+nav(location.hash.replace('#','') || 'home');
 
-// ════════════════════════════ 主持人 ════════════════════════
+// ── Host ─────────────────────────────────────────────────
 window.unlockHost = () => {
   if (document.getElementById('host-pw').value === HOST_PW) {
     document.getElementById('host-lock').classList.add('hidden');
-    document.getElementById('host-main').classList.remove('hidden');
+    const m = document.getElementById('host-main');
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
     initHost();
   } else {
     document.getElementById('host-err').classList.remove('hidden');
   }
 };
 
-let grpCount = 5;
+let grpCount    = 5;
 let assignments = [0,1,2,3,4];
 
 window.setGrpCount = function(n) {
   grpCount = n;
-  ['4','5'].forEach(k => {
-    document.getElementById('btn-g' + k).className =
-      'flex-1 py-2 rounded-xl font-bold transition-colors ' +
-      (String(n) === k ? 'bg-indigo-600' : 'bg-slate-700 hover:bg-indigo-600');
-  });
+  document.getElementById('btn-g4').classList.toggle('active', n === 4);
+  document.getElementById('btn-g5').classList.toggle('active', n === 5);
   renderAssign();
 };
 
@@ -372,10 +596,10 @@ function renderAssign() {
   c.innerHTML = '';
   for (let i = 0; i < grpCount; i++) {
     const d = document.createElement('div');
-    d.className = 'flex items-center gap-3';
+    d.style.cssText = 'display:flex;align-items:center;gap:10px';
     d.innerHTML = `
-      <span class="text-slate-300 w-14 shrink-0 font-bold">${GRP_NAMES[i]}</span>
-      <select id="asgn-${i}" class="flex-1 bg-slate-700 text-white px-3 py-2 rounded-xl border border-slate-600 focus:border-amber-400 outline-none text-sm">
+      <span style="color:var(--t2);width:48px;flex-shrink:0;font-size:13px;font-weight:500">${GRP_NAMES[i]}</span>
+      <select id="asgn-${i}" class="inp" style="font-size:13px">
         ${QUESTIONS.map((q,qi)=>`<option value="${qi}" ${assignments[i]===qi?'selected':''}>${qi+1}. ${q.short}</option>`).join('')}
       </select>`;
     c.appendChild(d);
@@ -389,49 +613,28 @@ window.startCourse = async () => {
     assignments[i] = qi;
     groups[i+1] = { name: GRP_NAMES[i], qIndex: qi };
   }
-  await set(sessRef, {
-    phase: 'drawing',
-    totalGroups: grpCount,
-    presentingGroup: 0,
-    discussionStart: 0,
-    presentStart: 0,
-    groups,
-    voters: {}
-  });
+  await set(sessRef, { phase:'drawing', totalGroups:grpCount, presentingGroup:0,
+    discussionStart:0, presentStart:0, groups, voters:{} });
 };
 
 window.startDiscussion = async () => {
-  const el = document.getElementById('btn-disc-start');
-  el.disabled = true;
-  el.textContent = '計時中…';
-  await update(sessRef, { phase: 'discussion', discussionStart: Date.now() });
+  const btn = document.getElementById('btn-disc-start');
+  btn.disabled = true; btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> 計時中…';
+  await update(sessRef, { phase:'discussion', discussionStart: Date.now() });
 };
 
-window.goPresent = async (n) => {
-  await update(sessRef, { phase: 'presenting', presentingGroup: n, presentStart: 0 });
-};
-
-window.startPresent = async () => {
-  await update(sessRef, { presentStart: Date.now() });
-};
-
-window.nextGroup = async () => {
+window.goPresent  = async (n) => { await update(sessRef, { phase:'presenting', presentingGroup:n, presentStart:0 }); };
+window.startPresent = async () => { await update(sessRef, { presentStart: Date.now() }); };
+window.nextGroup  = async () => {
   const next = (S.presentingGroup || 0) + 1;
   if (next > (S.totalGroups || 5)) { openVoting(); return; }
-  await update(sessRef, { presentingGroup: next, presentStart: 0 });
+  await update(sessRef, { presentingGroup:next, presentStart:0 });
 };
-
-window.openVoting = async () => {
-  await update(sessRef, { phase: 'voting' });
-};
-
-window.showResults = async () => {
-  await update(sessRef, { phase: 'results' });
-};
-
+window.openVoting  = async () => { await update(sessRef, { phase:'voting' }); };
+window.showResults = async () => { await update(sessRef, { phase:'results' }); };
 window.resetCourse = async () => {
-  if (!confirm('確定要重置課程？所有投票將清除。')) return;
-  await set(sessRef, { phase: 'waiting' });
+  if (!confirm('確定重置課程？所有投票將清除。')) return;
+  await set(sessRef, { phase:'waiting' });
 };
 
 function initHost() {
@@ -441,96 +644,94 @@ function initHost() {
     const { phase='waiting', presentingGroup=0, totalGroups=5,
             discussionStart=0, presentStart=0, voters={}, groups={} } = S;
 
-    const phaseLabel = {
-      waiting:'等待中', drawing:'展示題目', discussion:'小組討論',
-      presenting:'分享進行', voting:'投票中', results:'結果揭曉'
-    };
-    document.getElementById('h-phase').textContent = phaseLabel[phase] || phase;
+    const labels = { waiting:'等待中', drawing:'展示題目', discussion:'小組討論',
+                     presenting:'分享進行', voting:'投票中', results:'結果揭曉' };
+    document.getElementById('h-phase').textContent = labels[phase] || phase;
 
-    // 顯示對應 section
-    const showSec = id => document.getElementById(id).classList.remove('hidden');
-    const hideSec = id => document.getElementById(id).classList.add('hidden');
-    ['sec-setup','sec-discuss','sec-present','sec-voting','sec-results'].forEach(hideSec);
+    const show = id => { const e=document.getElementById(id); if(e){e.classList.remove('hidden');} };
+    const hide = id => { const e=document.getElementById(id); if(e) e.classList.add('hidden'); };
+    ['sec-setup','sec-discuss','sec-present','sec-voting','sec-results'].forEach(hide);
 
-    if (phase === 'waiting')    showSec('sec-setup');
-    if (['drawing','discussion'].includes(phase)) showSec('sec-discuss');
+    if (phase === 'waiting')   show('sec-setup');
+    if (['drawing','discussion'].includes(phase)) show('sec-discuss');
     if (phase === 'presenting') {
-      showSec('sec-present');
+      show('sec-present');
       const g = groups[presentingGroup];
-      document.getElementById('h-present-grp').textContent = (g?.name||'') + ' 分享中';
+      document.getElementById('h-present-grp').textContent = (g?.name || '') + ' 分享中';
       document.getElementById('btn-next-grp').textContent =
         presentingGroup >= totalGroups ? '→ 開放投票' : '下一組 →';
     }
     if (phase === 'voting') {
-      showSec('sec-voting');
-      const voterCount = Object.keys(voters).length;
-      document.getElementById('h-vote-count').textContent = `目前 ${voterCount} 人已投票`;
+      show('sec-voting');
+      const n = Object.keys(voters).length;
+      document.getElementById('h-vote-count').textContent = n + ' 人已投票';
       renderHostVoteLive(voters, groups, totalGroups);
     }
     if (phase === 'results') {
-      showSec('sec-results');
-      renderHostResults(voters, groups);
+      show('sec-results');
+      renderHostResults(voters, groups, totalGroups);
     }
 
-    // 計時
     clearInterval(timerHandle);
-    if (phase === 'discussion' && discussionStart) {
-      hostTick('h-disc-timer', discussionStart, DISC_SEC);
-    }
-    if (phase === 'presenting' && presentStart) {
-      hostTick('h-pres-timer', presentStart, PRES_SEC);
-    }
+    if (phase === 'discussion' && discussionStart) hostTick('h-disc-timer', discussionStart, DISC_SEC);
+    if (phase === 'presenting' && presentStart)   hostTick('h-pres-timer', presentStart, PRES_SEC);
   });
 }
 
-function hostTick(elId, startTs, totalSec) {
-  const update = () => {
-    const rem = Math.max(0, totalSec - (Date.now() - startTs) / 1000);
+function hostTick(elId, startTs, total) {
+  const tick = () => {
+    const rem = Math.max(0, total - (Date.now() - startTs) / 1000);
     const el = document.getElementById(elId);
     if (el) el.textContent = fmt(rem);
     if (rem <= 0) clearInterval(timerHandle);
   };
-  update();
-  timerHandle = setInterval(update, 500);
+  tick(); timerHandle = setInterval(tick, 500);
 }
 
 function renderHostVoteLive(voters, groups, total) {
   const counts = calcVotes(voters, total);
   const cats = [
-    { key:'creative', label:'✨ 最有創意' },
-    { key:'clarity',  label:'💡 最佳解惑' },
-    { key:'touching', label:'❤️ 最感動人' }
+    { key:'creative', label:'最有創意', color:'var(--gold)' },
+    { key:'clarity',  label:'最佳解惑', color:'var(--acc-hi)' },
+    { key:'touching', label:'最感動人', color:'#FF6B8A' }
   ];
-  const c = document.getElementById('h-vote-live');
-  c.innerHTML = cats.map(cat => {
-    const rows = Object.entries(counts[cat.key]||{})
-      .sort((a,b)=>b[1]-a[1])
-      .map(([gid,n]) => `<div class="flex justify-between text-sm">
-        <span>${groups[gid]?.name||'第'+gid+'組'}</span>
-        <span class="text-amber-300 font-bold">${n} 票</span>
-      </div>`).join('');
-    return `<div><div class="text-slate-400 text-xs mb-1">${cat.label}</div>${rows}</div>`;
-  }).join('');
-}
-
-function renderHostResults(voters, groups) {
-  const total = S.totalGroups || 5;
-  const counts = calcVotes(voters, total);
-  const cats = ['creative','clarity','touching'];
-  const labels = { creative:'✨ 最有創意獎', clarity:'💡 最佳解惑獎', touching:'❤️ 最感動人獎' };
-  document.getElementById('h-results').innerHTML = cats.map(cat => {
-    const entries = Object.entries(counts[cat]||{}).sort((a,b)=>b[1]-a[1]);
-    const winner  = entries[0];
-    const name    = winner ? (groups[winner[0]]?.name||'第'+winner[0]+'組') : '—';
-    const votes   = winner ? winner[1] : 0;
-    return `<div class="flex justify-between items-center">
-      <span>${labels[cat]}</span>
-      <span class="font-black text-amber-300">${name} <span class="text-slate-500 font-normal text-sm">${votes} 票</span></span>
+  document.getElementById('h-vote-live').innerHTML = cats.map(c => {
+    const entries = Object.entries(counts[c.key]||{}).sort((a,b)=>b[1]-a[1]);
+    const maxVotes = entries[0]?.[1] || 1;
+    return `<div>
+      <div style="color:var(--t3);font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px">${c.label}</div>
+      ${entries.map(([gid,n])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:12px;color:var(--t2);width:36px">${groups[gid]?.name||''}</span>
+          <div style="flex:1;height:4px;background:var(--bd);border-radius:4px;overflow:hidden">
+            <div style="width:${(n/maxVotes*100).toFixed(0)}%;height:100%;background:${c.color};border-radius:4px;transition:width .5s"></div>
+          </div>
+          <span style="font-size:12px;color:${c.color};font-weight:600;width:20px;text-align:right">${n}</span>
+        </div>`).join('')}
     </div>`;
   }).join('');
 }
 
-// ════════════════════════════ 大螢幕 ════════════════════════
+function renderHostResults(voters, groups, total) {
+  const counts = calcVotes(voters, total);
+  const cats = [
+    { key:'creative', label:'最有創意獎' },
+    { key:'clarity',  label:'最佳解惑獎' },
+    { key:'touching', label:'最感動人獎' }
+  ];
+  document.getElementById('h-results').innerHTML = cats.map(c => {
+    const entries = Object.entries(counts[c.key]||{}).sort((a,b)=>b[1]-a[1]);
+    const winner  = entries[0];
+    const name  = winner ? (groups[winner[0]]?.name || '第'+winner[0]+'組') : '—';
+    const votes = winner ? winner[1] : 0;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)">
+      <span style="font-size:13px;color:var(--t2)">${c.label}</span>
+      <span style="font-size:14px;font-weight:600">${name} <span style="color:var(--t3);font-weight:400;font-size:12px">${votes} 票</span></span>
+    </div>`;
+  }).join('');
+}
+
+// ── Display ───────────────────────────────────────────────
 function initDisplay() {
   displayListening = true;
   let qrDone = false;
@@ -541,36 +742,38 @@ function initDisplay() {
     const { phase='waiting', groups={}, presentingGroup=0,
             discussionStart=0, presentStart=0, voters={}, totalGroups=5 } = S;
 
-    // 切換視圖
     ['waiting','drawing','discussion','presenting','voting','results'].forEach(p => {
-      document.getElementById('disp-' + p).classList.add('hidden');
+      document.getElementById('disp-' + p)?.classList.add('hidden');
     });
-    const cur = document.getElementById('disp-' + phase);
-    if (cur) cur.classList.remove('hidden');
+    document.getElementById('disp-' + phase)?.classList.remove('hidden');
 
     clearInterval(dispTimer);
 
     if (phase === 'drawing') {
       const c = document.getElementById('disp-questions');
-      c.innerHTML = Object.entries(groups).map(([gid, g]) => `
-        <div class="bg-slate-800/60 rounded-2xl p-5 animate-in border border-slate-700">
-          <div class="text-amber-400 font-black text-xl mb-2">${g.name}</div>
-          <div class="text-slate-200 text-base md:text-lg leading-relaxed">${QUESTIONS[g.qIndex]?.full||''}</div>
+      c.innerHTML = Object.entries(groups).map(([gid,g]) => `
+        <div style="background:var(--surf);border:1px solid var(--bd);border-radius:12px;padding:18px 20px" class="ani-up">
+          <div style="color:var(--gold);font-weight:600;font-size:clamp(.85rem,1.6vw,1rem);margin-bottom:8px">${g.name}</div>
+          <div style="color:var(--t1);font-size:clamp(.9rem,1.8vw,1.15rem);line-height:1.65">${QUESTIONS[g.qIndex]?.full||''}</div>
         </div>`).join('');
     }
 
-    if (phase === 'discussion') {
-      if (discussionStart) {
-        const tick = () => {
-          const rem = Math.max(0, DISC_SEC - (Date.now() - discussionStart) / 1000);
-          const el  = document.getElementById('disp-disc-timer');
-          const bar = document.getElementById('disp-disc-bar');
-          if (el)  { el.textContent = fmt(rem); el.className = 'timer-huge font-mono ' + (rem<=60?'text-red-400 glow-red':'text-amber-300 glow-gold'); }
-          if (bar) bar.style.width = (rem / DISC_SEC * 100) + '%';
-          if (rem === 0) clearInterval(dispTimer);
-        };
-        tick(); dispTimer = setInterval(tick, 500);
-      }
+    if (phase === 'discussion' && discussionStart) {
+      const tick = () => {
+        const rem  = Math.max(0, DISC_SEC - (Date.now() - discussionStart) / 1000);
+        const el   = document.getElementById('disp-disc-timer');
+        const ring = document.getElementById('disp-disc-ring');
+        if (el) {
+          el.textContent = fmt(rem);
+          el.style.color = rem <= 60 ? 'var(--red)' : rem <= 120 ? 'var(--gold)' : 'var(--t1)';
+        }
+        if (ring) {
+          ring.style.strokeDashoffset = ((1 - rem / DISC_SEC) * CIRC).toFixed(2);
+          ring.style.stroke = rem <= 60 ? 'var(--red)' : rem <= 120 ? 'var(--gold)' : 'var(--acc)';
+        }
+        if (rem === 0) clearInterval(dispTimer);
+      };
+      tick(); dispTimer = setInterval(tick, 500);
     }
 
     if (phase === 'presenting') {
@@ -579,11 +782,17 @@ function initDisplay() {
       document.getElementById('disp-pres-q').textContent    = QUESTIONS[g?.qIndex]?.full || '';
       if (presentStart) {
         const tick = () => {
-          const rem = Math.max(0, PRES_SEC - (Date.now() - presentStart) / 1000);
-          const el  = document.getElementById('disp-pres-timer');
-          const bar = document.getElementById('disp-pres-bar');
-          if (el)  { el.textContent = fmt(rem); el.className = 'timer-huge font-mono ' + (rem<=30?'text-red-400 glow-red':'text-white'); }
-          if (bar) bar.style.width = (rem / PRES_SEC * 100) + '%';
+          const rem  = Math.max(0, PRES_SEC - (Date.now() - presentStart) / 1000);
+          const el   = document.getElementById('disp-pres-timer');
+          const ring = document.getElementById('disp-pres-ring');
+          if (el) {
+            el.textContent = fmt(rem);
+            el.style.color = rem <= 30 ? 'var(--red)' : 'var(--t1)';
+          }
+          if (ring) {
+            ring.style.strokeDashoffset = ((1 - rem / PRES_SEC) * CIRC).toFixed(2);
+            ring.style.stroke = rem <= 30 ? 'var(--red)' : rem <= 60 ? 'var(--gold)' : 'var(--green)';
+          }
           if (rem === 0) clearInterval(dispTimer);
         };
         tick(); dispTimer = setInterval(tick, 500);
@@ -592,15 +801,16 @@ function initDisplay() {
 
     if (phase === 'voting') {
       if (!qrDone) {
-        const url  = location.origin + location.pathname + '#vote';
+        const url = location.origin + location.pathname + '#vote';
         document.getElementById('disp-vote-url').textContent = url;
-        const qrc  = document.getElementById('disp-qr');
+        const qrc = document.getElementById('disp-qr');
         qrc.innerHTML = '';
-        new QRCode(qrc, { text: url, width: 200, height: 200, colorDark: '#0a0a1a', colorLight: '#ffffff' });
+        new QRCode(qrc, { text:url, width:200, height:200, colorDark:'#111113', colorLight:'#ffffff' });
         qrDone = true;
       }
-      const count = Object.keys(voters).length;
-      document.getElementById('disp-voter-count').textContent = count + ' 人已投票';
+      const n = Object.keys(voters).length;
+      document.getElementById('disp-voter-count').innerHTML =
+        `<span style="width:8px;height:8px;border-radius:50%;background:var(--green)"></span> ${n} 人已投票`;
     }
 
     if (phase === 'results') {
@@ -608,17 +818,15 @@ function initDisplay() {
       ['creative','clarity','touching'].forEach(cat => {
         const entries = Object.entries(counts[cat]||{}).sort((a,b)=>b[1]-a[1]);
         const winner  = entries[0];
-        const name    = winner ? (groups[winner[0]]?.name||'第'+winner[0]+'組') : '—';
-        const votes   = winner ? winner[1] : 0;
-        document.getElementById('res-' + cat).textContent = name;
-        document.getElementById('res-' + cat + '-votes').textContent = votes ? votes + ' 票' : '';
+        document.getElementById('res-' + cat).textContent = winner ? (groups[winner[0]]?.name || '第'+winner[0]+'組') : '—';
+        document.getElementById('res-' + cat + '-votes').textContent = winner && winner[1] ? winner[1] + ' 票' : '';
       });
     }
   });
 }
 
-// ════════════════════════════ 投票頁 ════════════════════════
-let voteChoices = { creative: null, clarity: null, touching: null };
+// ── Vote ─────────────────────────────────────────────────
+let voteChoices = { creative:null, clarity:null, touching:null };
 
 function initVote() {
   voteListening = true;
@@ -648,10 +856,10 @@ function initVote() {
 function renderVoteOptions(groups) {
   ['creative','clarity','touching'].forEach(cat => {
     const c = document.getElementById('vopt-' + cat);
-    if (!c || c.children.length > 0) return; // 已渲染就跳過
+    if (!c || c.children.length > 0) return;
     Object.entries(groups).forEach(([gid, g]) => {
       const d = document.createElement('div');
-      d.className = 'vote-card';
+      d.className = 'vcard';
       d.textContent = g.name;
       d.dataset.cat = cat; d.dataset.gid = gid;
       d.onclick = () => selectVote(cat, gid);
@@ -664,24 +872,39 @@ function selectVote(cat, gid) {
   voteChoices[cat] = gid;
   document.querySelectorAll(`[data-cat="${cat}"]`).forEach(e => e.classList.remove('selected'));
   document.querySelector(`[data-cat="${cat}"][data-gid="${gid}"]`)?.classList.add('selected');
-  checkVoteReady();
+  updateProgress();
+  checkReady();
 }
 window.selectVote = selectVote;
 
-function checkVoteReady() {
+function updateProgress() {
+  const cats = ['creative','clarity','touching'];
+  cats.forEach((cat, i) => {
+    const bar = document.getElementById('vp-' + i);
+    if (bar) bar.style.background = voteChoices[cat] ? 'var(--acc)' : 'var(--bd)';
+  });
+}
+
+function checkReady() {
   const ready = Object.values(voteChoices).every(v => v !== null);
   const btn   = document.getElementById('btn-submit');
+  if (!btn) return;
   btn.disabled = !ready;
-  btn.textContent = ready ? '送出投票 →' : '請選擇三個獎項';
-  btn.className   = ready
-    ? 'w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-5 rounded-2xl text-xl transition-all mt-2 pulse'
-    : 'w-full bg-slate-600 text-slate-400 font-black py-5 rounded-2xl text-xl transition-all mt-2 cursor-not-allowed';
+  if (ready) {
+    btn.className = 'btn btn-acc btn-xl btn-full pulse';
+    btn.style.cssText = 'margin-top:16px;cursor:pointer';
+    btn.textContent  = '送出投票 →';
+  } else {
+    btn.className = 'btn btn-full btn-xl';
+    btn.style.cssText = 'margin-top:16px;background:var(--elev);color:var(--t3);border:1px solid var(--bd);cursor:not-allowed';
+    btn.textContent = '請選擇三個獎項';
+  }
 }
 
 window.submitVote = async () => {
   if (!Object.values(voteChoices).every(v => v !== null)) return;
   const btn = document.getElementById('btn-submit');
-  btn.disabled = true; btn.textContent = '送出中…';
+  btn.disabled = true; btn.textContent = '送出中…'; btn.classList.remove('pulse');
   const rootRef = ref(db, '/');
   await update(rootRef, {
     [`session/voters/${deviceId}`]: {
@@ -694,27 +917,24 @@ window.submitVote = async () => {
   document.getElementById('vote-done').classList.remove('hidden');
 };
 
-// ════════════════════════════ 工具 ════════════════════════
+// ── Utils ─────────────────────────────────────────────────
 function fmt(sec) {
   const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
   return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
 }
 
 function calcVotes(voters, totalGroups) {
-  const counts = { creative:{}, clarity:{}, touching:{} };
-  for (let i = 1; i <= totalGroups; i++) {
-    counts.creative[i] = 0; counts.clarity[i] = 0; counts.touching[i] = 0;
-  }
-  Object.values(voters || {}).forEach(v => {
+  const c = { creative:{}, clarity:{}, touching:{} };
+  for (let i = 1; i <= totalGroups; i++) { c.creative[i]=0; c.clarity[i]=0; c.touching[i]=0; }
+  Object.values(voters||{}).forEach(v => {
     if (typeof v !== 'object') return;
     ['creative','clarity','touching'].forEach(cat => {
-      if (v[cat] && counts[cat][v[cat]] !== undefined) counts[cat][v[cat]]++;
+      if (v[cat] && c[cat][v[cat]] !== undefined) c[cat][v[cat]]++;
     });
   });
-  return counts;
+  return c;
 }
 
-// expose for inline handlers
 window.renderAssign = renderAssign;
 </script>
 </body>
