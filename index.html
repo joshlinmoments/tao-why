@@ -236,33 +236,49 @@
       <div id="sec-setup" class="card" style="padding:20px">
         <p class="slabel" style="margin-bottom:14px">分組設定</p>
         <div style="margin-bottom:14px">
-          <p style="font-size:12px;color:var(--t2);margin-bottom:8px">組數</p>
+          <p style="font-size:12px;color:var(--t2);margin-bottom:8px">組數（含線上組）</p>
           <div style="display:flex;gap:6px">
             <button onclick="setGrpCount(4)" id="btn-g4" class="btn btn-ghost" style="flex:1">4 組</button>
             <button onclick="setGrpCount(5)" id="btn-g5" class="btn btn-ghost active" style="flex:1">5 組</button>
           </div>
         </div>
-        <div id="grp-assign" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
+        <!-- 組別預覽 -->
+        <div id="grp-preview" style="display:flex;flex-direction:column;gap:0;margin-bottom:16px;border:1px solid rgba(255,255,255,.07);border-radius:8px;overflow:hidden"></div>
         <button onclick="startCourse()" class="btn btn-gold btn-xl btn-full">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          展示題目，開始課程
+          確認分組，進入抽題
         </button>
       </div>
 
       <!-- DISCUSS -->
       <div id="sec-discuss" class="card hidden" style="padding:20px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <p class="slabel">討論計時</p>
-          <span class="badge badge-gold">10 分鐘</span>
-        </div>
-        <div id="h-disc-timer" class="h-timer" style="color:var(--gold);text-align:center;margin-bottom:16px">10:00</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <button onclick="startDiscussion()" id="btn-disc-start" class="btn btn-green btn-lg">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            開始計時
+
+        <!-- 待抽題（drawingState = pending） -->
+        <div id="disc-pending">
+          <p class="slabel" style="margin-bottom:12px">隨機抽題</p>
+          <p style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6">各組已確認。按下按鈕，系統將隨機分配題目並在大螢幕呈現抽題動畫。</p>
+          <button onclick="assignRandom()" id="btn-draw" class="btn btn-acc btn-xl btn-full">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            隨機抽題
           </button>
-          <button onclick="goPresent(1)" class="btn btn-ghost btn-lg">跳過 → 分享</button>
         </div>
+
+        <!-- 已抽題，進入計時（drawingState = drawn） -->
+        <div id="disc-drawn" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <p class="slabel">討論計時</p>
+            <span class="badge badge-gold">10 分鐘</span>
+          </div>
+          <div id="h-disc-timer" class="h-timer" style="color:var(--gold);text-align:center;margin-bottom:16px">10:00</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button onclick="startDiscussion()" id="btn-disc-start" class="btn btn-green btn-lg">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              開始計時
+            </button>
+            <button onclick="goPresent(1)" class="btn btn-ghost btn-lg">跳過 → 分享</button>
+          </div>
+        </div>
+
       </div>
 
       <!-- PRESENT -->
@@ -554,7 +570,13 @@ const QUESTIONS = [
   { short:"為何上進階班",  full:"沒來上課的生活也可以很精彩啊，為什麼一定要來上進階班？" },
   { short:"功德與無執著",  full:"為什麼佛堂一直要我們做功德賺天幣，但是同時叫我們不要想自己賺多少功德呢？" },
 ];
-const GRP_NAMES = ['第一組','第二組','第三組','第四組','第五組'];
+const CHN = ['一','二','三','四'];
+function makeGrpNames(n) {
+  const names = [];
+  for (let i = 0; i < n - 1; i++) names.push('第' + CHN[i] + '組');
+  names.push('線上組');
+  return names;
+}
 const DISC_SEC  = 10 * 60;
 const PRES_SEC  = 3  * 60;
 const CIRC      = 534.07; // 2π × 85
@@ -597,40 +619,51 @@ window.unlockHost = () => {
   }
 };
 
-let grpCount    = 5;
-let assignments = [0,1,2,3,4];
+let grpCount = 5;
 
 window.setGrpCount = function(n) {
   grpCount = n;
   document.getElementById('btn-g4').classList.toggle('active', n === 4);
   document.getElementById('btn-g5').classList.toggle('active', n === 5);
-  renderAssign();
+  renderGroupPreview();
 };
 
-function renderAssign() {
-  const c = document.getElementById('grp-assign');
-  c.innerHTML = '';
-  for (let i = 0; i < grpCount; i++) {
-    const d = document.createElement('div');
-    d.style.cssText = 'display:flex;align-items:center;gap:10px';
-    d.innerHTML = `
-      <span style="color:var(--t2);width:48px;flex-shrink:0;font-size:13px;font-weight:500">${GRP_NAMES[i]}</span>
-      <select id="asgn-${i}" class="inp" style="font-size:13px">
-        ${QUESTIONS.map((q,qi)=>`<option value="${qi}" ${assignments[i]===qi?'selected':''}>${qi+1}. ${q.short}</option>`).join('')}
-      </select>`;
-    c.appendChild(d);
-  }
+function renderGroupPreview() {
+  const names = makeGrpNames(grpCount);
+  const c = document.getElementById('grp-preview');
+  c.innerHTML = names.map((name, i) => {
+    const isOnline = i === names.length - 1;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:${i%2===0?'rgba(255,255,255,.02)':'transparent'}">
+      <span style="width:8px;height:8px;border-radius:50%;background:${isOnline?'var(--green)':'var(--acc)'};flex-shrink:0"></span>
+      <span style="font-size:13px;color:var(--t2);flex:1">${name}</span>
+      ${isOnline ? '<span class="badge badge-green" style="font-size:10px">線上</span>' : ''}
+    </div>`;
+  }).join('');
 }
 
 window.startCourse = async () => {
+  const names = makeGrpNames(grpCount);
   const groups = {};
-  for (let i = 0; i < grpCount; i++) {
-    const qi = parseInt(document.getElementById('asgn-' + i).value);
-    assignments[i] = qi;
-    groups[i+1] = { name: GRP_NAMES[i], qIndex: qi };
+  names.forEach((name, i) => { groups[i+1] = { name, qIndex: -1 }; });
+  await set(sessRef, {
+    phase: 'drawing', drawingState: 'pending',
+    totalGroups: grpCount, presentingGroup: 0,
+    discussionStart: 0, presentStart: 0, groups, voters: {}
+  });
+};
+
+window.assignRandom = async () => {
+  const total = S.totalGroups || grpCount;
+  const pool = [...Array(total).keys()]; // [0,1,...,N-1]
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  await set(sessRef, { phase:'drawing', totalGroups:grpCount, presentingGroup:0,
-    discussionStart:0, presentStart:0, groups, voters:{} });
+  const btn = document.getElementById('btn-draw');
+  if (btn) { btn.disabled = true; btn.textContent = '抽題中…'; }
+  const updates = { 'session/drawingState': 'drawn' };
+  for (let i = 1; i <= total; i++) updates[`session/groups/${i}/qIndex`] = pool[i - 1];
+  await update(ref(db, '/'), updates);
 };
 
 window.startDiscussion = async () => {
@@ -654,14 +687,14 @@ window.resetCourse = async () => {
 };
 
 function initHost() {
-  renderAssign();
+  renderGroupPreview();
   onValue(sessRef, snap => {
     S = snap.val() || {};
     const { phase='waiting', presentingGroup=0, totalGroups=5,
-            discussionStart=0, presentStart=0, voters={}, groups={} } = S;
+            discussionStart=0, presentStart=0, voters={}, groups={}, drawingState='pending' } = S;
 
-    const labels = { waiting:'等待中', drawing:'展示題目', discussion:'小組討論',
-                     presenting:'分享進行', voting:'投票中', results:'結果揭曉' };
+    const labels = { waiting:'等待中', drawing: drawingState==='pending'?'展示組別':'抽題完成',
+                     discussion:'小組討論', presenting:'分享進行', voting:'投票中', results:'結果揭曉' };
     document.getElementById('h-phase').textContent = labels[phase] || phase;
 
     const show = id => { const e=document.getElementById(id); if(e){e.classList.remove('hidden');} };
@@ -669,7 +702,14 @@ function initHost() {
     ['sec-setup','sec-discuss','sec-present','sec-voting','sec-results'].forEach(hide);
 
     if (phase === 'waiting')   show('sec-setup');
-    if (['drawing','discussion'].includes(phase)) show('sec-discuss');
+    if (['drawing','discussion'].includes(phase)) {
+      show('sec-discuss');
+      const isPending = drawingState === 'pending';
+      const pd = document.getElementById('disc-pending');
+      const dr = document.getElementById('disc-drawn');
+      if (pd) pd.style.display = isPending ? '' : 'none';
+      if (dr) dr.style.display = isPending ? 'none' : '';
+    }
     if (phase === 'presenting') {
       show('sec-present');
       const g = groups[presentingGroup];
@@ -748,6 +788,90 @@ function renderHostResults(voters, groups, total) {
 }
 
 // ── Display ───────────────────────────────────────────────
+// ── Draw animation helpers ────────────────────────────────
+let drawAnimPlayed = false;
+const CARD_STYLE = 'background:rgba(18,26,22,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;transition:border-color .4s,background .4s';
+
+function renderDispPending(groups) {
+  const c = document.getElementById('disp-questions');
+  c.innerHTML = Object.entries(groups).map(([gid,g]) => `
+    <div style="${CARD_STYLE}" class="ani-up">
+      <div style="color:var(--gold);font-weight:700;font-size:clamp(1rem,2vw,1.3rem);margin-bottom:10px">${g.name}</div>
+      <div style="color:var(--t3);font-size:clamp(.85rem,1.5vw,1rem)">等待抽題…</div>
+    </div>`).join('');
+}
+
+function renderDispRevealed(groups) {
+  const c = document.getElementById('disp-questions');
+  c.innerHTML = Object.entries(groups).map(([gid,g]) => `
+    <div style="${CARD_STYLE}" class="ani-up">
+      <div style="color:var(--gold);font-weight:700;font-size:clamp(1rem,2vw,1.3rem);margin-bottom:8px">${g.name}</div>
+      <div style="color:var(--t1);font-size:clamp(.85rem,1.6vw,1.05rem);line-height:1.7">${QUESTIONS[g.qIndex]?.full||''}</div>
+    </div>`).join('');
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function playDrawAnim(groups) {
+  const c = document.getElementById('disp-questions');
+  const entries = Object.entries(groups);
+
+  // Step 1: show all cards with "?" placeholder
+  c.innerHTML = entries.map(([gid,g]) => `
+    <div id="dq-${gid}" style="${CARD_STYLE}">
+      <div style="color:var(--gold);font-weight:700;font-size:clamp(1rem,2vw,1.3rem);margin-bottom:10px">${g.name}</div>
+      <div id="dqt-${gid}" style="color:var(--t3);font-size:clamp(.85rem,1.5vw,1rem);transition:color .3s">—</div>
+    </div>`).join('');
+
+  await sleep(400);
+
+  // Step 2: reveal each group one by one
+  for (let i = 0; i < entries.length; i++) {
+    const [gid, g] = entries[i];
+    if (i > 0) await sleep(900);
+    await spinCard(gid, g.qIndex);
+  }
+}
+
+async function spinCard(gid, finalIdx) {
+  const card = document.getElementById('dq-' + gid);
+  const txt  = document.getElementById('dqt-' + gid);
+  if (!card || !txt) return;
+
+  // Highlight this card
+  card.style.borderColor = 'rgba(123,97,255,.5)';
+  card.style.background  = 'rgba(20,18,40,.8)';
+  await sleep(100);
+
+  // Fast spin (15 × 80ms = 1.2s)
+  for (let i = 0; i < 15; i++) {
+    txt.textContent = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)].short;
+    txt.style.color = 'var(--t2)';
+    await sleep(80);
+  }
+  // Slow down (5 × 180ms = 0.9s)
+  for (let i = 0; i < 5; i++) {
+    txt.textContent = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)].short;
+    await sleep(180);
+  }
+  // Lock in
+  txt.textContent = QUESTIONS[finalIdx].short;
+  txt.style.color = 'var(--gold-hi)';
+  txt.style.fontWeight = '600';
+  card.style.borderColor = 'rgba(52,199,89,.6)';
+  card.style.background  = 'rgba(12,30,20,.85)';
+  await sleep(700);
+  // Expand to full text
+  txt.textContent = QUESTIONS[finalIdx].full;
+  txt.style.color = 'var(--t1)';
+  txt.style.fontWeight = '400';
+  txt.style.fontSize   = 'clamp(.8rem,1.5vw,1rem)';
+  txt.style.lineHeight = '1.7';
+  card.style.borderColor = '';
+  card.style.background  = '';
+}
+
+// ── Display ───────────────────────────────────────────────
 function initDisplay() {
   displayListening = true;
   let qrDone = false;
@@ -768,12 +892,18 @@ function initDisplay() {
     clearInterval(dispTimer);
 
     if (phase === 'drawing') {
-      const c = document.getElementById('disp-questions');
-      c.innerHTML = Object.entries(groups).map(([gid,g]) => `
-        <div style="background:rgba(18,26,22,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px" class="ani-up">
-          <div style="color:var(--gold);font-weight:600;font-size:clamp(.85rem,1.6vw,1rem);margin-bottom:8px">${g.name}</div>
-          <div style="color:var(--t1);font-size:clamp(.9rem,1.8vw,1.15rem);line-height:1.65">${QUESTIONS[g.qIndex]?.full||''}</div>
-        </div>`).join('');
+      const ds = S.drawingState || 'pending';
+      if (ds === 'pending') {
+        drawAnimPlayed = false;
+        renderDispPending(groups);
+      } else if (ds === 'drawn') {
+        if (!drawAnimPlayed) {
+          drawAnimPlayed = true;
+          playDrawAnim(groups);
+        } else {
+          renderDispRevealed(groups);
+        }
+      }
     }
 
     if (phase === 'discussion' && discussionStart) {
@@ -953,7 +1083,7 @@ function calcVotes(voters, totalGroups) {
   return c;
 }
 
-window.renderAssign = renderAssign;
+window.renderGroupPreview = renderGroupPreview;
 </script>
 </body>
 </html>
