@@ -652,6 +652,12 @@ function renderDisplay() {
     return;
   }
 
+  // ── REVEAL for open/video: fall through to explain ──
+  if (screen === 'reveal' && q.type !== 'psych-classic') {
+    broadcast({ screen:'explain' });
+    return;
+  }
+
   // ── EXPLAIN（open / video）────────────────────────
   if (screen === 'explain') {
     showPanel('d-explain');
@@ -709,6 +715,8 @@ function renderDisplay() {
     }
     return;
   }
+  // Fallback: unknown state → show idle
+  showPanel('d-idle');
 }
 </script>
 </body>
