@@ -7,6 +7,8 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>道場的十萬個為什麼</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-database-compat.js"></script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
@@ -389,39 +391,39 @@ const Q = [
 ];
 
 // ═══════════════════════════════════════════════════
-// STATE  —  使用 BroadcastChannel 同步兩個分頁
+// STATE  —  使用 Firebase 跨裝置即時同步
 // ═══════════════════════════════════════════════════
-// 「主持人分頁」更新狀態後廣播，「大螢幕分頁」接收並渲染。
-// localStorage 作為備份，讓大螢幕開啟時能恢復上次狀態。
+// 手機主持人更新 Firebase → Mac 大螢幕即時收到並渲染。
 
-const CH = new BroadcastChannel('tao-why-v2');
+const fbApp = firebase.initializeApp({
+  apiKey:"AIzaSyAFlhG3HmDfXo33KJFnQ-k3MhWqt-Km0IY",
+  authDomain:"tao-why.firebaseapp.com",
+  databaseURL:"https://tao-why-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"tao-why", storageBucket:"tao-why.firebasestorage.app",
+  messagingSenderId:"890386342264", appId:"1:890386342264:web:de68c75a2cfe42dab5e88d"
+});
+const db = firebase.database();
+const stateRef = db.ref('state');
 
 const S = { screen:'idle', qIdx:-1, timerRunning:false, timerStart:0, timerDur:0 };
 
-// 嘗試從 localStorage 恢復（防止重新整理丟失狀態）
-try {
-  const saved = localStorage.getItem('tao-why-state');
-  if (saved) Object.assign(S, JSON.parse(saved));
-} catch(e) {}
-
-function broadcast(patch) {
+async function broadcast(patch) {
   Object.assign(S, patch);
-  localStorage.setItem('tao-why-state', JSON.stringify(S));
-  CH.postMessage({...S});
-  // 更新主持人 UI（如果在主持人分頁）
+  await stateRef.update(patch);
   if (document.getElementById('page-host')?.classList.contains('active')) {
     renderHostQList();
     renderHostControls();
   }
 }
 
-// 大螢幕分頁接收廣播
-CH.onmessage = e => {
+// 大螢幕（及主持人）監聽 Firebase 狀態變化
+stateRef.on('value', snap => {
+  const data = snap.val();
+  if (data) Object.assign(S, data);
   if (document.getElementById('page-display')?.classList.contains('active')) {
-    Object.assign(S, e.data);
     renderDisplay();
   }
-};
+});
 
 // ═══════════════════════════════════════════════════
 // ROUTER
@@ -562,7 +564,6 @@ window.hostStartTimer = () => {
   clearInterval(_timerInterval);
   _timerInterval = setInterval(() => {
     const rem = Math.max(0, S.timerDur - (Date.now()-S.timerStart)/1000);
-    CH.postMessage({...S, _t:Date.now()}); // 強制大螢幕刷新計時器
     if (rem <= 0) {
       clearInterval(_timerInterval);
       broadcast({ timerRunning:false });
