@@ -383,7 +383,7 @@ function renderHostQList() {
         class="btn ${active ? 'btn-gold' : 'btn-ghost'}"
         style="padding:8px 14px;font-weight:700;font-size:15px;min-width:42px">${i+1}</button>`;
     }).join('') +
-    `<button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0,selectedOpt:null})"
+    `<button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0,selectedOpt:''})"
       class="btn btn-danger" style="padding:8px 12px;margin-left:4px" title="重置">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
     </button>`;
@@ -408,7 +408,7 @@ function renderHostQList() {
 
 window.hostGoQ = i => {
   clearInterval(_timerInterval);
-  broadcast({ screen:'question', qIdx:i, timerRunning:false, timerStart:0, timerDur:Q[i].timerSec, selectedOpt:null });
+  broadcast({ screen:'question', qIdx:i, timerRunning:false, timerStart:0, timerDur:Q[i].timerSec, selectedOpt:'' });
 };
 
 window.hostSelectOpt = label => {
@@ -437,12 +437,12 @@ function renderHostControls() {
 
   const isLast = qIdx >= Q.length - 1;
   const nextBtn = isLast
-    ? `<button onclick="broadcast({screen:'idle',qIdx:-1,timerRunning:false,selectedOpt:null})" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">課程結束</button>`
+    ? `<button onclick="broadcast({screen:'idle',qIdx:-1,timerRunning:false,selectedOpt:''})" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">課程結束</button>`
     : `<button onclick="hostGoQ(${qIdx+1})" class="btn btn-gold btn-lg btn-full" style="margin-bottom:8px">下一題：Q${qIdx+2} ${Q[qIdx+1].badge} →</button>`;
 
   const resetHtml = `
     <div style="height:1px;background:var(--bd);margin:10px 0"></div>
-    <button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0,selectedOpt:null})" class="btn btn-danger btn-full" style="padding:9px">
+    <button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0,selectedOpt:''})" class="btn btn-danger btn-full" style="padding:9px">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
       重置
     </button>`;
@@ -532,7 +532,7 @@ window.hostPauseTimer = () => {
 
 window.hostReveal = () => {
   clearInterval(_timerInterval);
-  broadcast({ screen:'reveal', timerRunning:false, selectedOpt:null });
+  broadcast({ screen:'reveal', timerRunning:false, selectedOpt:'' });
 };
 
 window.hostExplain = () => {
