@@ -605,10 +605,11 @@ function renderDisplay() {
           <span class="d-opt-label" style="color:var(--gold-hi);flex-shrink:0">${o.label}</span>
           <span class="d-opt-text" style="color:var(--t2)">${o.text}</span>
         </div>`).join('');
+      document.getElementById('d-q-hint').style.display = '';
       document.getElementById('d-q-hint').textContent = '💬 請在聊天室回覆 A / B / C / D';
     } else {
       oc.innerHTML = '';
-      document.getElementById('d-q-hint').textContent = '💬 請在聊天室分享您的看法';
+      document.getElementById('d-q-hint').style.display = 'none';
     }
     return;
   }
