@@ -54,7 +54,7 @@
     .role-card:hover { border-color:var(--bd-hi); background:rgba(28,40,32,.78); transform:translateY(-2px) }
     .icon-box { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0 }
 
-    /* ── Display page: projector boost ── */
+    /* ── Display page ── */
     #page-display { --t1:#FFFFFF; --t2:#D8D8F0; --t3:#A0A0C0; --gold:#FFD060; --gold-hi:#FFE880; --acc:#A490FF; --acc-hi:#BBAAFF; --green:#4CD964; }
     .d-panel { display:none }
     .d-title { font-size:clamp(3rem,8vw,6rem); font-weight:700; line-height:1.1; text-shadow:0 0 40px rgba(255,255,255,.25) }
@@ -65,6 +65,9 @@
     .d-hint { font-size:clamp(.9rem,2vw,1.5rem); color:var(--t3) }
     .d-unity { font-size:clamp(1.1rem,2.3vw,1.8rem); color:var(--t2); line-height:1.9; text-align:center; white-space:pre-line }
     .d-explain-text { font-size:clamp(1.2rem,2.4vw,2rem); line-height:2; color:var(--t2) }
+    .d-classic-quote { font-size:clamp(1.8rem,4.5vw,3.6rem); font-weight:700; color:var(--t1); line-height:1.7; text-align:center }
+    .d-classic-source { font-size:clamp(1rem,2.2vw,1.8rem); color:var(--acc-hi); font-weight:600; text-align:center }
+    .d-supplement { font-size:clamp(1rem,2vw,1.6rem); color:var(--acc-hi); line-height:1.9; white-space:pre-line; text-align:center; font-style:italic }
 
     @keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
     @keyframes scaleIn { from { opacity:0; transform:scale(.95) } to { opacity:1; transform:scale(1) } }
@@ -79,17 +82,17 @@
 
 
 <!-- ═══════════════════════════════════════════════════
-     HOME  —  主持人 or 大螢幕
+     HOME
 ════════════════════════════════════════════════════ -->
 <div id="page-home" class="page active items-center justify-center p-5"
      style="background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(123,97,255,.1) 0%,transparent 70%)">
   <div style="max-width:420px;width:100%">
     <div class="text-center ani-up" style="margin-bottom:36px">
       <div style="width:60px;height:60px;border-radius:14px;background:rgba(123,97,255,.12);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#7B61FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#7B61FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#7B61FF" stroke-width="1.5"/><path d="M14 3C14 3 3 8.5 3 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/><path d="M14 3C14 3 25 8.5 25 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/></svg>
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#7B61FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#7B61FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#A490FF" stroke-width="1.5"/></svg>
       </div>
       <h1 style="font-size:22px;font-weight:700;color:var(--t1);margin-bottom:5px">道場的十萬個為什麼</h1>
-      <p style="color:var(--t3);font-size:13px">人才的使命與自覺</p>
+      <p style="color:var(--t3);font-size:13px">線上智勇班第一期最後一堂課特別企劃</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px">
       <div class="role-card ani-up" style="animation-delay:.08s;display:flex;align-items:center;gap:14px" onclick="nav('host')">
@@ -113,7 +116,7 @@
 
 
 <!-- ═══════════════════════════════════════════════════
-     HOST  —  密碼保護的控制台
+     HOST
 ════════════════════════════════════════════════════ -->
 <div id="page-host" class="page" style="overflow-y:auto">
   <div style="max-width:500px;margin:0 auto;width:100%;padding:0 16px 80px">
@@ -141,6 +144,12 @@
     <!-- Main (unlocked) -->
     <div id="host-main" class="hidden" style="flex-direction:column;gap:10px">
 
+      <!-- Quick jump buttons -->
+      <div class="card" style="padding:14px 16px">
+        <span class="slabel" style="display:block;margin-bottom:10px">快速跳題</span>
+        <div id="h-jump-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+
       <!-- Question list -->
       <div class="card" style="padding:20px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -159,7 +168,7 @@
 
 
 <!-- ═══════════════════════════════════════════════════
-     DISPLAY  —  投影機大螢幕
+     DISPLAY
 ════════════════════════════════════════════════════ -->
 <div id="page-display" class="page items-center justify-center relative overflow-hidden"
      style="background:radial-gradient(ellipse 100% 60% at 50% 0%,rgba(123,97,255,.05) 0%,transparent 60%)">
@@ -172,15 +181,14 @@
   <!-- ── IDLE ── -->
   <div id="d-idle" class="d-panel text-center ani-up" style="padding:32px">
     <div style="width:80px;height:80px;border-radius:20px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 28px">
-      <svg width="40" height="40" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#A490FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#A490FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#A490FF" stroke-width="1.5"/><path d="M14 3C14 3 3 8.5 3 14" stroke="#A490FF" stroke-width="1" opacity=".35"/><path d="M14 3C14 3 25 8.5 25 14" stroke="#A490FF" stroke-width="1" opacity=".35"/></svg>
+      <svg width="40" height="40" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#A490FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#A490FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#A490FF" stroke-width="1.5"/></svg>
     </div>
     <h1 class="d-title" style="color:var(--t1);margin-bottom:16px">道場的十萬個為什麼</h1>
-    <p style="color:var(--t2);font-size:clamp(1.3rem,3vw,2.2rem);font-weight:600;margin-bottom:12px">人才的使命與自覺</p>
+    <p style="color:var(--t2);font-size:clamp(1.3rem,3vw,2.2rem);font-weight:600;margin-bottom:12px">線上智勇班第一期最後一堂課特別企劃</p>
     <p style="color:var(--t3);font-size:clamp(1rem,2vw,1.6rem)">等待課程開始…</p>
   </div>
 
   <!-- ── QUESTION ── -->
-  <!-- 顯示題目文字 + 選項 + 可選計時器 -->
   <div id="d-question" class="d-panel"
        style="width:100%;max-width:1200px;padding:24px 36px;height:100dvh;flex-direction:column;justify-content:center">
     <div style="text-align:center;margin-bottom:clamp(.8rem,2.5vh,2rem)">
@@ -188,61 +196,21 @@
            style="font-size:clamp(.8rem,1.5vw,1.1rem);padding:5px 14px;margin-bottom:clamp(.6rem,1.5vh,1.2rem)">心理測驗</div>
       <div id="d-q-text" class="d-q" style="color:var(--t1);max-width:960px;margin:0 auto"></div>
     </div>
-    <!-- Timer (顯示於題目下方) -->
     <div id="d-q-timer-wrap" style="display:none;text-align:center;margin-bottom:clamp(.5rem,1.5vh,1rem)">
-      <div id="d-q-timer" class="d-timer" style="color:var(--gold)">02:00</div>
+      <div id="d-q-timer" class="d-timer" style="color:var(--gold)">01:30</div>
     </div>
-    <!-- Options -->
     <div id="d-q-opts" style="display:flex;flex-direction:column;gap:clamp(.4rem,1.2vh,.8rem);max-width:860px;margin:0 auto;width:100%"></div>
-    <!-- Chat hint -->
     <p id="d-q-hint" class="d-hint" style="text-align:center;margin-top:clamp(.8rem,2.5vh,1.8rem)">💬 請在聊天室回覆</p>
   </div>
 
-  <!-- ── REVEAL: RELIGION (心理測驗1 — 萬教同源) ── -->
-  <!-- 5 張圖片卡片，每張對應一個宗教 -->
-  <div id="d-reveal-religion" class="d-panel"
-       style="width:100%;padding:clamp(14px,2.5vw,24px) clamp(16px,3vw,36px);overflow-y:auto;max-height:100dvh">
-    <div style="text-align:center;margin-bottom:clamp(.6rem,2vh,1.2rem)">
-      <div style="font-size:clamp(1.8rem,4vw,3.5rem);font-weight:700;color:var(--gold-hi);
-                  text-shadow:0 0 40px rgba(255,208,96,.5);letter-spacing:.06em">萬教同源</div>
-    </div>
-    <div id="d-religion-cards"
-         style="display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(.5rem,1.2vw,.9rem);margin-bottom:clamp(.6rem,1.5vh,1rem)"></div>
-    <div id="d-unity-msg" class="d-unity"
-         style="padding:clamp(.8rem,1.8vw,1.4rem);background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
+  <!-- ── REVEAL: 心理測驗（經典詞句揭示）── -->
+  <div id="d-reveal-classic" class="d-panel"
+       style="width:100%;max-width:1100px;padding:clamp(20px,3vw,40px) clamp(24px,4vw,60px);overflow-y:auto;max-height:100dvh">
   </div>
 
-  <!-- ── REVEAL: TYPE (心理測驗2 — 修辦人才類型) ── -->
-  <!-- 4 張圖片卡片，2×2 格局 -->
-  <div id="d-reveal-type" class="d-panel"
-       style="width:100%;padding:clamp(14px,2.5vw,24px) clamp(16px,3vw,36px);overflow-y:auto;max-height:100dvh">
-    <div style="text-align:center;margin-bottom:clamp(.6rem,2vh,1.2rem)">
-      <div style="font-size:clamp(1.5rem,3.5vw,3rem);font-weight:700;color:var(--t1);
-                  text-shadow:0 0 30px rgba(255,255,255,.2)">每一種，都是道上的一步</div>
-    </div>
-    <div id="d-type-cards"
-         style="display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(.8rem,2vw,1.4rem);
-                max-width:1000px;margin:0 auto clamp(.6rem,1.5vh,1rem)"></div>
-    <div id="d-reflection-msg" class="d-unity"
-         style="padding:clamp(.8rem,1.8vw,1.4rem);background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
-  </div>
-
-  <!-- ── REVEAL: QUIZ (知識/思考/使命題 — 答案揭曉) ── -->
-  <!-- 正確選項高亮，其他變暗 -->
-  <div id="d-reveal-quiz" class="d-panel"
-       style="width:100%;max-width:960px;padding:24px 36px">
-    <div style="text-align:center;margin-bottom:clamp(1rem,3vh,2rem)">
-      <div id="d-rq-badge" class="badge badge-gold"
-           style="font-size:clamp(.8rem,1.5vw,1rem);padding:5px 14px;margin-bottom:clamp(.8rem,2vh,1.5rem)">正確答案</div>
-      <div id="d-rq-text" class="d-q"
-           style="color:var(--t2);max-width:800px;margin:0 auto;font-size:clamp(1.2rem,2.5vw,2rem)"></div>
-    </div>
-    <div id="d-rq-opts" style="display:flex;flex-direction:column;gap:clamp(.6rem,1.5vh,.9rem);max-width:800px;margin:0 auto"></div>
-  </div>
-
-  <!-- ── EXPLAIN (講解頁 — 文字 + 可選 YouTube) ── -->
+  <!-- ── EXPLAIN（開放題解答 + 圖片 / 影片）── -->
   <div id="d-explain" class="d-panel"
-       style="width:100%;max-width:1100px;padding:24px 36px;overflow-y:auto;max-height:100dvh">
+       style="width:100%;max-width:1200px;padding:clamp(20px,3vw,36px) clamp(24px,4vw,48px);overflow-y:auto;max-height:100dvh">
     <div id="d-explain-content" style="display:grid;gap:clamp(1rem,3vw,2.5rem)"></div>
   </div>
 
@@ -251,150 +219,103 @@
 
 <script>
 // ═══════════════════════════════════════════════════
-// DATA  —  題目資料庫（心理測驗 × 2 + 知識/思考題 × 4）
+// DATA
 // ═══════════════════════════════════════════════════
 const HOST_PW = '000';
 
 const Q = [
-  // ── 心理測驗 1：真我 × 五教 ───────────────────────
+  // ── Q1 心理測驗（點選選項，顯示對應經典）───────────
   {
-    id:1, badge:'心理測驗 1', type:'psych-religion',
-    question:'如果用一個特質描述你的內在，你最認同哪一個？',
+    id:1, badge:'心理測驗', type:'psych-classic',
+    question:'如果用一個描述你最近內在心理狀態，你是哪一個呢？',
     timerSec:0,
     opts:[
-      { label:'A', text:'我的內心充滿仁愛，最在乎人與人之間的和諧與關係',
-        religion:'儒', color:'#E8A44A', border:'rgba(232,164,74,.4)',
-        image:'images/ru_ren_20260603_153624.png',
-        quote:'仁者愛人', source:'《論語·顏淵》',
-        insight:'儒家以「仁」為核心，人與人之間的愛，是天道最真實的體現。' },
-      { label:'B', text:'我渴望智慧，想看清生命、苦難與解脫的本質',
-        religion:'佛', color:'#9B7EDE', border:'rgba(155,126,222,.4)',
-        image:'images/fo_wisdom_20260603_153653.png',
-        quote:'心本清淨，不因塵染', source:'《六祖壇經》',
-        insight:'佛法以「覺」為要，撥開執著才能回歸本性清淨。' },
-      { label:'C', text:'我嚮往自然，相信順著本性走，就能找到答案',
-        religion:'道', color:'#5CB87E', border:'rgba(92,184,126,.4)',
-        image:'images/dao_nature_20260603_153611.png',
-        quote:'道法自然', source:'《道德經》第二十五章',
-        insight:'道家以「自然」為本，循道而行，萬物各得其所。' },
-      { label:'D', text:'我相信愛與犧牲，願意為他人無條件付出',
-        religion:'耶', color:'#D4784A', border:'rgba(212,120,74,.4)',
-        image:'images/ye_love_20260603_153612.png',
-        quote:'要彼此相愛，如同我愛你們一樣', source:'《約翰福音》15:12',
-        insight:'基督教以「愛」為精髓，捨己為人是靈魂最高的實踐。' },
-      { label:'E', text:'我重視紀律與感恩，願意臣服於更高的旨意',
-        religion:'回', color:'#3B9EA8', border:'rgba(59,158,168,.4)',
-        image:'images/hui_discipline_20260603_153610.png',
-        quote:'至仁至慈的主啊', source:'《古蘭經》開端章',
-        insight:'伊斯蘭以「信」為基，在順服中找到平靜，在感恩中認識真主。' },
-    ],
-    unity:'五教如五道光——顏色不同，卻照亮同一個真理。\n萬教同源，同歸一理，皆教人向善回天。'
+      { label:'A',
+        text:'即便經歷風風雨雨，仍對世間的一切保有熱情。',
+        classic:'《孟子》',
+        quote:'大人者，不失其赤子之心者也。' },
+      { label:'B',
+        text:'不給自己設限，全然交給上天及道場去安排，聽話照做準沒錯！',
+        classic:'《道德經》',
+        quote:'為天下谷，常德乃足，復歸於樸。\n樸散則為器，聖人用之，則為官長，故大制不割。' },
+      { label:'C',
+        text:'總能敞開心房去相信每個人都是善良沒有惡意的，包括自己也是。',
+        classic:'《六祖壇經》',
+        quote:'人雖有南北，佛性本無南北，\n獦獠身與和尚不同，佛性有何差別？' },
+      { label:'D',
+        text:'時時靜下心來，檢視自己的身心言行，有不好的必盡力去修改！',
+        classic:'《舊約聖經·箴言 20:27》',
+        quote:'人的靈是耶和華的燈，\n鑒察人的心腹。' },
+    ]
   },
 
-  // ── 心理測驗 2：修辦人才類型 ─────────────────────
+  // ── Q2 思考題（本性善良）────────────────────────
   {
-    id:2, badge:'心理測驗 2', type:'psych-type',
-    question:'此刻，你最像哪一種在道場中的人？',
-    timerSec:0,
-    opts:[
-      { label:'A', text:'來道場是因為家人或朋友，還在感受、觀察中',
-        typeName:'緣分型', color:'#5CB87E', border:'rgba(92,184,126,.3)',
-        image:'images/type_yuanfen_20260603_153615.png',
-        response:'你正站在門口，帶著好奇向內望。\n這份緣分本身，就是最美的開始。\n每一位點傳師，也是這樣走進來的。',
-        verse:'「有緣千里來相會，無緣對面不相識。」' },
-      { label:'B', text:'積極學習道學，但還不確定自己在道場中的位置',
-        typeName:'學習型', color:'#A490FF', border:'rgba(164,144,255,.3)',
-        image:'images/type_learning_20260603_153711.png',
-        response:'你正在用心耕耘內在的田地。\n此刻的吸收，將成為日後帶動他人的根基。\n繼續走，方向沒有錯。',
-        verse:'「學而時習之，不亦說乎？」——《論語》' },
-      { label:'C', text:'喜歡在道場付出、幫忙，從行動中找到踏實感',
-        typeName:'服務型', color:'#F5A623', border:'rgba(245,166,35,.3)',
-        image:'images/type_service_20260603_153714.png',
-        response:'你用行動詮釋了「修辦合一」的真義。\n每一次付出，靈魂在悄悄提升。\n你的存在，也在影響身邊的人。',
-        verse:'「功德圓滿，天道成全。」' },
-      { label:'D', text:'感受到內在有個呼喚，想帶動更多人回到這條路上',
-        typeName:'使命型', color:'#FF8C6A', border:'rgba(255,140,106,.3)',
-        image:'images/type_mission_20260603_153712.png',
-        response:'你已聽到靈魂深處的召喚。\n這份使命感，是老天在此關鍵時刻，\n特別交託給你的任務。',
-        verse:'「奉天承運，此時不辦，更待何時？」' },
-    ],
-    reflection:'無論你現在是哪一種，每個階段都有它的意義。\n重要的是——你已經在這條路上了。'
-  },
-
-  // ── 思考題 1 ──────────────────────────────────────
-  {
-    id:3, badge:'思考題', type:'quiz',
-    question:'為什麼每個人的本性都是一樣善良的？明明我們有不一樣的個性，如果大家都是善良的，為什麼世界還會這麼亂？',
-    timerSec:120,
-    opts:[
-      { label:'A', text:'因為每個人出生時都沒有罪惡感，是後天環境讓人變壞' },
-      { label:'B', text:'因為本性是天賦的，人人皆有善的種子，只是被習性遮蔽了' },
-      { label:'C', text:'因為宗教都這樣說，所以大家接受了這個說法' },
-    ],
-    answer:1,
+    id:2, badge:'思考題', type:'open',
+    question:'為什麼每個人的本性都是一樣善良的？明明我們每個人都有不一樣的個性。而且如果大家都是善良的，為什麼世界還會這麼亂？',
+    timerSec:90,
     explain:{
-      text:'一貫道認為「天命真性」人人皆有，本性如月，習性如雲。\n\n月亮（本性）永遠是光明的，只是厚雲（習性、後天環境）遮蔽了它。修道的目的，就是撥雲見月，讓本性重新展現。\n\n世界的亂，不是本性的問題，而是習性未修的問題。',
-      youtube:''
+      title:'《孟子•告子篇》牛山濯濯',
+      text:'人見其禽獸也，而以為未嘗有才焉者，是豈人之情也哉？\n故苟得其養，無物不長；苟失其養，無物不消。\n\n孔子曰：「操則存，舍則亡；出入無時，莫知其鄉。」\n惟心之謂與？',
+      image:'images/photo_q2.png',
+      supplement:''
     }
   },
 
-  // ── 思考題 2 ──────────────────────────────────────
+  // ── Q3 思考題（無為而為）────────────────────────
   {
-    id:4, badge:'思考題', type:'quiz',
-    question:'老子說「無為而為」，那為什麼我們修道還要這麼努力辦道？',
-    timerSec:120,
-    opts:[
-      { label:'A', text:'因為無為是給聖人用的，我們凡人做不到，所以要努力' },
-      { label:'B', text:'「無為」是無私心的為，不是什麼都不做，而是放下「我要得到什麼」的心去行動' },
-      { label:'C', text:'老子的話不適用在現代，不用太認真解讀' },
-    ],
-    answer:1,
+    id:3, badge:'思考題', type:'open',
+    question:'老子都說了「無為而為」，那為什麼我們修道還要這麼努力？',
+    timerSec:90,
     explain:{
-      text:'「無為」不是消極的不作為，而是去掉「私我」的作為——不為名、不為利、不求回報的付出。\n\n辦道正是如此：全心投入、卻不執著於結果。這才是「無為而無不為」的真義。\n\n當我們辦道是為了成全他人、回應天命，而不是為了自己的功德，那就是最真實的「無為」。',
-      youtube:''
+      title:'《道德經第 48 章》',
+      text:'為學日益，為道日損。\n損之又損，以至於無為。\n無為而無不為矣。',
+      image:'images/photo_q3.jpg',
+      supplement:'師尊老大人慈悲聖訓\n\n對自己深刻的真誠　　才有愛而不礙的輕盈\n有愛而不礙的輕盈　　才有全面升級的可能\n有全面升級的可能　　才有持續真誠的從容'
     }
   },
 
-  // ── 使命題 1 ──────────────────────────────────────
+  // ── Q4 思考題（功德天幣）────────────────────────
   {
-    id:5, badge:'使命題', type:'quiz',
-    question:'道場生活和日常生活都可以很精彩，為什麼還要特別投入道場？道場給了我們什麼是外面找不到的？',
-    timerSec:120,
-    opts:[
-      { label:'A', text:'道場可以讓我們得到功德，以後可以回天' },
-      { label:'B', text:'道場提供的是靈魂的歸宿感——讓我們認識自己、找到使命、與同道同行' },
-      { label:'C', text:'因為家人希望我參加，所以來了' },
-    ],
-    answer:1,
+    id:4, badge:'思考題', type:'open',
+    question:'為什麼佛堂一直要我們做功德賺天幣，但是同時叫我們不要想自己賺多少功德呢？',
+    timerSec:90,
     explain:{
-      text:'外面的精彩可以滿足感官，卻常常讓人感到空洞。\n\n道場給的是「意義感」——讓你知道自己從哪裡來、為什麼來，以及可以成為什麼樣的人。這是物質生活填不滿的那一塊。\n\n當你找到這份意義，道場就不再是義務，而是你選擇在這裡的理由。',
-      youtube:''
+      title:'《中庸》',
+      text:'或生而知之，或學而知之，或困而知之，\n及其知之，一也；\n或安而行之，或利而行之，或勉強而行之，\n及其成功，一也。',
+      image:'images/photo_q4.jpg',
+      supplement:'球來就打'
     }
   },
 
-  // ── 使命題 2 ──────────────────────────────────────
+  // ── Q5 思考題（影片 + 進階班）──────────────────
   {
-    id:6, badge:'使命題', type:'quiz',
-    question:'什麼是「人才的自覺」？有自覺的修辦人才，跟被動來道場的人，最大的差別在哪裡？',
-    timerSec:120,
-    opts:[
-      { label:'A', text:'有自覺的人辦道更用力，也更容易得到老師賞識' },
-      { label:'B', text:'有自覺的人，是從「被安排來」到「我選擇在這裡」——從義務變成使命' },
-      { label:'C', text:'差別不大，重要的是有來就好' },
-    ],
-    answer:1,
+    id:5, badge:'思考題', type:'video',
+    question:'沒來上課的生活也可以很精彩啊，為什麼一定要來上進階班？',
+    timerSec:90,
     explain:{
-      text:'「自覺」不是覺得自己很優秀，而是覺知自己的使命。\n\n當一個人從「我被帶來」轉變為「我選擇在這裡」，他的道場生命就完全不同了——他開始主動思考、主動付出、主動帶動他人。\n\n這就是人才自覺的起點，也是今天這堂課最想傳達的訊息。',
-      youtube:''
+      video:'videos/pikmin.mp4',
+      supplement:'七真馬丹陽大仙：\n真正健康的生活，不是永遠守著正確的習慣，\n而是真正步入常道的循環。'
+    }
+  },
+
+  // ── Q6 使命題（師尊問洗澡）────────────────────
+  {
+    id:6, badge:'使命題', type:'open',
+    question:'師尊老大人問大家：如何讓一位不喜歡沐浴的人想沐浴？',
+    timerSec:90,
+    explain:{
+      title:'真誠以待，愛而不礙',
+      text:'徒兒們，聽了這麼多，\n要明白學習對自己真誠以待，\n試著對世間一切愛而不礙。',
+      image:'images/photo_q6.jpg',
+      supplement:'你相信的，就是你擁有的！'
     }
   },
 ];
 
 // ═══════════════════════════════════════════════════
-// STATE  —  使用 Firebase 跨裝置即時同步
+// STATE  —  Firebase 跨裝置即時同步
 // ═══════════════════════════════════════════════════
-// 手機主持人更新 Firebase → Mac 大螢幕即時收到並渲染。
-
 const fbApp = firebase.initializeApp({
   apiKey:"AIzaSyAFlhG3HmDfXo33KJFnQ-k3MhWqt-Km0IY",
   authDomain:"tao-why.firebaseapp.com",
@@ -405,7 +326,7 @@ const fbApp = firebase.initializeApp({
 const db = firebase.database();
 const stateRef = db.ref('state');
 
-const S = { screen:'idle', qIdx:-1, timerRunning:false, timerStart:0, timerDur:0 };
+const S = { screen:'idle', qIdx:-1, timerRunning:false, timerStart:0, timerDur:0, selectedOpt:null };
 
 async function broadcast(patch) {
   Object.assign(S, patch);
@@ -416,7 +337,6 @@ async function broadcast(patch) {
   }
 }
 
-// 大螢幕（及主持人）監聽 Firebase 狀態變化
 stateRef.on('value', snap => {
   const data = snap.val();
   if (data) Object.assign(S, data);
@@ -437,7 +357,7 @@ window.nav = p => {
 nav(location.hash.replace('#','') || 'home');
 
 // ═══════════════════════════════════════════════════
-// HOST  —  主持人控制台邏輯
+// HOST
 // ═══════════════════════════════════════════════════
 window.unlockHost = () => {
   const pw = document.getElementById('host-pw').value;
@@ -454,46 +374,60 @@ window.unlockHost = () => {
 };
 
 function renderHostQList() {
+  // Quick jump buttons
+  const jc = document.getElementById('h-jump-btns');
+  if (jc) {
+    jc.innerHTML = Q.map((q, i) => {
+      const active = i === S.qIdx;
+      return `<button onclick="hostGoQ(${i})"
+        class="btn ${active ? 'btn-gold' : 'btn-ghost'}"
+        style="padding:8px 14px;font-weight:700;font-size:15px;min-width:42px">${i+1}</button>`;
+    }).join('') +
+    `<button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0,selectedOpt:null})"
+      class="btn btn-danger" style="padding:8px 12px;margin-left:4px" title="重置">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>`;
+  }
+
+  // Question list
   const c = document.getElementById('h-q-list'); if (!c) return;
   c.innerHTML = Q.map((q, i) => {
     const isActive = i === S.qIdx;
-    const typeColor = q.type === 'quiz' ? 'badge-acc' : 'badge-gold';
     return `<div onclick="hostGoQ(${i})"
       style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;
              background:${isActive ? 'rgba(123,97,255,.15)' : 'rgba(255,255,255,.02)'};
              border:1px solid ${isActive ? 'rgba(123,97,255,.4)' : 'rgba(255,255,255,.06)'};
-             transition:all .15s"
-      onmouseover="this.style.background='rgba(255,255,255,.06)'"
-      onmouseout="this.style.background='${isActive ? 'rgba(123,97,255,.15)' : 'rgba(255,255,255,.02)'}'">
+             transition:all .15s">
       <span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace;flex-shrink:0">${String(i+1).padStart(2,'0')}</span>
-      <span class="badge ${typeColor}" style="flex-shrink:0;font-size:10px;padding:2px 8px">${q.badge}</span>
+      <span class="badge ${q.type==='psych-classic'?'badge-gold':'badge-acc'}" style="flex-shrink:0;font-size:10px;padding:2px 8px">${q.badge}</span>
       <span style="font-size:12px;color:${isActive ? 'var(--t1)' : 'var(--t2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${q.question.slice(0,28)}…</span>
     </div>`;
   }).join('');
   document.getElementById('h-prog').textContent = `${S.qIdx >= 0 ? S.qIdx+1 : 0} / ${Q.length}`;
 }
 
-// 跳到指定題目（顯示題目狀態）
 window.hostGoQ = i => {
   clearInterval(_timerInterval);
-  broadcast({ screen:'question', qIdx:i, timerRunning:false, timerStart:0, timerDur:Q[i].timerSec });
+  broadcast({ screen:'question', qIdx:i, timerRunning:false, timerStart:0, timerDur:Q[i].timerSec, selectedOpt:null });
 };
 
-// 動態渲染主持人控制按鈕
+window.hostSelectOpt = label => {
+  broadcast({ selectedOpt: label });
+};
+
 function renderHostControls() {
   const c = document.getElementById('h-controls'); if (!c) return;
   const { screen, qIdx, timerRunning, timerDur } = S;
   const q = Q[qIdx];
 
-  const statusMap = { idle:'等待中', question:'出題中', reveal:'答案揭曉', explain:'講解中' };
+  const statusMap = { idle:'等待中', question:'出題中', reveal:'揭示中', explain:'解答中' };
   const el = document.getElementById('h-status');
   if (el) el.textContent = statusMap[screen] || '等待中';
 
-  // ── 未選題目 ──
   if (screen === 'idle' || qIdx < 0) {
     c.innerHTML = `
       <p class="slabel" style="margin-bottom:10px">開始課程</p>
-      <p style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6">點選上方任一題，或從心理測驗開始。</p>
+      <p style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6">點選上方數字跳到任一題，或直接開始。</p>
       <button onclick="hostGoQ(0)" class="btn btn-gold btn-xl btn-full pulse">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         開始課程（從第 1 題）
@@ -501,59 +435,81 @@ function renderHostControls() {
     return;
   }
 
-  // ── 有選題目 ──
-  let timerHtml = '';
-  if (q.timerSec > 0) {
-    if (!timerRunning) {
-      timerHtml = `<button onclick="hostStartTimer()" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        開始計時 ${fmt(timerDur)}
-      </button>`;
-    } else {
-      timerHtml = `<button onclick="hostPauseTimer()" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-        暫停計時
-      </button>`;
-    }
-  }
-
-  const revealHtml = screen === 'question' ? `
-    <button onclick="hostReveal()" class="btn btn-acc btn-xl btn-full" style="margin-bottom:8px">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      揭曉答案
-    </button>` : '';
-
-  const explainHtml = (screen === 'reveal' && q.type === 'quiz' && q.explain?.text) ? `
-    <button onclick="hostExplain()" class="btn btn-green btn-lg btn-full" style="margin-bottom:8px">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      進入講解
-    </button>` : '';
-
   const isLast = qIdx >= Q.length - 1;
-  let nextHtml = '';
-  if (screen === 'reveal' || screen === 'explain') {
-    nextHtml = isLast
-      ? `<button onclick="broadcast({screen:'idle',qIdx:-1,timerRunning:false})" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">課程結束</button>`
-      : `<button onclick="hostGoQ(${qIdx+1})" class="btn btn-gold btn-lg btn-full" style="margin-bottom:8px">下一題：${Q[qIdx+1].badge} →</button>`;
-  }
+  const nextBtn = isLast
+    ? `<button onclick="broadcast({screen:'idle',qIdx:-1,timerRunning:false,selectedOpt:null})" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">課程結束</button>`
+    : `<button onclick="hostGoQ(${qIdx+1})" class="btn btn-gold btn-lg btn-full" style="margin-bottom:8px">下一題：Q${qIdx+2} ${Q[qIdx+1].badge} →</button>`;
 
   const resetHtml = `
     <div style="height:1px;background:var(--bd);margin:10px 0"></div>
-    <button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0})" class="btn btn-danger btn-full" style="padding:9px">
+    <button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0,selectedOpt:null})" class="btn btn-danger btn-full" style="padding:9px">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
       重置
     </button>`;
 
-  c.innerHTML = `
+  const qInfo = `
     <div style="margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span class="badge badge-gold">${q.badge}</span>
-        <span style="font-size:12px;color:var(--t3)">第 ${qIdx+1} 題 / 共 ${Q.length} 題</span>
+        <span class="badge badge-gold">Q${qIdx+1} ${q.badge}</span>
+        <span style="font-size:12px;color:var(--t3)">共 ${Q.length} 題</span>
       </div>
       <p style="font-size:13px;color:var(--t2);line-height:1.6">${q.question.slice(0,60)}${q.question.length>60?'…':''}</p>
     </div>
-    <div style="height:1px;background:var(--bd);margin-bottom:14px"></div>
-    ${timerHtml}${revealHtml}${explainHtml}${nextHtml}${resetHtml}`;
+    <div style="height:1px;background:var(--bd);margin-bottom:14px"></div>`;
+
+  // ── 心理測驗 question 狀態 ──
+  if (screen === 'question' && q.type === 'psych-classic') {
+    c.innerHTML = `${qInfo}
+      <button onclick="hostReveal()" class="btn btn-acc btn-xl btn-full" style="margin-bottom:8px">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        進入揭示（選擇選項）
+      </button>${resetHtml}`;
+    return;
+  }
+
+  // ── 心理測驗 reveal 狀態 ──
+  if (screen === 'reveal' && q.type === 'psych-classic') {
+    const optBtns = q.opts.map(o => `
+      <button onclick="hostSelectOpt('${o.label}')"
+        class="btn ${S.selectedOpt===o.label?'btn-gold':'btn-ghost'}"
+        style="flex-direction:column;height:auto;padding:12px 8px;flex:1;min-width:0;gap:4px">
+        <span style="font-size:20px;font-weight:700">${o.label}</span>
+        <span style="font-size:10px;opacity:.7;white-space:normal;text-align:center;line-height:1.3">${o.text.slice(0,18)}…</span>
+      </button>`).join('');
+    c.innerHTML = `${qInfo}
+      <p class="slabel" style="margin-bottom:10px">點選選項 → 大螢幕顯示對應經典</p>
+      <div style="display:flex;gap:6px;margin-bottom:14px">${optBtns}</div>
+      ${nextBtn}${resetHtml}`;
+    return;
+  }
+
+  // ── 一般題 question 狀態 ──
+  if (screen === 'question') {
+    let timerHtml = '';
+    if (q.timerSec > 0) {
+      timerHtml = timerRunning
+        ? `<button onclick="hostPauseTimer()" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            暫停計時
+          </button>`
+        : `<button onclick="hostStartTimer()" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            開始計時 ${fmt(timerDur)}
+          </button>`;
+    }
+    c.innerHTML = `${qInfo}${timerHtml}
+      <button onclick="hostExplain()" class="btn btn-acc btn-xl btn-full" style="margin-bottom:8px">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        揭示解答
+      </button>${resetHtml}`;
+    return;
+  }
+
+  // ── explain 狀態（所有類型）──
+  if (screen === 'explain') {
+    c.innerHTML = `${qInfo}${nextBtn}${resetHtml}`;
+    return;
+  }
 }
 
 // ── Timer ─────────────────────────────────────────
@@ -564,10 +520,7 @@ window.hostStartTimer = () => {
   clearInterval(_timerInterval);
   _timerInterval = setInterval(() => {
     const rem = Math.max(0, S.timerDur - (Date.now()-S.timerStart)/1000);
-    if (rem <= 0) {
-      clearInterval(_timerInterval);
-      broadcast({ timerRunning:false });
-    }
+    if (rem <= 0) { clearInterval(_timerInterval); broadcast({ timerRunning:false }); }
   }, 500);
 };
 
@@ -579,16 +532,17 @@ window.hostPauseTimer = () => {
 
 window.hostReveal = () => {
   clearInterval(_timerInterval);
-  broadcast({ screen:'reveal', timerRunning:false });
+  broadcast({ screen:'reveal', timerRunning:false, selectedOpt:null });
 };
 
-window.hostExplain = () => broadcast({ screen:'explain' });
+window.hostExplain = () => {
+  clearInterval(_timerInterval);
+  broadcast({ screen:'explain', timerRunning:false });
+};
 
 // ═══════════════════════════════════════════════════
-// DISPLAY  —  大螢幕渲染邏輯
+// DISPLAY
 // ═══════════════════════════════════════════════════
-
-// 切換顯示面板（hide all → show target）
 function showPanel(id) {
   document.querySelectorAll('.d-panel').forEach(el => el.style.display = 'none');
   const el = document.getElementById(id);
@@ -598,13 +552,11 @@ function showPanel(id) {
   setTimeout(() => { if (el) el.style.animation = ''; }, 500);
 }
 
-// 計時器格式
 function fmt(sec) {
   const m = Math.floor(sec/60), s = Math.floor(sec%60);
   return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
 
-// 大螢幕計時器本地刷新（避免依賴廣播頻率）
 let _dispTimer = null;
 
 function renderDisplay() {
@@ -614,16 +566,16 @@ function renderDisplay() {
   const { screen, qIdx, timerRunning, timerStart, timerDur } = S;
   const q = qIdx >= 0 ? Q[qIdx] : null;
 
-  // ── IDLE ──────────────────────────────────────────
+  // ── IDLE ─────────────────────────────────────────
   if (screen === 'idle' || !q) { showPanel('d-idle'); return; }
 
-  // ── QUESTION ──────────────────────────────────────
+  // ── QUESTION ─────────────────────────────────────
   if (screen === 'question') {
     showPanel('d-question');
     document.getElementById('d-q-badge').textContent = q.badge;
     document.getElementById('d-q-text').textContent = q.question;
 
-    // 計時器顯示
+    // Timer
     const tw = document.getElementById('d-q-timer-wrap');
     const te = document.getElementById('d-q-timer');
     if (timerDur > 0) {
@@ -643,118 +595,115 @@ function renderDisplay() {
       tw.style.display = 'none';
     }
 
-    // 選項
+    // Options (psych-classic only)
     const oc = document.getElementById('d-q-opts');
-    oc.innerHTML = q.opts.map(o => `
-      <div style="display:flex;align-items:flex-start;gap:clamp(.8rem,2vw,1.5rem);
-                  padding:clamp(.7rem,1.8vh,1rem) clamp(1rem,2.5vw,1.6rem);
-                  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px">
-        <span class="d-opt-label" style="color:var(--gold-hi);flex-shrink:0">${o.label}</span>
-        <span class="d-opt-text" style="color:var(--t2)">${o.text}</span>
-      </div>`).join('');
-
-    const hintMap = { 3:'A/B/C', 4:'A/B/C/D', 5:'A/B/C/D/E' };
-    document.getElementById('d-q-hint').textContent = `💬 請在聊天室回覆 ${hintMap[q.opts.length]||''}`;
+    if (q.type === 'psych-classic') {
+      oc.innerHTML = q.opts.map(o => `
+        <div style="display:flex;align-items:flex-start;gap:clamp(.8rem,2vw,1.5rem);
+                    padding:clamp(.7rem,1.8vh,1rem) clamp(1rem,2.5vw,1.6rem);
+                    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px">
+          <span class="d-opt-label" style="color:var(--gold-hi);flex-shrink:0">${o.label}</span>
+          <span class="d-opt-text" style="color:var(--t2)">${o.text}</span>
+        </div>`).join('');
+      document.getElementById('d-q-hint').textContent = '💬 請在聊天室回覆 A / B / C / D';
+    } else {
+      oc.innerHTML = '';
+      document.getElementById('d-q-hint').textContent = '💬 請在聊天室分享您的看法';
+    }
     return;
   }
 
-  // ── REVEAL: 心理測驗 1（五教圖片卡片）─────────────
-  if (screen === 'reveal' && q.type === 'psych-religion') {
-    showPanel('d-reveal-religion');
-    document.getElementById('d-religion-cards').innerHTML = q.opts.map((o,i) => `
-      <div class="ani-sc" style="animation-delay:${i*.1}s;
-           background:rgba(16,20,18,.75);backdrop-filter:blur(14px);
-           border:1px solid ${o.border};border-radius:12px;overflow:hidden;
-           display:flex;flex-direction:column">
-        <div style="height:clamp(90px,13vw,170px);flex-shrink:0;
-                    background:url('${o.image}') center/cover no-repeat;
-                    box-shadow:inset 0 0 0 1px ${o.border}"></div>
-        <div style="padding:clamp(.6rem,1.3vw,1rem);flex:1;display:flex;flex-direction:column;gap:5px">
-          <div style="font-size:clamp(1.2rem,2.5vw,2.2rem);font-weight:700;color:${o.color};
-                      text-shadow:0 0 24px ${o.border}">${o.religion}</div>
-          <div style="font-size:clamp(.85rem,1.7vw,1.4rem);color:var(--t1);font-weight:600;line-height:1.4">${o.quote}</div>
-          <div style="font-size:clamp(.65rem,1.2vw,.95rem);color:var(--t3)">${o.source}</div>
-          <div style="font-size:clamp(.7rem,1.25vw,.95rem);color:var(--t2);line-height:1.6;margin-top:2px">${o.insight}</div>
-        </div>
-      </div>`).join('');
-    document.getElementById('d-unity-msg').textContent = q.unity;
+  // ── REVEAL: 心理測驗 ─────────────────────────────
+  if (screen === 'reveal' && q.type === 'psych-classic') {
+    showPanel('d-reveal-classic');
+    const rc = document.getElementById('d-reveal-classic');
+    const opt = S.selectedOpt ? q.opts.find(o => o.label === S.selectedOpt) : null;
+
+    if (!opt) {
+      rc.innerHTML = `
+        <div style="text-align:center;padding:clamp(40px,8vh,80px) 20px">
+          <p style="color:var(--t2);font-size:clamp(1.2rem,2.5vw,2rem);margin-bottom:clamp(2rem,5vh,4rem)">選擇一個選項，看看對應的智慧 ✨</p>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(.6rem,1.5vw,1.2rem);max-width:800px;margin:0 auto;opacity:.45">
+            ${q.opts.map(o => `
+              <div style="padding:clamp(1rem,2.5vw,1.5rem);border:1px solid rgba(255,255,255,.1);border-radius:12px;text-align:left">
+                <span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(1.5rem,3.5vw,2.5rem);color:var(--gold-hi)">${o.label}</span>
+                <p style="font-size:clamp(.85rem,1.7vw,1.3rem);color:var(--t2);margin-top:.5rem;line-height:1.5">${o.text}</p>
+              </div>`).join('')}
+          </div>
+        </div>`;
+    } else {
+      rc.innerHTML = `
+        <div class="ani-up" style="max-width:880px;margin:0 auto">
+          <div style="margin-bottom:clamp(1.5rem,4vh,3rem)">
+            <span style="font-family:'JetBrains Mono',monospace;font-weight:700;
+                         font-size:clamp(3rem,7vw,5.5rem);color:var(--gold-hi);
+                         text-shadow:0 0 60px rgba(255,208,96,.4)">${opt.label}</span>
+            <p class="d-q" style="color:var(--t2);margin-top:.5rem">${opt.text}</p>
+          </div>
+          <div style="height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.2),transparent);
+                      margin-bottom:clamp(1.5rem,4vh,3rem)"></div>
+          <div style="text-align:center">
+            <div class="d-classic-source" style="margin-bottom:clamp(.8rem,2vh,1.5rem)">${opt.classic}</div>
+            <div class="d-classic-quote" style="white-space:pre-line">${opt.quote}</div>
+          </div>
+        </div>`;
+    }
     return;
   }
 
-  // ── REVEAL: 心理測驗 2（修辦類型圖片卡片）─────────
-  if (screen === 'reveal' && q.type === 'psych-type') {
-    showPanel('d-reveal-type');
-    document.getElementById('d-type-cards').innerHTML = q.opts.map((o,i) => `
-      <div class="ani-sc" style="animation-delay:${i*.1}s;
-           background:rgba(16,20,18,.75);backdrop-filter:blur(14px);
-           border:1px solid ${o.border};border-radius:12px;overflow:hidden;
-           display:flex;flex-direction:column">
-        <div style="height:clamp(110px,15vw,190px);flex-shrink:0;position:relative;
-                    background:url('${o.image}') center/cover no-repeat">
-          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,15,12,.85))"></div>
-          <div style="position:absolute;bottom:10px;left:14px;
-                      font-size:clamp(1.2rem,2.8vw,2.2rem);font-weight:700;
-                      color:${o.color};text-shadow:0 2px 12px rgba(0,0,0,.6),0 0 30px ${o.border}">${o.typeName}</div>
-        </div>
-        <div style="padding:clamp(.7rem,1.4vw,1.1rem);flex:1">
-          <p style="font-size:clamp(.8rem,1.55vw,1.25rem);color:var(--t2);line-height:1.9;
-                    margin-bottom:8px;white-space:pre-line">${o.response}</p>
-          <p style="font-size:clamp(.7rem,1.3vw,1rem);color:${o.color};font-style:italic;opacity:.85">${o.verse}</p>
-        </div>
-      </div>`).join('');
-    document.getElementById('d-reflection-msg').textContent = q.reflection;
-    return;
-  }
-
-  // ── REVEAL: 知識/思考/使命題（正確答案高亮）─────────
-  if (screen === 'reveal' && q.type === 'quiz') {
-    showPanel('d-reveal-quiz');
-    document.getElementById('d-rq-badge').textContent = q.badge;
-    document.getElementById('d-rq-text').textContent = q.question;
-    document.getElementById('d-rq-opts').innerHTML = q.opts.map((o,i) => {
-      const ok = i === q.answer;
-      return `<div class="ani-sc" style="animation-delay:${i*.1}s;
-        display:flex;align-items:flex-start;gap:clamp(.8rem,2vw,1.5rem);
-        padding:clamp(.7rem,1.8vh,1rem) clamp(1rem,2.5vw,1.6rem);
-        background:${ok ? 'rgba(52,199,89,.1)' : 'rgba(255,255,255,.02)'};
-        border:1px solid ${ok ? 'rgba(52,199,89,.4)' : 'rgba(255,255,255,.05)'};
-        border-radius:10px;opacity:${ok ? 1 : .3};
-        ${ok ? 'box-shadow:0 0 24px rgba(52,199,89,.15)' : ''}">
-        <span style="font-family:'JetBrains Mono',monospace;font-weight:700;
-                     font-size:clamp(1.5rem,3vw,2.2rem);flex-shrink:0;
-                     color:${ok ? 'var(--green)' : 'var(--t3)'}">${o.label}</span>
-        <span style="font-size:clamp(1rem,2.2vw,1.7rem);line-height:1.5;
-                     color:${ok ? 'var(--t1)' : 'var(--t3)'};
-                     ${ok ? 'font-weight:600' : ''}">${o.text}</span>
-        ${ok ? `<svg style="flex-shrink:0;margin-top:6px" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>` : ''}
-      </div>`;
-    }).join('');
-    return;
-  }
-
-  // ── EXPLAIN（講解頁 — 文字 + 可選 YouTube）─────────
-  if (screen === 'explain' && q.type === 'quiz') {
+  // ── EXPLAIN（open / video）────────────────────────
+  if (screen === 'explain') {
     showPanel('d-explain');
     const ec = document.getElementById('d-explain-content');
-    const yt = q.explain?.youtube;
-    if (yt) {
-      ec.style.gridTemplateColumns = '1fr 1fr';
+
+    // Video type
+    if (q.type === 'video') {
+      ec.style.gridTemplateColumns = '1fr';
       ec.innerHTML = `
-        <div>
-          <span class="badge badge-gold" style="margin-bottom:clamp(.8rem,2vh,1.5rem);font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px">${q.badge} — 講解</span>
-          <p class="d-explain-text ani-up" style="white-space:pre-line;margin-top:clamp(.8rem,2vh,1.5rem)">${q.explain.text}</p>
+        <div style="max-width:960px;margin:0 auto;width:100%">
+          <span class="badge badge-gold" style="margin-bottom:clamp(.8rem,2vh,1.2rem);font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px">
+            Q${qIdx+1} ${q.badge} — 解答
+          </span>
+          <video src="${q.explain.video}" controls playsinline
+                 style="width:100%;aspect-ratio:16/9;border-radius:12px;border:1px solid var(--bd);
+                        margin-top:clamp(.8rem,2vh,1.2rem);background:#000"></video>
+          ${q.explain.supplement ? `
+            <p class="d-supplement ani-up" style="margin-top:clamp(1rem,3vh,2rem)">${q.explain.supplement}</p>
+          ` : ''}
+        </div>`;
+      return;
+    }
+
+    // Open type
+    const { title, text, image, supplement } = q.explain;
+    const hasImage = !!image;
+
+    if (hasImage) {
+      ec.style.gridTemplateColumns = 'minmax(0,1.1fr) minmax(0,.9fr)';
+      ec.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:clamp(.8rem,2vh,1.5rem)">
+          <span class="badge badge-gold" style="font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px;align-self:flex-start">
+            Q${qIdx+1} ${q.badge} — 解答
+          </span>
+          ${title ? `<h2 style="font-size:clamp(1.3rem,2.8vw,2.4rem);font-weight:700;color:var(--gold-hi);line-height:1.3">${title}</h2>` : ''}
+          <p class="d-explain-text ani-up" style="white-space:pre-line">${text}</p>
+          ${supplement ? `<p class="d-supplement" style="text-align:left;margin-top:clamp(.5rem,1.5vh,1rem)">${supplement}</p>` : ''}
         </div>
-        <div style="display:flex;align-items:center">
-          <iframe style="width:100%;aspect-ratio:16/9;border-radius:12px;border:1px solid var(--bd)"
-            src="https://www.youtube.com/embed/${yt}?autoplay=1"
-            allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        <div style="display:flex;align-items:center;justify-content:center">
+          <img src="${image}" alt="" class="ani-sc"
+               style="width:100%;max-height:70vh;object-fit:cover;border-radius:14px;
+                      border:1px solid var(--bd);box-shadow:0 8px 40px rgba(0,0,0,.4)">
         </div>`;
     } else {
       ec.style.gridTemplateColumns = '1fr';
       ec.innerHTML = `
         <div style="max-width:880px;margin:0 auto">
-          <span class="badge badge-gold" style="margin-bottom:clamp(.8rem,2vh,1.5rem);font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px">${q.badge} — 講解</span>
-          <p class="d-explain-text ani-up" style="white-space:pre-line;margin-top:clamp(.8rem,2vh,1.5rem)">${q.explain.text}</p>
+          <span class="badge badge-gold" style="margin-bottom:clamp(.8rem,2vh,1.5rem);font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px">
+            Q${qIdx+1} ${q.badge} — 解答
+          </span>
+          ${title ? `<h2 style="font-size:clamp(1.4rem,3vw,2.6rem);font-weight:700;color:var(--gold-hi);margin-top:clamp(.8rem,2vh,1.5rem);line-height:1.3">${title}</h2>` : ''}
+          <p class="d-explain-text ani-up" style="white-space:pre-line;margin-top:clamp(.8rem,2vh,1.5rem)">${text}</p>
+          ${supplement ? `<p class="d-supplement" style="margin-top:clamp(1rem,3vh,2rem)">${supplement}</p>` : ''}
         </div>`;
     }
     return;
