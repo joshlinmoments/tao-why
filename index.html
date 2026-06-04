@@ -314,6 +314,12 @@ const Q = [
 ];
 
 // ═══════════════════════════════════════════════════
+// TIMER VARS  —  宣告在最前面避免 temporal dead zone
+// ═══════════════════════════════════════════════════
+let _timerInterval = null;
+let _dispTimer = null;
+
+// ═══════════════════════════════════════════════════
 // STATE  —  Firebase 跨裝置即時同步
 // ═══════════════════════════════════════════════════
 const fbApp = firebase.initializeApp({
@@ -513,8 +519,6 @@ function renderHostControls() {
 }
 
 // ── Timer ─────────────────────────────────────────
-let _timerInterval = null;
-
 window.hostStartTimer = () => {
   broadcast({ timerRunning:true, timerStart:Date.now(), timerDur:Q[S.qIdx].timerSec });
   clearInterval(_timerInterval);
@@ -556,8 +560,6 @@ function fmt(sec) {
   const m = Math.floor(sec/60), s = Math.floor(sec%60);
   return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
-
-let _dispTimer = null;
 
 function renderDisplay() {
   if (!document.getElementById('page-display')?.classList.contains('active')) return;
