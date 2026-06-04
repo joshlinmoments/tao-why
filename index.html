@@ -214,6 +214,9 @@
     <div id="d-explain-content" style="display:grid;gap:clamp(1rem,3vw,2.5rem)"></div>
   </div>
 
+  <!-- ── FULLSCREEN（滿版圖片壓字）── -->
+  <div id="d-fullscreen" class="d-panel" style="position:absolute;inset:0;overflow:hidden"></div>
+
 </div>
 
 
@@ -254,12 +257,12 @@ const Q = [
     id:2, badge:'思考題', type:'open',
     question:'為什麼每個人的本性都是一樣善良的？明明我們每個人都有不一樣的個性。而且如果大家都是善良的，為什麼世界還會這麼亂？',
     timerSec:90,
-    explain:{
-      title:'《孟子•告子篇》牛山濯濯',
-      text:'人見其禽獸也，而以為未嘗有才焉者，是豈人之情也哉？\n故苟得其養，無物不長；苟失其養，無物不消。\n\n孔子曰：「操則存，舍則亡；出入無時，莫知其鄉。」\n惟心之謂與？',
-      image:'images/photo_q2.png',
-      supplement:''
-    }
+    explain:[
+      { title:'《孟子•告子篇》牛山濯濯',
+        text:'人見其禽獸也，而以為未嘗有才焉者，是豈人之情也哉？\n故苟得其養，無物不長；苟失其養，無物不消。' },
+      { text:'孔子曰：「操則存，舍則亡；\n出入無時，莫知其鄉。」\n惟心之謂與？',
+        image:'images/photo_q2.png' }
+    ]
   },
 
   // ── Q3 思考題（無為而為）────────────────────────
@@ -267,12 +270,13 @@ const Q = [
     id:3, badge:'思考題', type:'open',
     question:'老子都說了「無為而為」，那為什麼我們修道還要這麼努力？',
     timerSec:90,
-    explain:{
-      title:'《道德經第 48 章》',
-      text:'為學日益，為道日損。\n損之又損，以至於無為。\n無為而無不為矣。',
-      image:'images/photo_q3.jpg',
-      supplement:'師尊老大人慈悲聖訓\n\n對自己深刻的真誠　　才有愛而不礙的輕盈\n有愛而不礙的輕盈　　才有全面升級的可能\n有全面升級的可能　　才有持續真誠的從容'
-    }
+    explain:[
+      { title:'《道德經第 48 章》',
+        text:'為學日益，為道日損。\n損之又損，以至於無為。\n無為而無不為矣。' },
+      { title:'師尊老大人慈悲聖訓',
+        text:'對自己深刻的真誠　　才有愛而不礙的輕盈\n有愛而不礙的輕盈　　才有全面升級的可能\n有全面升級的可能　　才有持續真誠的從容',
+        image:'images/photo_q3.jpg' }
+    ]
   },
 
   // ── Q4 思考題（功德天幣）────────────────────────
@@ -280,12 +284,12 @@ const Q = [
     id:4, badge:'思考題', type:'open',
     question:'為什麼佛堂一直要我們做功德賺天幣，但是同時叫我們不要想自己賺多少功德呢？',
     timerSec:90,
-    explain:{
-      title:'《中庸》',
-      text:'或生而知之，或學而知之，或困而知之，\n及其知之，一也；\n或安而行之，或利而行之，或勉強而行之，\n及其成功，一也。',
-      image:'images/photo_q4.jpg',
-      supplement:'球來就打'
-    }
+    explain:[
+      { title:'《中庸》',
+        text:'或生而知之，或學而知之，或困而知之，\n及其知之，一也；\n或安而行之，或利而行之，或勉強而行之，\n及其成功，一也。',
+        image:'images/photo_q4.jpg',
+        supplement:'球來就打' }
+    ]
   },
 
   // ── Q5 思考題（影片 + 進階班）──────────────────
@@ -293,10 +297,10 @@ const Q = [
     id:5, badge:'思考題', type:'video',
     question:'沒來上課的生活也可以很精彩啊，為什麼一定要來上進階班？',
     timerSec:90,
-    explain:{
-      video:'videos/pikmin.mp4',
-      supplement:'七真馬丹陽大仙：\n真正健康的生活，不是永遠守著正確的習慣，\n而是真正步入常道的循環。'
-    }
+    explain:[
+      { video:'videos/pikmin.mp4',
+        supplement:'七真馬丹陽大仙：\n真正健康的生活，不是永遠守著正確的習慣，\n而是真正步入常道的循環。' }
+    ]
   },
 
   // ── Q6 使命題（師尊問洗澡）────────────────────
@@ -304,12 +308,13 @@ const Q = [
     id:6, badge:'使命題', type:'open',
     question:'師尊老大人問大家：如何讓一位不喜歡沐浴的人想沐浴？',
     timerSec:90,
-    explain:{
-      title:'真誠以待，愛而不礙',
-      text:'徒兒們，聽了這麼多，\n要明白學習對自己真誠以待，\n試著對世間一切愛而不礙。',
-      image:'images/photo_q6.jpg',
-      supplement:'你相信的，就是你擁有的！'
-    }
+    explain:[
+      { title:'真誠以待，愛而不礙',
+        text:'徒兒們，聽了這麼多，\n要明白學習對自己真誠以待，\n試著對世間一切愛而不礙。',
+        image:'images/photo_q5.jpg', fullscreen:true },
+      { text:'你相信的，就是你擁有的！',
+        image:'images/photo_q6.jpg', fullscreen:true }
+    ]
   },
 ];
 
@@ -332,7 +337,7 @@ const fbApp = firebase.initializeApp({
 const db = firebase.database();
 const stateRef = db.ref('state');
 
-const S = { screen:'idle', qIdx:-1, timerRunning:false, timerStart:0, timerDur:0, selectedOpt:null };
+const S = { screen:'idle', qIdx:-1, timerRunning:false, timerStart:0, timerDur:0, selectedOpt:'', explainPage:0 };
 
 async function broadcast(patch) {
   Object.assign(S, patch);
@@ -414,7 +419,7 @@ function renderHostQList() {
 
 window.hostGoQ = i => {
   clearInterval(_timerInterval);
-  broadcast({ screen:'question', qIdx:i, timerRunning:false, timerStart:0, timerDur:Q[i].timerSec, selectedOpt:'' });
+  broadcast({ screen:'question', qIdx:i, timerRunning:false, timerStart:0, timerDur:Q[i].timerSec, selectedOpt:'', explainPage:0 });
 };
 
 window.hostSelectOpt = label => {
@@ -513,7 +518,18 @@ function renderHostControls() {
 
   // ── explain 狀態（所有類型）──
   if (screen === 'explain') {
-    c.innerHTML = `${qInfo}${nextBtn}${resetHtml}`;
+    const pages = Array.isArray(q.explain) ? q.explain : [q.explain];
+    const curPage = S.explainPage || 0;
+    const hasMore = curPage < pages.length - 1;
+    const pageInfo = pages.length > 1
+      ? `<p style="font-size:12px;color:var(--t3);margin-bottom:10px">解答第 ${curPage+1} 頁 / 共 ${pages.length} 頁</p>`
+      : '';
+    const pageBtn = hasMore
+      ? `<button onclick="hostExplainNext()" class="btn btn-acc btn-lg btn-full" style="margin-bottom:8px">
+          下一頁 →（${curPage+1}／${pages.length}）
+         </button>`
+      : nextBtn;
+    c.innerHTML = `${qInfo}${pageInfo}${pageBtn}${resetHtml}`;
     return;
   }
 }
@@ -541,7 +557,11 @@ window.hostReveal = () => {
 
 window.hostExplain = () => {
   clearInterval(_timerInterval);
-  broadcast({ screen:'explain', timerRunning:false });
+  broadcast({ screen:'explain', timerRunning:false, explainPage:0 });
+};
+
+window.hostExplainNext = () => {
+  broadcast({ explainPage: (S.explainPage || 0) + 1 });
 };
 
 // ═══════════════════════════════════════════════════
@@ -636,19 +656,17 @@ function renderDisplay() {
         </div>`;
     } else {
       rc.innerHTML = `
-        <div class="ani-up" style="max-width:880px;margin:0 auto">
-          <div style="margin-bottom:clamp(1.5rem,4vh,3rem)">
+        <div class="ani-up" style="max-width:960px;margin:0 auto;text-align:center">
+          <div style="display:inline-flex;align-items:center;gap:1rem;margin-bottom:clamp(1rem,3vh,2rem)">
             <span style="font-family:'JetBrains Mono',monospace;font-weight:700;
-                         font-size:clamp(3rem,7vw,5.5rem);color:var(--gold-hi);
-                         text-shadow:0 0 60px rgba(255,208,96,.4)">${opt.label}</span>
-            <p class="d-q" style="color:var(--t2);margin-top:.5rem">${opt.text}</p>
+                         font-size:clamp(2rem,5vw,4rem);color:var(--gold-hi);
+                         text-shadow:0 0 40px rgba(255,208,96,.4)">${opt.label}</span>
+            <span style="font-size:clamp(.85rem,1.6vw,1.3rem);color:var(--t3);font-style:italic;max-width:500px;text-align:left;line-height:1.5">${opt.text}</span>
           </div>
           <div style="height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.2),transparent);
                       margin-bottom:clamp(1.5rem,4vh,3rem)"></div>
-          <div style="text-align:center">
-            <div class="d-classic-source" style="margin-bottom:clamp(.8rem,2vh,1.5rem)">${opt.classic}</div>
-            <div class="d-classic-quote" style="white-space:pre-line">${opt.quote}</div>
-          </div>
+          <div class="d-classic-source" style="margin-bottom:clamp(.8rem,2vh,1.5rem)">${opt.classic}</div>
+          <div class="d-classic-quote" style="white-space:pre-line">${opt.quote}</div>
         </div>`;
     }
     return;
@@ -660,34 +678,55 @@ function renderDisplay() {
     return;
   }
 
-  // ── EXPLAIN（open / video）────────────────────────
+  // ── EXPLAIN（open / video，支援多頁）─────────────
   if (screen === 'explain') {
+    const pages = Array.isArray(q.explain) ? q.explain : [q.explain];
+    const page = pages[S.explainPage || 0] || pages[0];
+
+    // Fullscreen（Q6 滿版圖片壓字）
+    if (page.fullscreen) {
+      showPanel('d-fullscreen');
+      document.getElementById('d-fullscreen').innerHTML = `
+        <div class="ani-up" style="position:relative;width:100%;height:100%;display:flex;
+                    align-items:flex-end;justify-content:center;
+                    background:url('${page.image}') center/cover no-repeat">
+          <div style="position:absolute;inset:0;
+                      background:linear-gradient(to bottom,transparent 20%,rgba(0,0,0,.82))"></div>
+          <div style="position:relative;text-align:center;z-index:1;
+                      padding:0 clamp(40px,6vw,120px) clamp(60px,8vh,110px)">
+            ${page.title ? `<h2 style="font-size:clamp(2rem,5vw,4.5rem);font-weight:700;color:#fff;
+                                       text-shadow:0 2px 40px rgba(0,0,0,.9);letter-spacing:.04em;
+                                       margin-bottom:clamp(.8rem,2vh,1.5rem)">${page.title}</h2>` : ''}
+            <p style="font-size:clamp(1.4rem,3.2vw,3rem);color:rgba(255,255,255,.95);font-weight:600;
+                      line-height:1.8;text-shadow:0 2px 24px rgba(0,0,0,.9);
+                      white-space:pre-line">${page.text}</p>
+          </div>
+        </div>`;
+      return;
+    }
+
     showPanel('d-explain');
     const ec = document.getElementById('d-explain-content');
 
-    // Video type
-    if (q.type === 'video') {
+    // Video
+    if (page.video) {
       ec.style.gridTemplateColumns = '1fr';
       ec.innerHTML = `
         <div style="max-width:960px;margin:0 auto;width:100%">
           <span class="badge badge-gold" style="margin-bottom:clamp(.8rem,2vh,1.2rem);font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px">
             Q${qIdx+1} ${q.badge} — 解答
           </span>
-          <video src="${q.explain.video}" controls playsinline
+          <video src="${page.video}" controls playsinline
                  style="width:100%;aspect-ratio:16/9;border-radius:12px;border:1px solid var(--bd);
                         margin-top:clamp(.8rem,2vh,1.2rem);background:#000"></video>
-          ${q.explain.supplement ? `
-            <p class="d-supplement ani-up" style="margin-top:clamp(1rem,3vh,2rem)">${q.explain.supplement}</p>
-          ` : ''}
+          ${page.supplement ? `<p class="d-supplement ani-up" style="margin-top:clamp(1rem,3vh,2rem)">${page.supplement}</p>` : ''}
         </div>`;
       return;
     }
 
-    // Open type
-    const { title, text, image, supplement } = q.explain;
-    const hasImage = !!image;
-
-    if (hasImage) {
+    // Normal text + optional image
+    const { title, text, image, supplement } = page;
+    if (image) {
       ec.style.gridTemplateColumns = 'minmax(0,1.1fr) minmax(0,.9fr)';
       ec.innerHTML = `
         <div style="display:flex;flex-direction:column;gap:clamp(.8rem,2vh,1.5rem)">
