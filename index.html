@@ -2,92 +2,83 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>道場的十萬個為什麼</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
       --bg:#111113; --surf:rgba(18,22,20,.72); --elev:rgba(22,28,24,.8);
-      --hover:rgba(32,42,36,.85); --bd:rgba(255,255,255,.08); --bd-hi:rgba(255,255,255,.16);
+      --bd:rgba(255,255,255,.08); --bd-hi:rgba(255,255,255,.16);
       --t1:#ECECEC; --t2:#9999AA; --t3:#525260;
       --acc:#7B61FF; --acc-hi:#9580FF;
       --gold:#F5A623; --gold-hi:#FFD060;
       --green:#34C759; --red:#FF453A;
-      --circ:534.07;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Inter','Noto Sans TC',sans-serif;color:var(--t1);-webkit-font-smoothing:antialiased;
-      background:linear-gradient(rgba(8,14,12,.73),rgba(8,14,12,.79)),url('bg.jpg') center/cover fixed}
-    .page{display:none;min-height:100dvh;flex-direction:column}
-    .page.active{display:flex}
-    .card{background:var(--surf);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--bd);border-radius:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;border-radius:8px;font-family:inherit;font-weight:500;font-size:14px;line-height:1;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
-    .btn-acc{background:var(--acc);color:#fff}.btn-acc:hover{background:var(--acc-hi);transform:translateY(-1px)}
-    .btn-gold{background:var(--gold);color:#1a0f00;font-weight:700}.btn-gold:hover{background:var(--gold-hi);transform:translateY(-1px)}
-    .btn-green{background:var(--green);color:#fff}.btn-green:hover{filter:brightness(1.1)}
-    .btn-ghost{background:rgba(30,36,32,.7);color:var(--t1);border:1px solid var(--bd);backdrop-filter:blur(8px)}
-    .btn-ghost:hover{background:rgba(44,52,46,.8);border-color:var(--bd-hi)}
-    .btn-ghost.active{background:var(--acc);color:#fff;border-color:transparent}
-    .btn-danger{background:rgba(255,69,58,.1);color:var(--red);border:1px solid rgba(255,69,58,.2)}
-    .btn-danger:hover{background:rgba(255,69,58,.2)}
-    .btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;filter:none!important}
-    .btn-lg{padding:13px 22px;font-size:15px;font-weight:600;border-radius:10px}
-    .btn-xl{padding:16px 28px;font-size:17px;font-weight:700;border-radius:12px}
-    .btn-full{width:100%}
-    .inp{background:rgba(20,28,24,.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--bd);border-radius:8px;color:var(--t1);font-family:inherit;font-size:14px;padding:9px 12px;outline:none;transition:border-color .15s;width:100%}
-    .inp::placeholder{color:var(--t3)}.inp:focus{border-color:var(--acc)}
-    select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239999AA'%3E%3Cpath fill-rule='evenodd' d='M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:20px;padding-right:34px;cursor:pointer}
-    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500}
-    .badge-acc{background:rgba(123,97,255,.12);color:var(--acc-hi);border:1px solid rgba(123,97,255,.2)}
-    .badge-gold{background:rgba(245,166,35,.12);color:var(--gold);border:1px solid rgba(245,166,35,.2)}
-    .badge-green{background:rgba(52,199,89,.12);color:var(--green);border:1px solid rgba(52,199,89,.2)}
-    .slabel{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t3)}
-    .div{height:1px;background:var(--bd)}
-    .role-card{background:rgba(18,26,22,.68);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--bd);border-radius:14px;padding:18px 20px;cursor:pointer;transition:all .2s}
-    .role-card:hover{border-color:var(--bd-hi);background:rgba(28,40,32,.78);transform:translateY(-2px)}
-    .role-card:active{transform:none}
-    .icon-box{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    /* group-select cards on join page */
-    .grp-btn{background:rgba(20,30,24,.75);border:1.5px solid var(--bd);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;font-size:14px;font-weight:500;color:var(--t2);width:100%}
-    .grp-btn:hover{border-color:var(--bd-hi);color:var(--t1)}
-    .grp-btn.selected{border-color:var(--acc);background:rgba(123,97,255,.12);color:var(--acc-hi)}
-    /* star rating */
-    .star-row{display:flex;gap:4px}
-    .star-btn{font-size:28px;background:none;border:none;cursor:pointer;line-height:1;padding:2px 5px;color:rgba(255,255,255,.15);transition:color .1s}
-    .star-btn.lit{color:var(--gold)}
-    .score-cat{border:1px solid var(--bd);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
-    /* vote (old) / join cards */
-    .vcard{background:rgba(20,30,24,.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--bd);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;font-size:14px;font-weight:500;color:var(--t2)}
-    .vcard:hover{border-color:var(--bd-hi);background:var(--hover);color:var(--t1)}
-    .vcard.selected{border-color:var(--acc);background:rgba(123,97,255,.1);color:var(--acc-hi)}
-    /* ring */
-    .ring-track{fill:none;stroke:rgba(255,255,255,.06);stroke-width:8}
-    .ring-prog{fill:none;stroke-width:8;stroke-linecap:round;transform-origin:50% 50%;transform:rotate(-90deg);stroke-dasharray:534.07;stroke-dashoffset:0;transition:stroke-dashoffset .5s linear,stroke .5s}
-    /* display typo */
-    /* ── Display page: boost all fonts + colors for projector ── */
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+    body {
+      font-family:'Inter','Noto Sans TC',sans-serif; color:var(--t1);
+      -webkit-font-smoothing:antialiased;
+      background:linear-gradient(rgba(8,14,12,.73),rgba(8,14,12,.79)),url('bg.jpg') center/cover fixed;
+    }
+    .page { display:none; min-height:100dvh; flex-direction:column }
+    .page.active { display:flex }
+    .card { background:var(--surf); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid var(--bd); border-radius:12px }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:9px 16px; border-radius:8px; font-family:inherit; font-weight:500; font-size:14px; line-height:1; border:none; cursor:pointer; transition:all .15s; white-space:nowrap }
+    .btn-acc { background:var(--acc); color:#fff } .btn-acc:hover { background:var(--acc-hi); transform:translateY(-1px) }
+    .btn-gold { background:var(--gold); color:#1a0f00; font-weight:700 } .btn-gold:hover { background:var(--gold-hi); transform:translateY(-1px) }
+    .btn-green { background:var(--green); color:#fff } .btn-green:hover { filter:brightness(1.1) }
+    .btn-ghost { background:rgba(30,36,32,.7); color:var(--t1); border:1px solid var(--bd); backdrop-filter:blur(8px) }
+    .btn-ghost:hover { background:rgba(44,52,46,.8); border-color:var(--bd-hi) }
+    .btn-danger { background:rgba(255,69,58,.1); color:var(--red); border:1px solid rgba(255,69,58,.2) }
+    .btn:disabled { opacity:.35; cursor:not-allowed; transform:none!important; filter:none!important }
+    .btn-lg { padding:13px 22px; font-size:15px; font-weight:600; border-radius:10px }
+    .btn-xl { padding:16px 28px; font-size:17px; font-weight:700; border-radius:12px }
+    .btn-full { width:100% }
+    .inp { background:rgba(20,28,24,.75); backdrop-filter:blur(8px); border:1px solid var(--bd); border-radius:8px; color:var(--t1); font-family:inherit; font-size:14px; padding:9px 12px; outline:none; transition:border-color .15s; width:100% }
+    .inp:focus { border-color:var(--acc) }
+    .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:99px; font-size:12px; font-weight:500 }
+    .badge-acc { background:rgba(123,97,255,.12); color:var(--acc-hi); border:1px solid rgba(123,97,255,.2) }
+    .badge-gold { background:rgba(245,166,35,.12); color:var(--gold); border:1px solid rgba(245,166,35,.2) }
+    .badge-green { background:rgba(52,199,89,.12); color:var(--green); border:1px solid rgba(52,199,89,.2) }
+    .slabel { font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--t3) }
+    .hidden { display:none!important }
+    .role-card { background:rgba(18,26,22,.68); backdrop-filter:blur(16px); border:1px solid var(--bd); border-radius:14px; padding:18px 20px; cursor:pointer; transition:all .2s }
+    .role-card:hover { border-color:var(--bd-hi); background:rgba(28,40,32,.78); transform:translateY(-2px) }
+    .icon-box { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0 }
+
+    /* ── Display page: projector boost ── */
     #page-display { --t1:#FFFFFF; --t2:#D8D8F0; --t3:#A0A0C0; --gold:#FFD060; --gold-hi:#FFE880; --acc:#A490FF; --acc-hi:#BBAAFF; --green:#4CD964; }
-    .d-h1{font-size:clamp(3.5rem,9vw,7rem);font-weight:700;line-height:1.1;text-shadow:0 0 40px rgba(255,255,255,.25)}
-    .d-timer{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(6rem,20vw,13rem);line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 0 60px rgba(255,255,255,.3)}
-    .d-group{font-size:clamp(4rem,12vw,8rem);font-weight:700;line-height:1.05;text-shadow:0 0 40px rgba(255,208,96,.4)}
-    .d-q{font-size:clamp(1.4rem,3vw,2.2rem);color:var(--t2);line-height:1.7;text-shadow:0 0 20px rgba(255,255,255,.1)}
-    .h-timer{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:52px;line-height:1;font-variant-numeric:tabular-nums}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes scaleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-    @keyframes pulseAcc{0%,100%{box-shadow:0 0 0 0 rgba(123,97,255,.4)}50%{box-shadow:0 0 0 12px rgba(123,97,255,0)}}
-    .ani-up{animation:fadeUp .4s ease both}
-    .ani-sc{animation:scaleIn .35s ease both}
-    .pulse{animation:pulseAcc 2s infinite}
-    .dot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0}
-    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
+    .d-panel { display:none }
+    .d-title { font-size:clamp(3rem,8vw,6rem); font-weight:700; line-height:1.1; text-shadow:0 0 40px rgba(255,255,255,.25) }
+    .d-q { font-size:clamp(1.6rem,3.5vw,3rem); font-weight:600; line-height:1.5; text-shadow:0 0 20px rgba(255,255,255,.1) }
+    .d-opt-label { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(1.5rem,3.5vw,2.5rem) }
+    .d-opt-text { font-size:clamp(1.1rem,2.2vw,1.8rem); line-height:1.5 }
+    .d-timer { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(4rem,14vw,10rem); line-height:1; font-variant-numeric:tabular-nums; text-shadow:0 0 60px rgba(255,255,255,.3) }
+    .d-hint { font-size:clamp(.9rem,2vw,1.5rem); color:var(--t3) }
+    .d-unity { font-size:clamp(1.1rem,2.3vw,1.8rem); color:var(--t2); line-height:1.9; text-align:center; white-space:pre-line }
+    .d-explain-text { font-size:clamp(1.2rem,2.4vw,2rem); line-height:2; color:var(--t2) }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
+    @keyframes scaleIn { from { opacity:0; transform:scale(.95) } to { opacity:1; transform:scale(1) } }
+    @keyframes pulseAcc { 0%,100% { box-shadow:0 0 0 0 rgba(123,97,255,.4) } 50% { box-shadow:0 0 0 12px rgba(123,97,255,0) } }
+    .ani-up { animation:fadeUp .4s ease both }
+    .ani-sc { animation:scaleIn .35s ease both }
+    .pulse { animation:pulseAcc 2s infinite }
+    ::-webkit-scrollbar { width:4px } ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:4px }
   </style>
 </head>
 <body>
 
-<!-- ═══════ HOME ═══════ -->
+
+<!-- ═══════════════════════════════════════════════════
+     HOME  —  主持人 or 大螢幕
+════════════════════════════════════════════════════ -->
 <div id="page-home" class="page active items-center justify-center p-5"
      style="background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(123,97,255,.1) 0%,transparent 70%)">
   <div style="max-width:420px;width:100%">
@@ -96,866 +87,678 @@
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#7B61FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#7B61FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#7B61FF" stroke-width="1.5"/><path d="M14 3C14 3 3 8.5 3 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/><path d="M14 3C14 3 25 8.5 25 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/></svg>
       </div>
       <h1 style="font-size:22px;font-weight:700;color:var(--t1);margin-bottom:5px">道場的十萬個為什麼</h1>
-      <p style="color:var(--t3);font-size:13px">講員培訓互動課程</p>
+      <p style="color:var(--t3);font-size:13px">人才的使命與自覺</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px">
       <div class="role-card ani-up" style="animation-delay:.08s;display:flex;align-items:center;gap:14px" onclick="nav('host')">
-        <div class="icon-box" style="background:rgba(245,166,35,.12)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div style="flex:1"><div style="font-size:15px;font-weight:600;margin-bottom:2px">主持人</div><div style="color:var(--t3);font-size:12px">課程控制、計時、管理</div></div>
+        <div class="icon-box" style="background:rgba(245,166,35,.12)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;margin-bottom:2px">主持人</div><div style="color:var(--t3);font-size:12px">課程控制、計時、揭曉答案</div></div>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
       </div>
       <div class="role-card ani-up" style="animation-delay:.15s;display:flex;align-items:center;gap:14px" onclick="nav('display')">
-        <div class="icon-box" style="background:rgba(123,97,255,.12)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7B61FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-        <div style="flex:1"><div style="font-size:15px;font-weight:600;margin-bottom:2px">大螢幕</div><div style="color:var(--t3);font-size:12px">投影顯示、計時</div></div>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="role-card ani-up" style="animation-delay:.22s;display:flex;align-items:center;gap:14px" onclick="nav('join')">
-        <div class="icon-box" style="background:rgba(52,199,89,.12)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></div>
-        <div style="flex:1"><div style="font-size:15px;font-weight:600;margin-bottom:2px">加入課程</div><div style="color:var(--t3);font-size:12px">登入分組、評分、查看結果</div></div>
+        <div class="icon-box" style="background:rgba(123,97,255,.12)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7B61FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;margin-bottom:2px">大螢幕</div><div style="color:var(--t3);font-size:12px">分享此視窗給所有班員觀看</div></div>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
       </div>
     </div>
+    <p style="text-align:center;color:var(--t3);font-size:11px;margin-top:20px">💡 開兩個分頁：一個大螢幕（分享 Zoom）、一個主持人（自己看）</p>
   </div>
 </div>
 
 
-<!-- ═══════ HOST ═══════ -->
+<!-- ═══════════════════════════════════════════════════
+     HOST  —  密碼保護的控制台
+════════════════════════════════════════════════════ -->
 <div id="page-host" class="page" style="overflow-y:auto">
-  <div style="max-width:540px;margin:0 auto;width:100%;padding:0 16px 80px">
+  <div style="max-width:500px;margin:0 auto;width:100%;padding:0 16px 80px">
+
+    <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px">
-      <button onclick="nav('home')" class="btn btn-ghost" style="padding:7px 12px;font-size:13px;gap:5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回</button>
+      <button onclick="nav('home')" class="btn btn-ghost" style="padding:7px 12px;font-size:13px;gap:5px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回
+      </button>
       <span style="font-size:14px;font-weight:600">主持人控制台</span>
-      <div class="badge badge-acc"><span class="dot"></span><span id="h-phase">等待中</span></div>
+      <div id="h-status" class="badge badge-acc">等待中</div>
     </div>
+
     <!-- Lock -->
     <div id="host-lock" class="card" style="padding:20px;margin-bottom:10px">
       <p style="font-size:14px;font-weight:600;margin-bottom:12px">輸入主持人密碼</p>
       <div style="display:flex;gap:8px">
-        <input id="host-pw" type="password" class="inp" placeholder="密碼" onkeydown="if(event.key==='Enter')unlockHost()">
+        <input id="host-pw" type="password" class="inp" placeholder="密碼"
+               onkeydown="if(event.key==='Enter')unlockHost()">
         <button onclick="unlockHost()" class="btn btn-acc" style="flex-shrink:0">確認</button>
       </div>
       <div id="host-err" class="hidden" style="color:var(--red);font-size:13px;margin-top:8px">密碼錯誤，請重試</div>
     </div>
-    <!-- Controls -->
-    <div id="host-main" class="hidden" style="display:flex;flex-direction:column;gap:10px">
 
-      <!-- SETUP -->
-      <div id="sec-setup" class="card" style="padding:20px">
-        <p class="slabel" style="margin-bottom:14px">分組設定</p>
-        <div style="margin-bottom:14px">
-          <p style="font-size:12px;color:var(--t2);margin-bottom:8px">組數（含線上組）</p>
-          <div style="display:flex;gap:6px">
-            <button onclick="setGrpCount(4)" id="btn-g4" class="btn btn-ghost" style="flex:1">4 組</button>
-            <button onclick="setGrpCount(5)" id="btn-g5" class="btn btn-ghost active" style="flex:1">5 組</button>
-          </div>
-        </div>
-        <div id="grp-preview" style="border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:16px"></div>
-        <button onclick="startRegistering()" class="btn btn-gold btn-xl btn-full">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-          確認分組，開放登入
-        </button>
-      </div>
+    <!-- Main (unlocked) -->
+    <div id="host-main" class="hidden" style="flex-direction:column;gap:10px">
 
-      <!-- REGISTER -->
-      <div id="sec-register" class="card hidden" style="padding:20px">
+      <!-- Question list -->
+      <div class="card" style="padding:20px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <p class="slabel">登入中</p>
-          <span id="h-join-count" class="badge badge-green">0 人已加入</span>
+          <span class="slabel">課程題目</span>
+          <span id="h-prog" class="badge badge-gold">0 / 6</span>
         </div>
-        <div id="h-join-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px"></div>
-        <button onclick="startCourse()" class="btn btn-acc btn-xl btn-full">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          人員確認，進入抽題
-        </button>
+        <div id="h-q-list" style="display:flex;flex-direction:column;gap:5px"></div>
       </div>
 
-      <!-- DISCUSS -->
-      <div id="sec-discuss" class="card hidden" style="padding:20px">
-        <div id="disc-pending">
-          <p class="slabel" style="margin-bottom:12px">隨機抽題</p>
-          <p style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6">各組已確認，按下按鈕隨機分配題目並在大螢幕呈現抽題動畫。</p>
-          <button onclick="assignRandom()" id="btn-draw" class="btn btn-acc btn-xl btn-full">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-            隨機抽題
-          </button>
-        </div>
-        <div id="disc-drawn" style="display:none">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <p class="slabel">討論計時</p><span class="badge badge-gold">10 分鐘</span>
-          </div>
-          <div id="h-disc-timer" class="h-timer" style="color:var(--gold);text-align:center;margin-bottom:16px">10:00</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <button onclick="startDiscussion()" id="btn-disc-start" class="btn btn-green btn-lg"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>開始計時</button>
-            <button onclick="goPresent(1)" class="btn btn-ghost btn-lg">跳過 → 分享</button>
-          </div>
-        </div>
-      </div>
+      <!-- Dynamic control panel -->
+      <div id="h-controls" class="card" style="padding:20px"></div>
 
-      <!-- PRESENT -->
-      <div id="sec-present" class="card hidden" style="padding:20px">
-        <p class="slabel" style="margin-bottom:12px">分享控制</p>
-        <div id="h-present-grp" style="font-size:17px;font-weight:600;text-align:center;margin-bottom:4px">第一組 分享中</div>
-        <div id="h-score-count" style="color:var(--t3);font-size:12px;text-align:center;margin-bottom:10px">0 人已評分</div>
-        <div id="h-pres-timer" class="h-timer" style="color:var(--acc-hi);text-align:center;margin-bottom:16px">3:00</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-          <button onclick="startPresent()" class="btn btn-green btn-lg"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>開始計時</button>
-          <button id="btn-next-grp" onclick="nextGroup()" class="btn btn-ghost btn-lg">下一組 →</button>
-        </div>
-        <button onclick="showResults()" class="btn btn-full btn-lg" style="background:rgba(245,166,35,.1);color:var(--gold);border:1px solid rgba(245,166,35,.2)">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/><path d="M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-          公布結果
-        </button>
-      </div>
-
-      <!-- RESULTS -->
-      <div id="sec-results" class="card hidden" style="padding:20px">
-        <p class="slabel" style="margin-bottom:14px">得獎名單</p>
-        <div id="h-results" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
-        <div class="div" style="margin-bottom:12px"></div>
-        <button onclick="resetCourse()" class="btn btn-danger btn-full" style="padding:10px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-          重置課程
-        </button>
-      </div>
     </div>
   </div>
 </div>
 
 
-<!-- ═══════ DISPLAY ═══════ -->
+<!-- ═══════════════════════════════════════════════════
+     DISPLAY  —  投影機大螢幕
+════════════════════════════════════════════════════ -->
 <div id="page-display" class="page items-center justify-center relative overflow-hidden"
-     style="background:radial-gradient(ellipse 100% 60% at 50% 0%,rgba(123,97,255,.06) 0%,transparent 60%)">
-  <button onclick="nav('home')" class="btn btn-ghost" style="position:absolute;top:14px;left:14px;padding:7px 12px;font-size:12px;gap:5px;z-index:10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回</button>
+     style="background:radial-gradient(ellipse 100% 60% at 50% 0%,rgba(123,97,255,.05) 0%,transparent 60%)">
 
-  <!-- WAITING -->
-  <div id="disp-waiting" class="text-center ani-up" style="padding:32px">
+  <button onclick="nav('home')" class="btn btn-ghost"
+          style="position:absolute;top:14px;left:14px;padding:7px 12px;font-size:12px;gap:5px;z-index:10">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回
+  </button>
+
+  <!-- ── IDLE ── -->
+  <div id="d-idle" class="d-panel text-center ani-up" style="padding:32px">
     <div style="width:80px;height:80px;border-radius:20px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 28px">
-      <svg width="40" height="40" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#7B61FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#7B61FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#7B61FF" stroke-width="1.5"/><path d="M14 3C14 3 3 8.5 3 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/><path d="M14 3C14 3 25 8.5 25 14" stroke="#7B61FF" stroke-width="1" opacity=".35"/></svg>
+      <svg width="40" height="40" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#A490FF" stroke-width="1.5"/><circle cx="14" cy="8.5" r="3" fill="#A490FF"/><circle cx="14" cy="19.5" r="3" fill="none" stroke="#A490FF" stroke-width="1.5"/><path d="M14 3C14 3 3 8.5 3 14" stroke="#A490FF" stroke-width="1" opacity=".35"/><path d="M14 3C14 3 25 8.5 25 14" stroke="#A490FF" stroke-width="1" opacity=".35"/></svg>
     </div>
-    <h1 class="d-h1" style="color:var(--t1);margin-bottom:16px">道場的十萬個為什麼</h1>
-    <p style="color:var(--t3);font-size:clamp(1.4rem,3vw,2.2rem);font-weight:500">等待課程開始…</p>
+    <h1 class="d-title" style="color:var(--t1);margin-bottom:16px">道場的十萬個為什麼</h1>
+    <p style="color:var(--t2);font-size:clamp(1.3rem,3vw,2.2rem);font-weight:600;margin-bottom:12px">人才的使命與自覺</p>
+    <p style="color:var(--t3);font-size:clamp(1rem,2vw,1.6rem)">等待課程開始…</p>
   </div>
 
-  <!-- REGISTERING -->
-  <div id="disp-registering" style="display:none;width:100%;max-width:1100px;padding:24px 28px">
-    <div style="display:flex;align-items:flex-start;gap:32px">
-      <!-- Left: QR + title -->
-      <div style="flex-shrink:0;text-align:center">
-        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:700;margin-bottom:20px;color:#FFFFFF;text-shadow:0 0 30px rgba(255,255,255,.2)">掃碼加入課程</h2>
-        <div id="disp-reg-qr" style="background:#fff;padding:10px;border-radius:14px;display:inline-block;margin-bottom:12px;box-shadow:0 0 40px rgba(123,97,255,.2)"></div>
-        <p id="disp-reg-url" style="color:var(--t3);font-size:11px;word-break:break-all;max-width:220px"></p>
-        <div id="disp-reg-count" style="margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.15);border:1px solid rgba(76,217,100,.5);border-radius:99px;padding:8px 18px;color:#4CD964;font-size:clamp(1rem,2vw,1.6rem);font-weight:600">
-          <span style="width:7px;height:7px;border-radius:50%;background:var(--green)"></span>0 人已加入
-        </div>
-      </div>
-      <!-- Right: group list -->
-      <div style="flex:1;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))" id="disp-reg-groups"></div>
+  <!-- ── QUESTION ── -->
+  <!-- 顯示題目文字 + 選項 + 可選計時器 -->
+  <div id="d-question" class="d-panel"
+       style="width:100%;max-width:1200px;padding:24px 36px;height:100dvh;flex-direction:column;justify-content:center">
+    <div style="text-align:center;margin-bottom:clamp(.8rem,2.5vh,2rem)">
+      <div id="d-q-badge" class="badge badge-acc"
+           style="font-size:clamp(.8rem,1.5vw,1.1rem);padding:5px 14px;margin-bottom:clamp(.6rem,1.5vh,1.2rem)">心理測驗</div>
+      <div id="d-q-text" class="d-q" style="color:var(--t1);max-width:960px;margin:0 auto"></div>
     </div>
+    <!-- Timer (顯示於題目下方) -->
+    <div id="d-q-timer-wrap" style="display:none;text-align:center;margin-bottom:clamp(.5rem,1.5vh,1rem)">
+      <div id="d-q-timer" class="d-timer" style="color:var(--gold)">02:00</div>
+    </div>
+    <!-- Options -->
+    <div id="d-q-opts" style="display:flex;flex-direction:column;gap:clamp(.4rem,1.2vh,.8rem);max-width:860px;margin:0 auto;width:100%"></div>
+    <!-- Chat hint -->
+    <p id="d-q-hint" class="d-hint" style="text-align:center;margin-top:clamp(.8rem,2.5vh,1.8rem)">💬 請在聊天室回覆</p>
   </div>
 
-  <!-- DRAWING -->
-  <div id="disp-drawing" style="display:none;width:100%;max-width:960px;padding:32px 28px">
-    <h2 style="font-size:clamp(2.2rem,5vw,4rem);font-weight:700;text-align:center;color:#FFFFFF;margin-bottom:28px;text-shadow:0 0 30px rgba(255,255,255,.2)">今天的題目</h2>
-    <div id="disp-questions" style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))"></div>
+  <!-- ── REVEAL: RELIGION (心理測驗1 — 萬教同源) ── -->
+  <!-- 5 張圖片卡片，每張對應一個宗教 -->
+  <div id="d-reveal-religion" class="d-panel"
+       style="width:100%;padding:clamp(14px,2.5vw,24px) clamp(16px,3vw,36px);overflow-y:auto;max-height:100dvh">
+    <div style="text-align:center;margin-bottom:clamp(.6rem,2vh,1.2rem)">
+      <div style="font-size:clamp(1.8rem,4vw,3.5rem);font-weight:700;color:var(--gold-hi);
+                  text-shadow:0 0 40px rgba(255,208,96,.5);letter-spacing:.06em">萬教同源</div>
+    </div>
+    <div id="d-religion-cards"
+         style="display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(.5rem,1.2vw,.9rem);margin-bottom:clamp(.6rem,1.5vh,1rem)"></div>
+    <div id="d-unity-msg" class="d-unity"
+         style="padding:clamp(.8rem,1.8vw,1.4rem);background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
   </div>
 
-  <!-- DISCUSSION -->
-  <div id="disp-discussion" class="text-center" style="display:none;padding:32px">
-    <p style="color:var(--t3);font-size:clamp(1.4rem,3vw,2.4rem);margin-bottom:28px;letter-spacing:.1em;text-transform:uppercase;font-weight:600">小組討論</p>
-    <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
-      <svg width="320" height="320" viewBox="0 0 200 200"><circle class="ring-track" cx="100" cy="100" r="85"/><circle id="disp-disc-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#A490FF"/></svg>
-      <div style="position:absolute;text-align:center"><div id="disp-disc-timer" class="d-timer" style="color:var(--t1)">10:00</div></div>
+  <!-- ── REVEAL: TYPE (心理測驗2 — 修辦人才類型) ── -->
+  <!-- 4 張圖片卡片，2×2 格局 -->
+  <div id="d-reveal-type" class="d-panel"
+       style="width:100%;padding:clamp(14px,2.5vw,24px) clamp(16px,3vw,36px);overflow-y:auto;max-height:100dvh">
+    <div style="text-align:center;margin-bottom:clamp(.6rem,2vh,1.2rem)">
+      <div style="font-size:clamp(1.5rem,3.5vw,3rem);font-weight:700;color:var(--t1);
+                  text-shadow:0 0 30px rgba(255,255,255,.2)">每一種，都是道上的一步</div>
     </div>
-    <div style="display:none"><div id="disp-disc-bar" style="width:100%"></div></div>
-    <p style="color:var(--t3);font-size:clamp(1.2rem,2.5vw,2rem);margin-top:28px;font-weight:500">各組正在準備精彩答案…</p>
+    <div id="d-type-cards"
+         style="display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(.8rem,2vw,1.4rem);
+                max-width:1000px;margin:0 auto clamp(.6rem,1.5vh,1rem)"></div>
+    <div id="d-reflection-msg" class="d-unity"
+         style="padding:clamp(.8rem,1.8vw,1.4rem);background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
   </div>
 
-  <!-- PRESENTING -->
-  <div id="disp-presenting" class="text-center" style="display:none;padding:32px;width:100%;max-width:800px">
-    <p style="color:var(--t3);font-size:clamp(1.4rem,3vw,2.4rem);margin-bottom:14px;letter-spacing:.1em;text-transform:uppercase;font-weight:600">現在分享</p>
-    <div id="disp-pres-name" class="d-group" style="color:var(--t1);margin-bottom:10px">第一組</div>
-    <div id="disp-pres-q" class="d-q" style="margin-bottom:24px;max-width:680px;margin-left:auto;margin-right:auto"></div>
-    <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
-      <svg width="260" height="260" viewBox="0 0 200 200"><circle class="ring-track" cx="100" cy="100" r="85"/><circle id="disp-pres-ring" class="ring-prog" cx="100" cy="100" r="85" stroke="#4CD964"/></svg>
-      <div style="position:absolute;text-align:center"><div id="disp-pres-timer" style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(4rem,13vw,7rem);line-height:1;font-variant-numeric:tabular-nums;color:var(--t1);text-shadow:0 0 50px rgba(255,255,255,.3)">3:00</div></div>
+  <!-- ── REVEAL: QUIZ (知識/思考/使命題 — 答案揭曉) ── -->
+  <!-- 正確選項高亮，其他變暗 -->
+  <div id="d-reveal-quiz" class="d-panel"
+       style="width:100%;max-width:960px;padding:24px 36px">
+    <div style="text-align:center;margin-bottom:clamp(1rem,3vh,2rem)">
+      <div id="d-rq-badge" class="badge badge-gold"
+           style="font-size:clamp(.8rem,1.5vw,1rem);padding:5px 14px;margin-bottom:clamp(.8rem,2vh,1.5rem)">正確答案</div>
+      <div id="d-rq-text" class="d-q"
+           style="color:var(--t2);max-width:800px;margin:0 auto;font-size:clamp(1.2rem,2.5vw,2rem)"></div>
     </div>
-    <div style="display:none"><div id="disp-pres-bar" style="width:100%"></div></div>
-    <div id="disp-score-count" style="margin-top:20px;display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);border-radius:99px;padding:5px 14px;color:var(--green);font-size:14px;font-weight:600">
-      <span style="width:7px;height:7px;border-radius:50%;background:var(--green)"></span>0 人已評分
-    </div>
+    <div id="d-rq-opts" style="display:flex;flex-direction:column;gap:clamp(.6rem,1.5vh,.9rem);max-width:800px;margin:0 auto"></div>
   </div>
 
-  <!-- RESULTS -->
-  <div id="disp-results" class="text-center" style="display:none;padding:32px;width:100%;max-width:900px">
-    <h2 style="font-size:clamp(2.5rem,6vw,5rem);font-weight:700;color:#FFFFFF;margin-bottom:36px;text-shadow:0 0 40px rgba(255,255,255,.25)">得獎名單</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
-      <div class="card ani-sc" style="padding:28px 20px;animation-delay:.1s">
-        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="margin:0 auto 14px" stroke="#FFD060" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <div style="color:#A0A0C0;font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">精闢講解獎</div>
-        <div id="res-clarity" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#FFD060;margin-bottom:6px;text-shadow:0 0 30px rgba(255,208,96,.5)">—</div>
-        <div id="res-clarity-score" style="color:#A0A0C0;font-size:clamp(.85rem,1.6vw,1.2rem);margin-bottom:14px"></div>
-        <div id="res-clarity-members" style="color:#D8D8F0;font-size:clamp(1rem,1.8vw,1.4rem);line-height:2"></div>
-      </div>
-      <div class="card ani-sc" style="padding:28px 20px;animation-delay:.25s">
-        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="margin:0 auto 14px" stroke="#BBAAFF" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <div style="color:#A0A0C0;font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">創意表現獎</div>
-        <div id="res-creative" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#BBAAFF;margin-bottom:6px;text-shadow:0 0 30px rgba(187,170,255,.5)">—</div>
-        <div id="res-creative-score" style="color:#A0A0C0;font-size:clamp(.85rem,1.6vw,1.2rem);margin-bottom:14px"></div>
-        <div id="res-creative-members" style="color:#D8D8F0;font-size:clamp(1rem,1.8vw,1.4rem);line-height:2"></div>
-      </div>
-      <div class="card ani-sc" style="padding:28px 20px;animation-delay:.4s">
-        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="margin:0 auto 14px" stroke="#FF8FAA" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        <div style="color:#A0A0C0;font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">情感傳達獎</div>
-        <div id="res-emotion" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#FF8FAA;margin-bottom:6px;text-shadow:0 0 30px rgba(255,143,170,.5)">—</div>
-        <div id="res-emotion-score" style="color:#A0A0C0;font-size:clamp(.85rem,1.6vw,1.2rem);margin-bottom:14px"></div>
-        <div id="res-emotion-members" style="color:#D8D8F0;font-size:clamp(1rem,1.8vw,1.4rem);line-height:2"></div>
-      </div>
-    </div>
+  <!-- ── EXPLAIN (講解頁 — 文字 + 可選 YouTube) ── -->
+  <div id="d-explain" class="d-panel"
+       style="width:100%;max-width:1100px;padding:24px 36px;overflow-y:auto;max-height:100dvh">
+    <div id="d-explain-content" style="display:grid;gap:clamp(1rem,3vw,2.5rem)"></div>
   </div>
+
 </div>
 
 
-<!-- ═══════ JOIN ═══════ -->
-<div id="page-join" class="page" style="overflow-y:auto">
-  <div style="max-width:480px;margin:0 auto;width:100%;padding:0 16px 80px">
-    <div style="display:flex;align-items:center;gap:10px;padding:16px 0 6px">
-      <button onclick="nav('home')" class="btn btn-ghost" style="padding:7px 10px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
-      <span style="font-size:15px;font-weight:600">加入課程</span>
-    </div>
+<script>
+// ═══════════════════════════════════════════════════
+// DATA  —  題目資料庫（心理測驗 × 2 + 知識/思考題 × 4）
+// ═══════════════════════════════════════════════════
+const HOST_PW = '000';
 
-    <!-- 登入表單 -->
-    <div id="join-register">
-      <div class="card" style="padding:20px;margin-bottom:10px">
-        <p style="font-size:13px;color:var(--t2);margin-bottom:10px">你的名字</p>
-        <input id="join-name" class="inp" placeholder="輸入你的名字" style="font-size:16px">
-      </div>
-      <div class="card" style="padding:20px;margin-bottom:16px">
-        <p style="font-size:13px;color:var(--t2);margin-bottom:10px">選擇你的組別</p>
-        <div id="join-grp-btns" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px"></div>
-      </div>
-      <button onclick="joinCourse()" id="btn-join" disabled class="btn btn-full btn-xl" style="background:var(--elev);color:var(--t3);border:1px solid var(--bd);cursor:not-allowed">選擇組別後加入</button>
-    </div>
+const Q = [
+  // ── 心理測驗 1：真我 × 五教 ───────────────────────
+  {
+    id:1, badge:'心理測驗 1', type:'psych-religion',
+    question:'如果用一個特質描述你的內在，你最認同哪一個？',
+    timerSec:0,
+    opts:[
+      { label:'A', text:'我的內心充滿仁愛，最在乎人與人之間的和諧與關係',
+        religion:'儒', color:'#E8A44A', border:'rgba(232,164,74,.4)',
+        image:'images/ru_ren_20260603_153624.png',
+        quote:'仁者愛人', source:'《論語·顏淵》',
+        insight:'儒家以「仁」為核心，人與人之間的愛，是天道最真實的體現。' },
+      { label:'B', text:'我渴望智慧，想看清生命、苦難與解脫的本質',
+        religion:'佛', color:'#9B7EDE', border:'rgba(155,126,222,.4)',
+        image:'images/fo_wisdom_20260603_153653.png',
+        quote:'心本清淨，不因塵染', source:'《六祖壇經》',
+        insight:'佛法以「覺」為要，撥開執著才能回歸本性清淨。' },
+      { label:'C', text:'我嚮往自然，相信順著本性走，就能找到答案',
+        religion:'道', color:'#5CB87E', border:'rgba(92,184,126,.4)',
+        image:'images/dao_nature_20260603_153611.png',
+        quote:'道法自然', source:'《道德經》第二十五章',
+        insight:'道家以「自然」為本，循道而行，萬物各得其所。' },
+      { label:'D', text:'我相信愛與犧牲，願意為他人無條件付出',
+        religion:'耶', color:'#D4784A', border:'rgba(212,120,74,.4)',
+        image:'images/ye_love_20260603_153612.png',
+        quote:'要彼此相愛，如同我愛你們一樣', source:'《約翰福音》15:12',
+        insight:'基督教以「愛」為精髓，捨己為人是靈魂最高的實踐。' },
+      { label:'E', text:'我重視紀律與感恩，願意臣服於更高的旨意',
+        religion:'回', color:'#3B9EA8', border:'rgba(59,158,168,.4)',
+        image:'images/hui_discipline_20260603_153610.png',
+        quote:'至仁至慈的主啊', source:'《古蘭經》開端章',
+        insight:'伊斯蘭以「信」為基，在順服中找到平靜，在感恩中認識真主。' },
+    ],
+    unity:'五教如五道光——顏色不同，卻照亮同一個真理。\n萬教同源，同歸一理，皆教人向善回天。'
+  },
 
-    <!-- 等待中（已登入） -->
-    <div id="join-lobby" style="display:none;text-align:center;padding:60px 0">
-      <div style="width:56px;height:56px;border-radius:14px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </div>
-      <h3 id="join-hello" style="font-size:20px;font-weight:700;color:var(--t1);margin-bottom:6px">你好！</h3>
-      <div id="join-my-grp" style="display:inline-flex;align-items:center;gap:6px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.2);border-radius:99px;padding:4px 12px;color:var(--acc-hi);font-size:13px;margin-bottom:16px"></div>
-      <p style="color:var(--t3);font-size:14px">等待課程開始…</p>
-    </div>
+  // ── 心理測驗 2：修辦人才類型 ─────────────────────
+  {
+    id:2, badge:'心理測驗 2', type:'psych-type',
+    question:'此刻，你最像哪一種在道場中的人？',
+    timerSec:0,
+    opts:[
+      { label:'A', text:'來道場是因為家人或朋友，還在感受、觀察中',
+        typeName:'緣分型', color:'#5CB87E', border:'rgba(92,184,126,.3)',
+        image:'images/type_yuanfen_20260603_153615.png',
+        response:'你正站在門口，帶著好奇向內望。\n這份緣分本身，就是最美的開始。\n每一位點傳師，也是這樣走進來的。',
+        verse:'「有緣千里來相會，無緣對面不相識。」' },
+      { label:'B', text:'積極學習道學，但還不確定自己在道場中的位置',
+        typeName:'學習型', color:'#A490FF', border:'rgba(164,144,255,.3)',
+        image:'images/type_learning_20260603_153711.png',
+        response:'你正在用心耕耘內在的田地。\n此刻的吸收，將成為日後帶動他人的根基。\n繼續走，方向沒有錯。',
+        verse:'「學而時習之，不亦說乎？」——《論語》' },
+      { label:'C', text:'喜歡在道場付出、幫忙，從行動中找到踏實感',
+        typeName:'服務型', color:'#F5A623', border:'rgba(245,166,35,.3)',
+        image:'images/type_service_20260603_153714.png',
+        response:'你用行動詮釋了「修辦合一」的真義。\n每一次付出，靈魂在悄悄提升。\n你的存在，也在影響身邊的人。',
+        verse:'「功德圓滿，天道成全。」' },
+      { label:'D', text:'感受到內在有個呼喚，想帶動更多人回到這條路上',
+        typeName:'使命型', color:'#FF8C6A', border:'rgba(255,140,106,.3)',
+        image:'images/type_mission_20260603_153712.png',
+        response:'你已聽到靈魂深處的召喚。\n這份使命感，是老天在此關鍵時刻，\n特別交託給你的任務。',
+        verse:'「奉天承運，此時不辦，更待何時？」' },
+    ],
+    reflection:'無論你現在是哪一種，每個階段都有它的意義。\n重要的是——你已經在這條路上了。'
+  },
 
-    <!-- 評分表單（其他組分享時） -->
-    <div id="join-score" style="display:none">
-      <div style="text-align:center;padding:20px 0 16px">
-        <div id="score-grp-name" style="font-size:18px;font-weight:700;color:var(--gold);margin-bottom:4px">第一組</div>
-        <p style="color:var(--t3);font-size:13px">正在分享，請給予評分</p>
-      </div>
-      <!-- 精闢講解 -->
-      <div class="score-cat card" style="margin-bottom:8px">
-        <div>
-          <div style="font-size:14px;font-weight:600;color:var(--t1)">精闢講解</div>
-          <div style="font-size:11px;color:var(--t3);margin-top:2px">解釋得清楚、有深度</div>
-        </div>
-        <div class="star-row" id="stars-clarity">
-          <button class="star-btn" data-val="1" onclick="setStar('clarity',1)">★</button>
-          <button class="star-btn" data-val="2" onclick="setStar('clarity',2)">★</button>
-          <button class="star-btn" data-val="3" onclick="setStar('clarity',3)">★</button>
-        </div>
-      </div>
-      <!-- 創意表現 -->
-      <div class="score-cat card" style="margin-bottom:8px">
-        <div>
-          <div style="font-size:14px;font-weight:600;color:var(--t1)">創意表現</div>
-          <div style="font-size:11px;color:var(--t3);margin-top:2px">有新意、令人眼睛一亮</div>
-        </div>
-        <div class="star-row" id="stars-creative">
-          <button class="star-btn" data-val="1" onclick="setStar('creative',1)">★</button>
-          <button class="star-btn" data-val="2" onclick="setStar('creative',2)">★</button>
-          <button class="star-btn" data-val="3" onclick="setStar('creative',3)">★</button>
-        </div>
-      </div>
-      <!-- 情感傳達 -->
-      <div class="score-cat card" style="margin-bottom:16px">
-        <div>
-          <div style="font-size:14px;font-weight:600;color:var(--t1)">情感傳達</div>
-          <div style="font-size:11px;color:var(--t3);margin-top:2px">打動人心、有共鳴</div>
-        </div>
-        <div class="star-row" id="stars-emotion">
-          <button class="star-btn" data-val="1" onclick="setStar('emotion',1)">★</button>
-          <button class="star-btn" data-val="2" onclick="setStar('emotion',2)">★</button>
-          <button class="star-btn" data-val="3" onclick="setStar('emotion',3)">★</button>
-        </div>
-      </div>
-      <button id="btn-score-submit" onclick="submitScore()" disabled class="btn btn-full btn-xl" style="background:var(--elev);color:var(--t3);border:1px solid var(--bd);cursor:not-allowed">請完成所有評分</button>
-    </div>
+  // ── 思考題 1 ──────────────────────────────────────
+  {
+    id:3, badge:'思考題', type:'quiz',
+    question:'為什麼每個人的本性都是一樣善良的？明明我們有不一樣的個性，如果大家都是善良的，為什麼世界還會這麼亂？',
+    timerSec:120,
+    opts:[
+      { label:'A', text:'因為每個人出生時都沒有罪惡感，是後天環境讓人變壞' },
+      { label:'B', text:'因為本性是天賦的，人人皆有善的種子，只是被習性遮蔽了' },
+      { label:'C', text:'因為宗教都這樣說，所以大家接受了這個說法' },
+    ],
+    answer:1,
+    explain:{
+      text:'一貫道認為「天命真性」人人皆有，本性如月，習性如雲。\n\n月亮（本性）永遠是光明的，只是厚雲（習性、後天環境）遮蔽了它。修道的目的，就是撥雲見月，讓本性重新展現。\n\n世界的亂，不是本性的問題，而是習性未修的問題。',
+      youtube:''
+    }
+  },
 
-    <!-- 自己組在分享 -->
-    <div id="join-my-turn" style="display:none;text-align:center;padding:60px 0">
-      <div style="font-size:56px;margin-bottom:16px">🎤</div>
-      <h3 style="font-size:22px;font-weight:700;color:var(--gold);margin-bottom:8px">輪到你們了！</h3>
-      <p style="color:var(--t3);font-size:14px">好好發揮，加油！</p>
-    </div>
+  // ── 思考題 2 ──────────────────────────────────────
+  {
+    id:4, badge:'思考題', type:'quiz',
+    question:'老子說「無為而為」，那為什麼我們修道還要這麼努力辦道？',
+    timerSec:120,
+    opts:[
+      { label:'A', text:'因為無為是給聖人用的，我們凡人做不到，所以要努力' },
+      { label:'B', text:'「無為」是無私心的為，不是什麼都不做，而是放下「我要得到什麼」的心去行動' },
+      { label:'C', text:'老子的話不適用在現代，不用太認真解讀' },
+    ],
+    answer:1,
+    explain:{
+      text:'「無為」不是消極的不作為，而是去掉「私我」的作為——不為名、不為利、不求回報的付出。\n\n辦道正是如此：全心投入、卻不執著於結果。這才是「無為而無不為」的真義。\n\n當我們辦道是為了成全他人、回應天命，而不是為了自己的功德，那就是最真實的「無為」。',
+      youtube:''
+    }
+  },
 
-    <!-- 已評分 -->
-    <div id="join-scored" style="display:none;text-align:center;padding:60px 0">
-      <div style="width:56px;height:56px;border-radius:14px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <h3 style="font-size:20px;font-weight:700;color:var(--t1);margin-bottom:6px">已送出評分</h3>
-      <p style="color:var(--t3);font-size:14px">等待下一組分享…</p>
-    </div>
+  // ── 使命題 1 ──────────────────────────────────────
+  {
+    id:5, badge:'使命題', type:'quiz',
+    question:'道場生活和日常生活都可以很精彩，為什麼還要特別投入道場？道場給了我們什麼是外面找不到的？',
+    timerSec:120,
+    opts:[
+      { label:'A', text:'道場可以讓我們得到功德，以後可以回天' },
+      { label:'B', text:'道場提供的是靈魂的歸宿感——讓我們認識自己、找到使命、與同道同行' },
+      { label:'C', text:'因為家人希望我參加，所以來了' },
+    ],
+    answer:1,
+    explain:{
+      text:'外面的精彩可以滿足感官，卻常常讓人感到空洞。\n\n道場給的是「意義感」——讓你知道自己從哪裡來、為什麼來，以及可以成為什麼樣的人。這是物質生活填不滿的那一塊。\n\n當你找到這份意義，道場就不再是義務，而是你選擇在這裡的理由。',
+      youtube:''
+    }
+  },
 
-    <!-- 結果 -->
-    <div id="join-results" style="display:none">
-      <div style="text-align:center;padding:24px 0 20px">
-        <h3 style="font-size:22px;font-weight:700;color:var(--t1)">得獎名單</h3>
-      </div>
-      <div id="join-results-body" style="display:flex;flex-direction:column;gap:10px"></div>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- ═══════ SCRIPT ═══════ -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, update, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey:"AIzaSyDpkFpV5hujitNEK4TitlPF3vklaVchmJc",
-  authDomain:"tao-why.firebaseapp.com",
-  databaseURL:"https://tao-why-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"tao-why",storageBucket:"tao-why.firebasestorage.app",
-  messagingSenderId:"890386342264",appId:"1:890386342264:web:de68c75a2cfe42dab5e88d"
-};
-const HOST_PW  = "000";
-const QUESTIONS = [
-  {short:"本性善良之謎",  full:"為什麼每個人的本性都是一樣善良的？明明我們每個人都有不一樣的個性。而且如果大家都是善良的，為什麼世界還會這麼亂？"},
-  {short:"無為而修道",    full:"老子都說了「無為而為」，那為什麼我們修道還要這麼努力？"},
-  {short:"帶家人來佛堂",  full:"如何讓家裡的人認同，跟我一起來佛堂？"},
-  {short:"為何上進階班",  full:"沒來上課的生活也可以很精彩啊，為什麼一定要來上進階班？"},
-  {short:"功德與無執著",  full:"為什麼佛堂一直要我們做功德賺天幣，但是同時叫我們不要想自己賺多少功德呢？"},
+  // ── 使命題 2 ──────────────────────────────────────
+  {
+    id:6, badge:'使命題', type:'quiz',
+    question:'什麼是「人才的自覺」？有自覺的修辦人才，跟被動來道場的人，最大的差別在哪裡？',
+    timerSec:120,
+    opts:[
+      { label:'A', text:'有自覺的人辦道更用力，也更容易得到老師賞識' },
+      { label:'B', text:'有自覺的人，是從「被安排來」到「我選擇在這裡」——從義務變成使命' },
+      { label:'C', text:'差別不大，重要的是有來就好' },
+    ],
+    answer:1,
+    explain:{
+      text:'「自覺」不是覺得自己很優秀，而是覺知自己的使命。\n\n當一個人從「我被帶來」轉變為「我選擇在這裡」，他的道場生命就完全不同了——他開始主動思考、主動付出、主動帶動他人。\n\n這就是人才自覺的起點，也是今天這堂課最想傳達的訊息。',
+      youtube:''
+    }
+  },
 ];
-const CHN = ['一','二','三','四'];
-function makeGrpNames(n) {
-  const a = [];
-  for (let i=0;i<n-1;i++) a.push('第'+CHN[i]+'組');
-  a.push('線上組'); return a;
-}
-const DISC_SEC=10*60, PRES_SEC=3*60, CIRC=534.07;
 
-const fbApp=initializeApp(firebaseConfig), db=getDatabase(fbApp);
-const sessRef=ref(db,'session'), usersRef=ref(db,'users'), scoresRef=ref(db,'scores');
+// ═══════════════════════════════════════════════════
+// STATE  —  使用 BroadcastChannel 同步兩個分頁
+// ═══════════════════════════════════════════════════
+// 「主持人分頁」更新狀態後廣播，「大螢幕分頁」接收並渲染。
+// localStorage 作為備份，讓大螢幕開啟時能恢復上次狀態。
 
-// Device ID
-let deviceId=localStorage.getItem('_tao_dev');
-if(!deviceId){deviceId='dev_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('_tao_dev',deviceId);}
+const CH = new BroadcastChannel('tao-why-v2');
 
-let S={}, allUsers={}, allScores={};
-let timerHandle=null, displayListening=false, joinListening=false;
+const S = { screen:'idle', qIdx:-1, timerRunning:false, timerStart:0, timerDur:0 };
 
-// ── Router ─────────────────────────────────────────
-window.nav=function(p){
-  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  location.hash=p;
-  if(p==='display'&&!displayListening) initDisplay();
-  if(p==='join'&&!joinListening) initJoin();
-};
-nav(location.hash.replace('#','')||'home');
+// 嘗試從 localStorage 恢復（防止重新整理丟失狀態）
+try {
+  const saved = localStorage.getItem('tao-why-state');
+  if (saved) Object.assign(S, JSON.parse(saved));
+} catch(e) {}
 
-// ── Host ───────────────────────────────────────────
-window.unlockHost=()=>{
-  if(document.getElementById('host-pw').value===HOST_PW){
-    document.getElementById('host-lock').classList.add('hidden');
-    const m=document.getElementById('host-main');
-    m.classList.remove('hidden'); m.style.display='flex';
-    initHost();
-  } else { document.getElementById('host-err').classList.remove('hidden'); }
-};
-
-let grpCount=5;
-window.setGrpCount=function(n){
-  grpCount=n;
-  document.getElementById('btn-g4').classList.toggle('active',n===4);
-  document.getElementById('btn-g5').classList.toggle('active',n===5);
-  renderGroupPreview();
-};
-
-function renderGroupPreview(){
-  const names=makeGrpNames(grpCount), c=document.getElementById('grp-preview');
-  c.innerHTML=names.map((name,i)=>{
-    const online=i===names.length-1;
-    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:${i%2===0?'rgba(255,255,255,.02)':'transparent'}">
-      <span style="width:7px;height:7px;border-radius:50%;background:${online?'var(--green)':'var(--acc)'};flex-shrink:0"></span>
-      <span style="font-size:13px;color:var(--t2);flex:1">${name}</span>
-      ${online?'<span class="badge badge-green" style="font-size:10px">線上</span>':''}
-    </div>`;
-  }).join('');
-}
-
-window.startRegistering=async()=>{
-  const names=makeGrpNames(grpCount), groups={};
-  names.forEach((name,i)=>{groups[i+1]={name,qIndex:-1};});
-  await set(ref(db,'/'),{
-    session:{phase:'registering',drawingState:'pending',totalGroups:grpCount,
-      presentingGroup:0,discussionStart:0,presentStart:0,groups},
-    users:null, scores:null
-  });
-};
-
-window.startCourse=async()=>{
-  await update(sessRef,{phase:'drawing'});
-};
-
-window.assignRandom=async()=>{
-  const total=S.totalGroups||grpCount;
-  const pool=[...Array(total).keys()];
-  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
-  const btn=document.getElementById('btn-draw');
-  if(btn){btn.disabled=true;btn.textContent='抽題中…';}
-  const upd={'session/drawingState':'drawn'};
-  for(let i=1;i<=total;i++) upd[`session/groups/${i}/qIndex`]=pool[i-1];
-  await update(ref(db,'/'),upd);
-};
-
-window.startDiscussion=async()=>{
-  const btn=document.getElementById('btn-disc-start');
-  btn.disabled=true;btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> 計時中…';
-  await update(sessRef,{phase:'discussion',discussionStart:Date.now()});
-};
-window.goPresent=async(n)=>{await update(sessRef,{phase:'presenting',presentingGroup:n,presentStart:0});};
-window.startPresent=async()=>{await update(sessRef,{presentStart:Date.now()});};
-window.nextGroup=async()=>{
-  const next=(S.presentingGroup||0)+1;
-  if(next>(S.totalGroups||5)){showResults();return;}
-  await update(sessRef,{presentingGroup:next,presentStart:0});
-};
-window.showResults=async()=>{await update(sessRef,{phase:'results'});};
-window.resetCourse=async()=>{
-  if(!confirm('確定重置？所有資料將清除。')) return;
-  await set(ref(db,'/'),{session:{phase:'waiting'},users:null,scores:null});
-};
-
-function initHost(){
-  renderGroupPreview();
-  onValue(ref(db,'/'),snap=>{
-    const root=snap.val()||{};
-    S=root.session||{}; allUsers=root.users||{}; allScores=root.scores||{};
-    const {phase='waiting',presentingGroup=0,totalGroups=5,discussionStart=0,presentStart=0,groups={},drawingState='pending'}=S;
-
-    const labels={waiting:'等待中',registering:'登入分組',drawing:drawingState==='pending'?'展示組別':'抽題完成',
-      discussion:'小組討論',presenting:'分享進行',results:'結果揭曉'};
-    document.getElementById('h-phase').textContent=labels[phase]||phase;
-
-    const show=id=>{const e=document.getElementById(id);if(e)e.classList.remove('hidden');};
-    const hide=id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');};
-    ['sec-setup','sec-register','sec-discuss','sec-present','sec-results'].forEach(hide);
-
-    if(phase==='waiting') show('sec-setup');
-    if(phase==='registering'){
-      show('sec-register');
-      const joinList=Object.values(allUsers);
-      document.getElementById('h-join-count').textContent=joinList.length+' 人已加入';
-      renderHostJoinList(allUsers,groups,totalGroups);
-    }
-    if(['drawing','discussion'].includes(phase)){
-      show('sec-discuss');
-      document.getElementById('disc-pending').style.display=drawingState==='pending'?'':'none';
-      document.getElementById('disc-drawn').style.display=drawingState==='pending'?'none':'';
-    }
-    if(phase==='presenting'){
-      show('sec-present');
-      const g=groups[presentingGroup];
-      document.getElementById('h-present-grp').textContent=(g?.name||'')+' 分享中';
-      document.getElementById('btn-next-grp').textContent=presentingGroup>=totalGroups?'→ 公布結果':'下一組 →';
-      const cnt=Object.keys(allScores[presentingGroup]||{}).length;
-      document.getElementById('h-score-count').textContent=cnt+' 人已評分';
-    }
-    if(phase==='results'){
-      show('sec-results');
-      renderHostResults(allScores,allUsers,groups,totalGroups);
-    }
-
-    clearInterval(timerHandle);
-    if(phase==='discussion'&&discussionStart) hostTick('h-disc-timer',discussionStart,DISC_SEC);
-    if(phase==='presenting'&&presentStart)   hostTick('h-pres-timer',presentStart,PRES_SEC);
-  });
-}
-
-function renderHostJoinList(users,groups,total){
-  const c=document.getElementById('h-join-list'); if(!c) return;
-  const byGrp={};
-  for(let i=1;i<=total;i++) byGrp[i]=[];
-  Object.values(users||{}).forEach(u=>{if(byGrp[u.groupId]) byGrp[u.groupId].push(u.name);});
-  c.innerHTML=Object.entries(byGrp).map(([gid,names])=>{
-    const gname=groups[gid]?.name||'第'+gid+'組';
-    return `<div style="display:flex;align-items:center;gap:8px;font-size:13px">
-      <span style="color:var(--t2);width:44px;flex-shrink:0">${gname}</span>
-      <span style="color:var(--t1)">${names.join('、')||'—'}</span>
-    </div>`;
-  }).join('');
-}
-
-function renderHostResults(scores,users,groups,total){
-  const res=calcResults(scores,users,groups,total);
-  const cats=[{key:'clarity',label:'精闢講解獎'},{key:'creative',label:'創意表現獎'},{key:'emotion',label:'情感傳達獎'}];
-  document.getElementById('h-results').innerHTML=cats.map(c=>{
-    const w=res[c.key]; if(!w) return `<div style="font-size:13px;color:var(--t2)">${c.label}：尚無資料</div>`;
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)">
-      <span style="font-size:13px;color:var(--t2)">${c.label}</span>
-      <span style="font-size:14px;font-weight:600">${w.groupName} <span style="color:var(--t3);font-size:12px">${w.avg.toFixed(1)}★</span></span>
-    </div>`;
-  }).join('');
-}
-
-function hostTick(elId,startTs,total){
-  const tick=()=>{const rem=Math.max(0,total-(Date.now()-startTs)/1000);const el=document.getElementById(elId);if(el)el.textContent=fmt(rem);if(rem<=0)clearInterval(timerHandle);};
-  tick(); timerHandle=setInterval(tick,500);
-}
-
-// ── Draw animation ──────────────────────────────────
-let drawAnimPlayed=false;
-const CARD_BASE='background:rgba(18,26,22,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px 24px;transition:border-color .4s,background .4s';
-
-function renderDispPending(groups){
-  const c=document.getElementById('disp-questions');
-  c.innerHTML=Object.entries(groups).map(([gid,g])=>`
-    <div style="${CARD_BASE}" class="ani-up">
-      <div style="color:#FFD060;font-weight:700;font-size:clamp(1.3rem,2.5vw,2rem);margin-bottom:12px;text-shadow:0 0 20px rgba(255,208,96,.4)">${g.name}</div>
-      <div style="color:#A0A0C0;font-size:clamp(1rem,2vw,1.5rem)">等待抽題…</div>
-    </div>`).join('');
-}
-
-function renderDispRevealed(groups){
-  const c=document.getElementById('disp-questions');
-  c.innerHTML=Object.entries(groups).map(([gid,g])=>`
-    <div style="${CARD_BASE}" class="ani-up">
-      <div style="color:#FFD060;font-weight:700;font-size:clamp(1.3rem,2.5vw,2rem);margin-bottom:12px;text-shadow:0 0 20px rgba(255,208,96,.4)">${g.name}</div>
-      <div style="color:#FFFFFF;font-size:clamp(1rem,2vw,1.5rem);line-height:1.75">${QUESTIONS[g.qIndex]?.full||''}</div>
-    </div>`).join('');
-}
-
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-
-async function playDrawAnim(groups){
-  const c=document.getElementById('disp-questions');
-  const entries=Object.entries(groups);
-  c.innerHTML=entries.map(([gid,g])=>`
-    <div id="dq-${gid}" style="${CARD_BASE}">
-      <div style="color:#FFD060;font-weight:700;font-size:clamp(1.3rem,2.5vw,2rem);margin-bottom:12px;text-shadow:0 0 20px rgba(255,208,96,.4)">${g.name}</div>
-      <div id="dqt-${gid}" style="color:#A0A0C0;font-size:clamp(1rem,2vw,1.5rem);transition:color .3s">—</div>
-    </div>`).join('');
-  await sleep(400);
-  for(let i=0;i<entries.length;i++){
-    const [gid,g]=entries[i];
-    if(i>0) await sleep(900);
-    await spinCard(gid,g.qIndex);
+function broadcast(patch) {
+  Object.assign(S, patch);
+  localStorage.setItem('tao-why-state', JSON.stringify(S));
+  CH.postMessage({...S});
+  // 更新主持人 UI（如果在主持人分頁）
+  if (document.getElementById('page-host')?.classList.contains('active')) {
+    renderHostQList();
+    renderHostControls();
   }
 }
 
-async function spinCard(gid,finalIdx){
-  const card=document.getElementById('dq-'+gid), txt=document.getElementById('dqt-'+gid);
-  if(!card||!txt) return;
-  card.style.borderColor='rgba(123,97,255,.5)'; card.style.background='rgba(20,18,40,.8)';
-  await sleep(100);
-  for(let i=0;i<15;i++){txt.textContent=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)].short;txt.style.color='var(--t2)';await sleep(80);}
-  for(let i=0;i<5;i++){txt.textContent=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)].short;await sleep(180);}
-  txt.textContent=QUESTIONS[finalIdx].short; txt.style.color='var(--gold-hi)'; txt.style.fontWeight='600';
-  card.style.borderColor='rgba(52,199,89,.6)'; card.style.background='rgba(12,30,20,.85)';
-  await sleep(700);
-  txt.textContent=QUESTIONS[finalIdx].full; txt.style.color='#FFFFFF'; txt.style.fontWeight='400';
-  txt.style.fontSize='clamp(1rem,2vw,1.5rem)'; txt.style.lineHeight='1.75';
-  card.style.borderColor=''; card.style.background='';
+// 大螢幕分頁接收廣播
+CH.onmessage = e => {
+  if (document.getElementById('page-display')?.classList.contains('active')) {
+    Object.assign(S, e.data);
+    renderDisplay();
+  }
+};
+
+// ═══════════════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════════════
+window.nav = p => {
+  document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  location.hash = p;
+  if (p === 'display') renderDisplay();
+};
+nav(location.hash.replace('#','') || 'home');
+
+// ═══════════════════════════════════════════════════
+// HOST  —  主持人控制台邏輯
+// ═══════════════════════════════════════════════════
+window.unlockHost = () => {
+  const pw = document.getElementById('host-pw').value;
+  if (pw !== HOST_PW) {
+    document.getElementById('host-err').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('host-lock').classList.add('hidden');
+  const main = document.getElementById('host-main');
+  main.classList.remove('hidden');
+  main.style.display = 'flex';
+  renderHostQList();
+  renderHostControls();
+};
+
+function renderHostQList() {
+  const c = document.getElementById('h-q-list'); if (!c) return;
+  c.innerHTML = Q.map((q, i) => {
+    const isActive = i === S.qIdx;
+    const typeColor = q.type === 'quiz' ? 'badge-acc' : 'badge-gold';
+    return `<div onclick="hostGoQ(${i})"
+      style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;
+             background:${isActive ? 'rgba(123,97,255,.15)' : 'rgba(255,255,255,.02)'};
+             border:1px solid ${isActive ? 'rgba(123,97,255,.4)' : 'rgba(255,255,255,.06)'};
+             transition:all .15s"
+      onmouseover="this.style.background='rgba(255,255,255,.06)'"
+      onmouseout="this.style.background='${isActive ? 'rgba(123,97,255,.15)' : 'rgba(255,255,255,.02)'}'">
+      <span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace;flex-shrink:0">${String(i+1).padStart(2,'0')}</span>
+      <span class="badge ${typeColor}" style="flex-shrink:0;font-size:10px;padding:2px 8px">${q.badge}</span>
+      <span style="font-size:12px;color:${isActive ? 'var(--t1)' : 'var(--t2)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${q.question.slice(0,28)}…</span>
+    </div>`;
+  }).join('');
+  document.getElementById('h-prog').textContent = `${S.qIdx >= 0 ? S.qIdx+1 : 0} / ${Q.length}`;
 }
 
-// ── Display ─────────────────────────────────────────
-function initDisplay(){
-  displayListening=true;
-  let qrRegDone=false, dispTimer=null;
+// 跳到指定題目（顯示題目狀態）
+window.hostGoQ = i => {
+  clearInterval(_timerInterval);
+  broadcast({ screen:'question', qIdx:i, timerRunning:false, timerStart:0, timerDur:Q[i].timerSec });
+};
 
-  onValue(ref(db,'/'),snap=>{
-    const root=snap.val()||{};
-    S=root.session||{}; allUsers=root.users||{}; allScores=root.scores||{};
-    const {phase='waiting',groups={},presentingGroup=0,discussionStart=0,presentStart=0,totalGroups=5,drawingState='pending'}=S;
+// 動態渲染主持人控制按鈕
+function renderHostControls() {
+  const c = document.getElementById('h-controls'); if (!c) return;
+  const { screen, qIdx, timerRunning, timerDur } = S;
+  const q = Q[qIdx];
 
-    ['waiting','registering','drawing','discussion','presenting','results'].forEach(p=>{
-      const el=document.getElementById('disp-'+p); if(el) el.style.display='none';
-    });
-    const target=document.getElementById('disp-'+phase);
-    if(target) target.style.display='';
+  const statusMap = { idle:'等待中', question:'出題中', reveal:'答案揭曉', explain:'講解中' };
+  const el = document.getElementById('h-status');
+  if (el) el.textContent = statusMap[screen] || '等待中';
 
-    clearInterval(dispTimer);
+  // ── 未選題目 ──
+  if (screen === 'idle' || qIdx < 0) {
+    c.innerHTML = `
+      <p class="slabel" style="margin-bottom:10px">開始課程</p>
+      <p style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6">點選上方任一題，或從心理測驗開始。</p>
+      <button onclick="hostGoQ(0)" class="btn btn-gold btn-xl btn-full pulse">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        開始課程（從第 1 題）
+      </button>`;
+    return;
+  }
 
-    if(phase==='registering'){
-      if(!qrRegDone){
-        const url=location.origin+location.pathname+'#join';
-        document.getElementById('disp-reg-url').textContent=url;
-        const qrc=document.getElementById('disp-reg-qr'); qrc.innerHTML='';
-        new QRCode(qrc,{text:url,width:180,height:180,colorDark:'#111113',colorLight:'#ffffff'});
-        qrRegDone=true;
-      }
-      const cnt=Object.keys(allUsers).length;
-      document.getElementById('disp-reg-count').innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:var(--green)"></span> ${cnt} 人已加入`;
-      renderDispRegGroups(allUsers,groups,totalGroups);
+  // ── 有選題目 ──
+  let timerHtml = '';
+  if (q.timerSec > 0) {
+    if (!timerRunning) {
+      timerHtml = `<button onclick="hostStartTimer()" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        開始計時 ${fmt(timerDur)}
+      </button>`;
+    } else {
+      timerHtml = `<button onclick="hostPauseTimer()" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        暫停計時
+      </button>`;
     }
+  }
 
-    if(phase==='drawing'){
-      if(drawingState==='pending'){drawAnimPlayed=false;renderDispPending(groups);}
-      else if(!drawAnimPlayed){drawAnimPlayed=true;playDrawAnim(groups);}
-      else renderDispRevealed(groups);
+  const revealHtml = screen === 'question' ? `
+    <button onclick="hostReveal()" class="btn btn-acc btn-xl btn-full" style="margin-bottom:8px">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      揭曉答案
+    </button>` : '';
+
+  const explainHtml = (screen === 'reveal' && q.type === 'quiz' && q.explain?.text) ? `
+    <button onclick="hostExplain()" class="btn btn-green btn-lg btn-full" style="margin-bottom:8px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      進入講解
+    </button>` : '';
+
+  const isLast = qIdx >= Q.length - 1;
+  let nextHtml = '';
+  if (screen === 'reveal' || screen === 'explain') {
+    nextHtml = isLast
+      ? `<button onclick="broadcast({screen:'idle',qIdx:-1,timerRunning:false})" class="btn btn-ghost btn-lg btn-full" style="margin-bottom:8px">課程結束</button>`
+      : `<button onclick="hostGoQ(${qIdx+1})" class="btn btn-gold btn-lg btn-full" style="margin-bottom:8px">下一題：${Q[qIdx+1].badge} →</button>`;
+  }
+
+  const resetHtml = `
+    <div style="height:1px;background:var(--bd);margin:10px 0"></div>
+    <button onclick="if(confirm('重置課程？'))broadcast({screen:'idle',qIdx:-1,timerRunning:false,timerStart:0})" class="btn btn-danger btn-full" style="padding:9px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      重置
+    </button>`;
+
+  c.innerHTML = `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span class="badge badge-gold">${q.badge}</span>
+        <span style="font-size:12px;color:var(--t3)">第 ${qIdx+1} 題 / 共 ${Q.length} 題</span>
+      </div>
+      <p style="font-size:13px;color:var(--t2);line-height:1.6">${q.question.slice(0,60)}${q.question.length>60?'…':''}</p>
+    </div>
+    <div style="height:1px;background:var(--bd);margin-bottom:14px"></div>
+    ${timerHtml}${revealHtml}${explainHtml}${nextHtml}${resetHtml}`;
+}
+
+// ── Timer ─────────────────────────────────────────
+let _timerInterval = null;
+
+window.hostStartTimer = () => {
+  broadcast({ timerRunning:true, timerStart:Date.now(), timerDur:Q[S.qIdx].timerSec });
+  clearInterval(_timerInterval);
+  _timerInterval = setInterval(() => {
+    const rem = Math.max(0, S.timerDur - (Date.now()-S.timerStart)/1000);
+    CH.postMessage({...S, _t:Date.now()}); // 強制大螢幕刷新計時器
+    if (rem <= 0) {
+      clearInterval(_timerInterval);
+      broadcast({ timerRunning:false });
     }
+  }, 500);
+};
 
-    if(phase==='discussion'&&discussionStart){
-      const tick=()=>{
-        const rem=Math.max(0,DISC_SEC-(Date.now()-discussionStart)/1000);
-        const el=document.getElementById('disp-disc-timer'), ring=document.getElementById('disp-disc-ring');
-        if(el){el.textContent=fmt(rem);el.style.color=rem<=60?'var(--red)':rem<=120?'var(--gold)':'var(--t1)';}
-        if(ring){ring.style.strokeDashoffset=((1-rem/DISC_SEC)*CIRC).toFixed(2);ring.style.stroke=rem<=60?'var(--red)':rem<=120?'var(--gold)':'var(--acc)';}
-        if(rem===0) clearInterval(dispTimer);
+window.hostPauseTimer = () => {
+  clearInterval(_timerInterval);
+  const rem = Math.max(0, S.timerDur - (Date.now()-S.timerStart)/1000);
+  broadcast({ timerRunning:false, timerDur:Math.round(rem), timerStart:0 });
+};
+
+window.hostReveal = () => {
+  clearInterval(_timerInterval);
+  broadcast({ screen:'reveal', timerRunning:false });
+};
+
+window.hostExplain = () => broadcast({ screen:'explain' });
+
+// ═══════════════════════════════════════════════════
+// DISPLAY  —  大螢幕渲染邏輯
+// ═══════════════════════════════════════════════════
+
+// 切換顯示面板（hide all → show target）
+function showPanel(id) {
+  document.querySelectorAll('.d-panel').forEach(el => el.style.display = 'none');
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = id === 'd-question' ? 'flex' : 'block';
+  el.style.animation = 'fadeUp .45s ease both';
+  setTimeout(() => { if (el) el.style.animation = ''; }, 500);
+}
+
+// 計時器格式
+function fmt(sec) {
+  const m = Math.floor(sec/60), s = Math.floor(sec%60);
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+// 大螢幕計時器本地刷新（避免依賴廣播頻率）
+let _dispTimer = null;
+
+function renderDisplay() {
+  if (!document.getElementById('page-display')?.classList.contains('active')) return;
+  clearInterval(_dispTimer);
+
+  const { screen, qIdx, timerRunning, timerStart, timerDur } = S;
+  const q = qIdx >= 0 ? Q[qIdx] : null;
+
+  // ── IDLE ──────────────────────────────────────────
+  if (screen === 'idle' || !q) { showPanel('d-idle'); return; }
+
+  // ── QUESTION ──────────────────────────────────────
+  if (screen === 'question') {
+    showPanel('d-question');
+    document.getElementById('d-q-badge').textContent = q.badge;
+    document.getElementById('d-q-text').textContent = q.question;
+
+    // 計時器顯示
+    const tw = document.getElementById('d-q-timer-wrap');
+    const te = document.getElementById('d-q-timer');
+    if (timerDur > 0) {
+      tw.style.display = '';
+      const updateTimer = () => {
+        const rem = timerRunning && timerStart
+          ? Math.max(0, timerDur - (Date.now()-timerStart)/1000)
+          : timerDur;
+        te.textContent = fmt(rem);
+        te.style.color = rem <= 30 ? 'var(--red)' : rem <= 60 ? 'var(--gold)' : 'var(--t1)';
+        te.style.textShadow = rem <= 30 ? '0 0 60px rgba(255,69,58,.6)' : '0 0 60px rgba(255,255,255,.3)';
+        if (rem <= 0) clearInterval(_dispTimer);
       };
-      tick(); dispTimer=setInterval(tick,500);
+      updateTimer();
+      if (timerRunning) _dispTimer = setInterval(updateTimer, 500);
+    } else {
+      tw.style.display = 'none';
     }
 
-    if(phase==='presenting'){
-      const g=groups[presentingGroup];
-      document.getElementById('disp-pres-name').textContent=g?.name||'';
-      document.getElementById('disp-pres-q').textContent=QUESTIONS[g?.qIndex]?.full||'';
-      const cnt=Object.keys(allScores[presentingGroup]||{}).length;
-      document.getElementById('disp-score-count').innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:var(--green)"></span> ${cnt} 人已評分`;
-      if(presentStart){
-        const tick=()=>{
-          const rem=Math.max(0,PRES_SEC-(Date.now()-presentStart)/1000);
-          const el=document.getElementById('disp-pres-timer'), ring=document.getElementById('disp-pres-ring');
-          if(el){el.textContent=fmt(rem);el.style.color=rem<=30?'var(--red)':'var(--t1)';}
-          if(ring){ring.style.strokeDashoffset=((1-rem/PRES_SEC)*CIRC).toFixed(2);ring.style.stroke=rem<=30?'var(--red)':rem<=60?'var(--gold)':'var(--green)';}
-          if(rem===0) clearInterval(dispTimer);
-        };
-        tick(); dispTimer=setInterval(tick,500);
-      }
+    // 選項
+    const oc = document.getElementById('d-q-opts');
+    oc.innerHTML = q.opts.map(o => `
+      <div style="display:flex;align-items:flex-start;gap:clamp(.8rem,2vw,1.5rem);
+                  padding:clamp(.7rem,1.8vh,1rem) clamp(1rem,2.5vw,1.6rem);
+                  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px">
+        <span class="d-opt-label" style="color:var(--gold-hi);flex-shrink:0">${o.label}</span>
+        <span class="d-opt-text" style="color:var(--t2)">${o.text}</span>
+      </div>`).join('');
+
+    const hintMap = { 3:'A/B/C', 4:'A/B/C/D', 5:'A/B/C/D/E' };
+    document.getElementById('d-q-hint').textContent = `💬 請在聊天室回覆 ${hintMap[q.opts.length]||''}`;
+    return;
+  }
+
+  // ── REVEAL: 心理測驗 1（五教圖片卡片）─────────────
+  if (screen === 'reveal' && q.type === 'psych-religion') {
+    showPanel('d-reveal-religion');
+    document.getElementById('d-religion-cards').innerHTML = q.opts.map((o,i) => `
+      <div class="ani-sc" style="animation-delay:${i*.1}s;
+           background:rgba(16,20,18,.75);backdrop-filter:blur(14px);
+           border:1px solid ${o.border};border-radius:12px;overflow:hidden;
+           display:flex;flex-direction:column">
+        <div style="height:clamp(90px,13vw,170px);flex-shrink:0;
+                    background:url('${o.image}') center/cover no-repeat;
+                    box-shadow:inset 0 0 0 1px ${o.border}"></div>
+        <div style="padding:clamp(.6rem,1.3vw,1rem);flex:1;display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:clamp(1.2rem,2.5vw,2.2rem);font-weight:700;color:${o.color};
+                      text-shadow:0 0 24px ${o.border}">${o.religion}</div>
+          <div style="font-size:clamp(.85rem,1.7vw,1.4rem);color:var(--t1);font-weight:600;line-height:1.4">${o.quote}</div>
+          <div style="font-size:clamp(.65rem,1.2vw,.95rem);color:var(--t3)">${o.source}</div>
+          <div style="font-size:clamp(.7rem,1.25vw,.95rem);color:var(--t2);line-height:1.6;margin-top:2px">${o.insight}</div>
+        </div>
+      </div>`).join('');
+    document.getElementById('d-unity-msg').textContent = q.unity;
+    return;
+  }
+
+  // ── REVEAL: 心理測驗 2（修辦類型圖片卡片）─────────
+  if (screen === 'reveal' && q.type === 'psych-type') {
+    showPanel('d-reveal-type');
+    document.getElementById('d-type-cards').innerHTML = q.opts.map((o,i) => `
+      <div class="ani-sc" style="animation-delay:${i*.1}s;
+           background:rgba(16,20,18,.75);backdrop-filter:blur(14px);
+           border:1px solid ${o.border};border-radius:12px;overflow:hidden;
+           display:flex;flex-direction:column">
+        <div style="height:clamp(110px,15vw,190px);flex-shrink:0;position:relative;
+                    background:url('${o.image}') center/cover no-repeat">
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,15,12,.85))"></div>
+          <div style="position:absolute;bottom:10px;left:14px;
+                      font-size:clamp(1.2rem,2.8vw,2.2rem);font-weight:700;
+                      color:${o.color};text-shadow:0 2px 12px rgba(0,0,0,.6),0 0 30px ${o.border}">${o.typeName}</div>
+        </div>
+        <div style="padding:clamp(.7rem,1.4vw,1.1rem);flex:1">
+          <p style="font-size:clamp(.8rem,1.55vw,1.25rem);color:var(--t2);line-height:1.9;
+                    margin-bottom:8px;white-space:pre-line">${o.response}</p>
+          <p style="font-size:clamp(.7rem,1.3vw,1rem);color:${o.color};font-style:italic;opacity:.85">${o.verse}</p>
+        </div>
+      </div>`).join('');
+    document.getElementById('d-reflection-msg').textContent = q.reflection;
+    return;
+  }
+
+  // ── REVEAL: 知識/思考/使命題（正確答案高亮）─────────
+  if (screen === 'reveal' && q.type === 'quiz') {
+    showPanel('d-reveal-quiz');
+    document.getElementById('d-rq-badge').textContent = q.badge;
+    document.getElementById('d-rq-text').textContent = q.question;
+    document.getElementById('d-rq-opts').innerHTML = q.opts.map((o,i) => {
+      const ok = i === q.answer;
+      return `<div class="ani-sc" style="animation-delay:${i*.1}s;
+        display:flex;align-items:flex-start;gap:clamp(.8rem,2vw,1.5rem);
+        padding:clamp(.7rem,1.8vh,1rem) clamp(1rem,2.5vw,1.6rem);
+        background:${ok ? 'rgba(52,199,89,.1)' : 'rgba(255,255,255,.02)'};
+        border:1px solid ${ok ? 'rgba(52,199,89,.4)' : 'rgba(255,255,255,.05)'};
+        border-radius:10px;opacity:${ok ? 1 : .3};
+        ${ok ? 'box-shadow:0 0 24px rgba(52,199,89,.15)' : ''}">
+        <span style="font-family:'JetBrains Mono',monospace;font-weight:700;
+                     font-size:clamp(1.5rem,3vw,2.2rem);flex-shrink:0;
+                     color:${ok ? 'var(--green)' : 'var(--t3)'}">${o.label}</span>
+        <span style="font-size:clamp(1rem,2.2vw,1.7rem);line-height:1.5;
+                     color:${ok ? 'var(--t1)' : 'var(--t3)'};
+                     ${ok ? 'font-weight:600' : ''}">${o.text}</span>
+        ${ok ? `<svg style="flex-shrink:0;margin-top:6px" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>` : ''}
+      </div>`;
+    }).join('');
+    return;
+  }
+
+  // ── EXPLAIN（講解頁 — 文字 + 可選 YouTube）─────────
+  if (screen === 'explain' && q.type === 'quiz') {
+    showPanel('d-explain');
+    const ec = document.getElementById('d-explain-content');
+    const yt = q.explain?.youtube;
+    if (yt) {
+      ec.style.gridTemplateColumns = '1fr 1fr';
+      ec.innerHTML = `
+        <div>
+          <span class="badge badge-gold" style="margin-bottom:clamp(.8rem,2vh,1.5rem);font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px">${q.badge} — 講解</span>
+          <p class="d-explain-text ani-up" style="white-space:pre-line;margin-top:clamp(.8rem,2vh,1.5rem)">${q.explain.text}</p>
+        </div>
+        <div style="display:flex;align-items:center">
+          <iframe style="width:100%;aspect-ratio:16/9;border-radius:12px;border:1px solid var(--bd)"
+            src="https://www.youtube.com/embed/${yt}?autoplay=1"
+            allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>`;
+    } else {
+      ec.style.gridTemplateColumns = '1fr';
+      ec.innerHTML = `
+        <div style="max-width:880px;margin:0 auto">
+          <span class="badge badge-gold" style="margin-bottom:clamp(.8rem,2vh,1.5rem);font-size:clamp(.8rem,1.4vw,1rem);padding:5px 14px">${q.badge} — 講解</span>
+          <p class="d-explain-text ani-up" style="white-space:pre-line;margin-top:clamp(.8rem,2vh,1.5rem)">${q.explain.text}</p>
+        </div>`;
     }
-
-    if(phase==='results'){
-      renderDispResults(allScores,allUsers,groups,totalGroups);
-    }
-  });
-}
-
-function renderDispRegGroups(users,groups,total){
-  const c=document.getElementById('disp-reg-groups'); if(!c) return;
-  const byGrp={};
-  for(let i=1;i<=total;i++) byGrp[i]=[];
-  Object.values(users||{}).forEach(u=>{if(byGrp[u.groupId]) byGrp[u.groupId].push(u.name);});
-  c.innerHTML=Object.entries(byGrp).map(([gid,names])=>{
-    const isOnline=groups[gid]?.name==='線上組';
-    return `<div style="background:rgba(18,26,22,.72);backdrop-filter:blur(12px);border:1px solid ${isOnline?'rgba(52,199,89,.25)':'rgba(255,255,255,.08)'};border-radius:12px;padding:14px">
-      <div style="font-weight:700;font-size:clamp(1.1rem,2vw,1.6rem);color:${isOnline?'#4CD964':'#FFD060'};margin-bottom:10px;text-shadow:0 0 16px ${isOnline?'rgba(76,217,100,.4)':'rgba(255,208,96,.4)'}">${groups[gid]?.name||'第'+gid+'組'}</div>
-      <div style="font-size:clamp(1rem,1.8vw,1.4rem);color:#D8D8F0;line-height:2">${names.length?names.join('\n').split('\n').map(n=>`<div>${n}</div>`).join(''):'<div style="color:#A0A0C0">等待中…</div>'}</div>
-    </div>`;
-  }).join('');
-}
-
-function renderDispResults(scores,users,groups,total){
-  const res=calcResults(scores,users,groups,total);
-  const cats=[{key:'clarity',elId:'clarity'},{key:'creative',elId:'creative'},{key:'emotion',elId:'emotion'}];
-  cats.forEach(c=>{
-    const w=res[c.key];
-    document.getElementById('res-'+c.elId).textContent=w?.groupName||'—';
-    document.getElementById('res-'+c.elId+'-score').textContent=w?'平均 '+w.avg.toFixed(1)+' ★':'';
-    document.getElementById('res-'+c.elId+'-members').innerHTML=w?.members?.length
-      ?w.members.map(n=>`<div>${n}</div>`).join('')
-      :'<div style="color:var(--t3)">—</div>';
-  });
-}
-
-// ── Join page ────────────────────────────────────────
-let myName='', myGroupId='', joinSelectedGrp='';
-const scoreVals={clarity:0,creative:0,emotion:0};
-let scoredGroups=new Set();
-
-function initJoin(){
-  joinListening=true;
-  myName=localStorage.getItem('_tao_name')||'';
-  myGroupId=localStorage.getItem('_tao_grp')||'';
-
-  onValue(ref(db,'/'),snap=>{
-    const root=snap.val()||{};
-    S=root.session||{}; allUsers=root.users||{}; allScores=root.scores||{};
-    const {phase='waiting',groups={},presentingGroup=0,totalGroups=5}=S;
-
-    // Re-register on Firebase if needed (e.g. after reset)
-    if(myName&&myGroupId&&phase!=='waiting'){
-      const existsInDb=allUsers[deviceId];
-      if(!existsInDb) set(ref(db,'users/'+deviceId),{name:myName,groupId:myGroupId,joinedAt:Date.now()});
-    }
-
-    // Render group buttons when registering
-    if(phase==='registering') renderJoinGrpBtns(groups,totalGroups);
-
-    // Determine which panel to show
-    const isRegistered=!!(myName&&myGroupId&&allUsers[deviceId]);
-    showJoinPanel('none');
-
-    if(!isRegistered&&['registering','drawing','discussion','presenting','results'].includes(phase)){
-      renderJoinGrpBtns(groups,totalGroups);
-      showJoinPanel('register');
-    } else if(!isRegistered){
-      showJoinPanel('register');
-    } else if(phase==='waiting'||phase==='registering'){
-      document.getElementById('join-hello').textContent='你好，'+myName+'！';
-      document.getElementById('join-my-grp').innerHTML=`<span style="width:6px;height:6px;border-radius:50%;background:var(--acc)"></span> ${S.groups?.[myGroupId]?.name||''}`;
-      showJoinPanel('lobby');
-    } else if(phase==='drawing'||phase==='discussion'){
-      document.getElementById('join-hello').textContent='你好，'+myName+'！';
-      document.getElementById('join-my-grp').innerHTML=`<span style="width:6px;height:6px;border-radius:50%;background:var(--acc)"></span> ${S.groups?.[myGroupId]?.name||''}`;
-      showJoinPanel('lobby');
-    } else if(phase==='presenting'){
-      const pg=String(presentingGroup);
-      if(pg===String(myGroupId)){
-        showJoinPanel('my-turn');
-      } else if(allScores[pg]&&allScores[pg][deviceId]){
-        showJoinPanel('scored');
-      } else {
-        // Show scoring form
-        resetScoreForm();
-        document.getElementById('score-grp-name').textContent=(groups[pg]?.name||'')+'  正在分享';
-        showJoinPanel('score');
-      }
-    } else if(phase==='results'){
-      renderJoinResults(allScores,allUsers,groups,totalGroups);
-      showJoinPanel('results');
-    }
-  });
-}
-
-function showJoinPanel(which){
-  const ids=['register','lobby','score','my-turn','scored','results'];
-  ids.forEach(id=>{
-    const el=document.getElementById('join-'+id);
-    if(el) el.style.display=which===id?'':'none';
-  });
-}
-
-function renderJoinGrpBtns(groups,total){
-  const c=document.getElementById('join-grp-btns'); if(!c||c.children.length>0) return;
-  for(let i=1;i<=total;i++){
-    const g=groups[i]; if(!g) continue;
-    const btn=document.createElement('button');
-    btn.className='grp-btn'; btn.textContent=g.name;
-    btn.dataset.gid=String(i);
-    btn.onclick=()=>selectJoinGrp(String(i),groups);
-    c.appendChild(btn);
+    return;
   }
 }
-
-function selectJoinGrp(gid,groups){
-  joinSelectedGrp=gid;
-  document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('selected',b.dataset.gid===gid));
-  const nameVal=document.getElementById('join-name')?.value?.trim();
-  updateJoinBtn(nameVal);
-}
-
-function updateJoinBtn(nameVal){
-  const btn=document.getElementById('btn-join'); if(!btn) return;
-  const ready=!!(nameVal&&joinSelectedGrp);
-  btn.disabled=!ready;
-  btn.className='btn btn-full btn-xl'+(ready?' btn-acc pulse':'');
-  btn.style.cssText=ready?'cursor:pointer':'background:var(--elev);color:var(--t3);border:1px solid var(--bd);cursor:not-allowed';
-  btn.textContent=ready?'加入課程 →':'選擇組別後加入';
-}
-
-document.getElementById('join-name')?.addEventListener('input',e=>updateJoinBtn(e.target.value.trim()));
-
-window.joinCourse=async()=>{
-  const name=document.getElementById('join-name')?.value?.trim();
-  if(!name||!joinSelectedGrp) return;
-  myName=name; myGroupId=joinSelectedGrp;
-  localStorage.setItem('_tao_name',name); localStorage.setItem('_tao_grp',joinSelectedGrp);
-  await set(ref(db,'users/'+deviceId),{name,groupId:joinSelectedGrp,joinedAt:Date.now()});
-};
-
-// Star rating
-window.setStar=function(cat,val){
-  scoreVals[cat]=val;
-  document.querySelectorAll(`#stars-${cat} .star-btn`).forEach(btn=>{
-    btn.classList.toggle('lit',parseInt(btn.dataset.val)<=val);
-  });
-  checkScoreReady();
-};
-
-function resetScoreForm(){
-  ['clarity','creative','emotion'].forEach(cat=>{
-    scoreVals[cat]=0;
-    document.querySelectorAll(`#stars-${cat} .star-btn`).forEach(b=>b.classList.remove('lit'));
-  });
-  const btn=document.getElementById('btn-score-submit');
-  if(btn){btn.disabled=true;btn.className='btn btn-full btn-xl';btn.style.cssText='background:var(--elev);color:var(--t3);border:1px solid var(--bd);cursor:not-allowed';btn.textContent='請完成所有評分';}
-}
-
-function checkScoreReady(){
-  const ready=Object.values(scoreVals).every(v=>v>0);
-  const btn=document.getElementById('btn-score-submit'); if(!btn) return;
-  btn.disabled=!ready;
-  if(ready){btn.className='btn btn-acc btn-xl btn-full pulse';btn.style.cssText='cursor:pointer';btn.textContent='送出評分 →';}
-  else{btn.className='btn btn-full btn-xl';btn.style.cssText='background:var(--elev);color:var(--t3);border:1px solid var(--bd);cursor:not-allowed';btn.textContent='請完成所有評分';}
-}
-
-window.submitScore=async()=>{
-  if(!Object.values(scoreVals).every(v=>v>0)) return;
-  const gid=String(S.presentingGroup);
-  const btn=document.getElementById('btn-score-submit');
-  btn.disabled=true; btn.textContent='送出中…';
-  await set(ref(db,`scores/${gid}/${deviceId}`),{
-    clarity:scoreVals.clarity, creative:scoreVals.creative, emotion:scoreVals.emotion,
-    scorerGroupId:myGroupId
-  });
-};
-
-function renderJoinResults(scores,users,groups,total){
-  const res=calcResults(scores,users,groups,total);
-  const cats=[{key:'clarity',label:'精闢講解獎',color:'var(--gold)'},{key:'creative',label:'創意表現獎',color:'var(--acc-hi)'},{key:'emotion',label:'情感傳達獎',color:'#FF6B8A'}];
-  document.getElementById('join-results-body').innerHTML=cats.map(c=>{
-    const w=res[c.key];
-    if(!w) return `<div class="card" style="padding:16px"><div style="font-size:13px;color:var(--t2)">${c.label}：尚無資料</div></div>`;
-    return `<div class="card" style="padding:16px">
-      <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:6px">${c.label}</div>
-      <div style="font-size:20px;font-weight:700;color:${c.color};margin-bottom:4px">${w.groupName}</div>
-      <div style="font-size:12px;color:var(--t3);margin-bottom:8px">平均 ${w.avg.toFixed(1)} ★</div>
-      <div style="font-size:13px;color:var(--t2);line-height:1.8">${w.members.map(n=>`<span style="margin-right:8px">${n}</span>`).join('')}</div>
-    </div>`;
-  }).join('');
-}
-
-// ── Calc results ────────────────────────────────────
-function calcResults(scores,users,groups,total){
-  const totals={};
-  for(let i=1;i<=total;i++){
-    const gs=scores?.[i]||{}, vals=Object.values(gs);
-    totals[i]={
-      clarity:  vals.length?vals.reduce((s,v)=>s+(v.clarity||0),0)/vals.length:0,
-      creative: vals.length?vals.reduce((s,v)=>s+(v.creative||0),0)/vals.length:0,
-      emotion:  vals.length?vals.reduce((s,v)=>s+(v.emotion||0),0)/vals.length:0,
-      count: vals.length
-    };
-  }
-  const cats=['clarity','creative','emotion'];
-  const winners={};
-  cats.forEach(cat=>{
-    const sorted=Object.entries(totals).sort((a,b)=>b[1][cat]-a[1][cat]);
-    const [winGid,winData]=sorted[0]||[];
-    if(!winGid||winData[cat]===0) return;
-    const members=Object.values(users||{}).filter(u=>String(u.groupId)===String(winGid)).map(u=>u.name);
-    winners[cat]={groupName:groups[winGid]?.name||'第'+winGid+'組',avg:winData[cat],members};
-  });
-  return winners;
-}
-
-// ── Utils ────────────────────────────────────────────
-function fmt(sec){const m=Math.floor(sec/60),s=Math.floor(sec%60);return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
-window.renderGroupPreview=renderGroupPreview;
 </script>
 </body>
 </html>
